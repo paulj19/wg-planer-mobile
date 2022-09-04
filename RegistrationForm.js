@@ -17,21 +17,21 @@ const registrationValidationSchema = Yup.object().shape({
     //     .required('Phone number is required'),
     email: Yup
         .string()
-        .email("Please enter valid email")
+        .matches("/^[_A-Za-z0-9-+]+(.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(.[A-Za-z0-9]+)*(.[A-Za-z]{2,})$/", "Invalid email")
         .required("Email is required"),
     password: Yup
         .string()
         .matches(/\w*[a-z]\w*/, "Password must have a small letter")
         .matches(/\w*[A-Z]\w*/, "Password must have a capital letter")
         .matches(/\d/, "Password must have a number")
-        .matches(/[!@#$%^&*()\-_"=+{}; :,<.>]/, "Password must have a special character")
+        .matches(/(?=^\S+$)/, "Password must not have white space")
+        .matches(/[!@#$%^&*()\-_"=+{};:,<.>]/, "Password must have a special character")
         .min(8, ({min}) => `Password must be at least ${min} characters`)
         .required("Password is required"),
     confirmPassword: Yup
         .string()
         .oneOf([Yup.ref("password")], "Passwords do not match")
         .required('Confirm password is required'),
-    //todo should enter password first?
 })
 export const RegistrationForm = props => (
     <Formik
