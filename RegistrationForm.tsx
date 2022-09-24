@@ -1,23 +1,28 @@
 import React from 'react';
 import {Button, TextInput, View, StyleSheet, Text} from 'react-native';
-import {ErrorMessage, Formik} from 'formik';
+import {Formik} from 'formik';
 import * as Yup from 'yup';
-import * as httpRequest from "./RegistrationFormRequests.tsx";
-import {RegistrationDto} from "./RegistrationFormRequests.tsx";
+import * as httpRequest from "./RegistrationFormRequests";
 
 const registrationValidationSchema = Yup.object().shape({
     username: Yup
         .string()
         // .matches(/(\w.+\s).+/, 'Enter at least 2 names')
         .min(5, ({min}) => `Username must be at least ${min} characters`)
-        .required('username is required'),
+        .test("username is already taken", "username is not available", function (value) {
+          return httpRequest.verifyIsUsernameAvailable(value)
+              .then((result) => {
+                  return !result;
+          })
+        })
+        .required("username is required"),
     // phoneNumber: Yup
     //     .string()
     //     .matches(/(01)(\d){8}\b/, 'Enter a valid phone number')
     //     .required('Phone number is required'),
     email: Yup
         .string()
-        .matches("/^[_A-Za-z0-9-+]+(.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(.[A-Za-z0-9]+)*(.[A-Za-z]{2,})$/", "Invalid email")
+        .matches(/^[_A-Za-z0-9-+]+(.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(.[A-Za-z0-9]+)*(.[A-Za-z]{2,})$/, "Invalid email")
         .required("Email is required"),
     password: Yup
         .string()
@@ -33,10 +38,12 @@ const registrationValidationSchema = Yup.object().shape({
         .oneOf([Yup.ref("password")], "Passwords do not match")
         .required('Confirm password is required'),
 })
+
 export const RegistrationForm = props => (
     <Formik
         initialValues={{username: '', email: '', password: '', confirmPassword: ''}}
         validationSchema={registrationValidationSchema}
+        validateOnChange={false}
         // onSubmit={(values, { setSubmitting }) => {
         //     setTimeout(() => {
         //         alert(JSON.stringify(values, null, 2));
@@ -46,10 +53,10 @@ export const RegistrationForm = props => (
         onSubmit={values => {
             console.log(values);
             httpRequest.submitRegistrationData(values);
-            }
+        }
         }
     >
-        {({handleChange, handleBlur, handleSubmit, values, touched, errors}) => (
+        {({handleChange, handleBlur, handleSubmit, values, touched, errors, isValid, dirty}) => (
             <View>
                 <TextInput
                     name="username"
@@ -58,6 +65,7 @@ export const RegistrationForm = props => (
                     onBlur={handleBlur('username')}
                     value={values.username}
                     placeholder="Enter your username"
+                    testID='username'
                 />
                 {errors.username && touched.username && <Text style={styles.fieldError}>{errors.username}</Text>}
                 <TextInput
@@ -85,7 +93,11 @@ export const RegistrationForm = props => (
                 />
                 {errors.confirmPassword && touched.confirmPassword &&
                     <Text style={styles.fieldError}>{errors.confirmPassword}</Text>}
-                <Button onPress={handleSubmit} title="Submit"/>
+                <Button
+                    onPress={handleSubmit}
+                    disabled={!(isValid && dirty)}
+                    title="Submit"
+                />
             </View>
         )}
     </Formik>
