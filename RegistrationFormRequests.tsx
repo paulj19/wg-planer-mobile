@@ -2,7 +2,7 @@ import axios from "axios";
 
 export const submitRegistrationData = (formValues: string) => {
     axios
-        .post("http://localhost:8080/register", formValues, {
+        .post("http://localhost:8080/registration/new", formValues, {
             headers: {
                 'Content-Type': 'application/json'
             }
@@ -10,9 +10,9 @@ export const submitRegistrationData = (formValues: string) => {
         .then(response => console.log(response));
 }
 
-export const verifyIsUsernameAvailable = (username: string): Promise<boolean> => {
+export const isUsernameAvailable = (username: string): Promise<boolean> => {
     return axios
-        .get("http://localhost:8080/register/username-available", {
+        .get("http://localhost:8080/registration/username-available", {
             params: {
                 username: username
             },
@@ -21,6 +21,22 @@ export const verifyIsUsernameAvailable = (username: string): Promise<boolean> =>
             }
         })
         .then(response => {
-            return response.data === 'true'
+            return response.data === true
+        });
+}
+
+export const isEmailAvailable = (email: string): Promise<boolean> => {
+    return axios
+        .get("http://localhost:8080/registration/email-available", {
+            params: {
+                email: email
+            },
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+            debugger;
+            return response.data === true
         });
 }
