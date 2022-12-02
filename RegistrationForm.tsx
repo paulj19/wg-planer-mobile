@@ -63,7 +63,6 @@ export const RegistrationForm = props => (
             
             httpRequest.isUsernameAvailable(values.username)
                             .then((usernameAvailable) => {
-                                debugger;
                                 if(!usernameAvailable) {
                                     errors.setErrors({username: "username is not available"})
                                     return false;
@@ -73,7 +72,6 @@ export const RegistrationForm = props => (
                                 if(usernameAvailable) {
                                     httpRequest.isEmailAvailable(values.email)
                                         .then((emailAvailable) => {
-                                            debugger;
                                             if(!emailAvailable) {
                                                 errors.setErrors({email: "email is not available"})
                                                 return false;

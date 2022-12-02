@@ -1,18 +1,21 @@
-import axios from "axios";
+import axios from "./lib/axiosConfig";
 
 export const submitRegistrationData = (formValues: string) => {
     axios
-        .post("http://localhost:8080/registration/new", formValues, {
+        .postForm("/registration/new", formValues, {
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/x-www-form-urlencoded'
             }
         })
-        .then(response => console.log(response));
+        .then(response => console.log(response))
+        .catch((e) => {
+            console.log(e);
+        });
 }
 
 export const isUsernameAvailable = (username: string): Promise<boolean> => {
     return axios
-        .get("http://localhost:8080/registration/username-available", {
+        .get("/registration/username-available", {
             params: {
                 username: username
             },
@@ -22,12 +25,16 @@ export const isUsernameAvailable = (username: string): Promise<boolean> => {
         })
         .then(response => {
             return response.data === true
+        })
+        .catch((e) => {
+            console.log(e);
+            return true;
         });
 }
 
 export const isEmailAvailable = (email: string): Promise<boolean> => {
     return axios
-        .get("http://localhost:8080/registration/email-available", {
+        .get("/registration/email-available", {
             params: {
                 email: email
             },
@@ -36,7 +43,11 @@ export const isEmailAvailable = (email: string): Promise<boolean> => {
             }
         })
         .then(response => {
-            debugger;
             return response.data === true
+        })
+        .catch((e) => {
+            console.log(e);
+            //todo retry until form submission
+            return true;
         });
 }
