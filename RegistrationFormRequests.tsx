@@ -2,9 +2,9 @@ import axios from "./lib/axiosConfig";
 
 export const submitRegistrationData = (formValues: string) => {
     axios
-        .postForm("/registration/new", formValues, {
+        .post("/registration/new", formValues, {
             headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
+                'Content-Type': 'application/json'
             }
         })
         .then(response => console.log(response))
