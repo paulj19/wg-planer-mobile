@@ -70,11 +70,8 @@ export default function App({navigation}) {
                         if (response.status === 200) {
                             dispatch({type: 'SIGN_IN', accessToken: response.data.accessToken});
                         }
-                        if (response.status === 401) {
-                            errors.setErrors({username: 'username or password incorrect', password: 'username or password incorrect'})
-                        }
                     }).catch(response => {
-                    if (response.status !== 200) {
+                    if (response.status === 401) {
                         errors.setErrors({username: 'username or password incorrect', password: 'username or password incorrect'})
                     }
                 })
@@ -140,8 +137,8 @@ export default function App({navigation}) {
             <NavigationContainer>
                 <Stack.Navigator>
                     {authState.accessToken == null ? (
-			    //<Stack.Screen name="Login" component={LoginScreen}/>
-                        <Stack.Screen name="Login" component={RegistrationForm}/>
+			    <Stack.Screen name="Login" component={LoginScreen}/>
+                //        <Stack.Screen name="Login" component={RegistrationForm}/>
                     ) : (
                         <Stack.Screen name="Home" component={HomeScreen}/>
                     )}
