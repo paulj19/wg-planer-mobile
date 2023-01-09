@@ -3,9 +3,11 @@ import * as React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {HomeScreen} from "./Home/HomeScreen";
-import {RegistrationForm} from "./RegistrationForm";
 import {Formik} from "formik";
 import axios from "./lib/axiosConfig";
+import * as secureStorage from "./util/storage/SecureStore";
+import {StoredItems} from "./util/storage/SecureStore";
+import {PATH_LOGIN, PATH_VALIDATE_ACCESS_TOKEN} from "./lib/UrlPaths";
 
 const Stack = createStackNavigator();
 
@@ -17,17 +19,14 @@ export default function App({navigation}) {
                     return {
                         ...prevState,
                         accessToken: action.accessToken,
-                        isLoading: false,
-                    };
-                case 'RESTORE_TOKEN':
-                    return {
-                        ...prevState,
-                        accessToken: action.accessToken,
+                        refreshToken: action.refreshToken,
                         isLoading: false,
                     };
                 case 'SIGN_IN':
                     return {
+                        ...prevState,
                         accessToken: action.accessToken,
+                        refreshToken: action.refreshToken,
                         isSignout: false,
                     };
                 case 'SIGN_OUT':
@@ -35,6 +34,7 @@ export default function App({navigation}) {
                         ...prevState,
                         isSignout: true,
                         accessToken: null,
+                        refreshToken: null,
                     };
             }
         },
@@ -42,49 +42,79 @@ export default function App({navigation}) {
             isLoading: true,
             isSignout: false,
             accessToken: null,
+            refreshToken: null,
         }
     )
 
     React.useEffect(() => {
-        // const bootStrapAsync = async () => {
-        //     let accessToken;
-        //     try {
-        //         accessToken = await SecureStore.getItemAsync("accessToken");
-        //     } catch (e) {
-        //         // restore token failed
-        // }
-        // dispatch({type: 'RESTORE_TOKEN', token: accessToken});
-        // }
-        // bootStrapAsync();
+        const bootStrapAsync = async () => {
+            //non-lenient if any internal or http error => set token to null, go to login.
+            //remove this after fixing stack.nav flow
+            //isAvail check instead
+            let accessToken = await secureStorage.load(StoredItems.ACCESS_TOKEN).catch(() => null);
+            let refreshToken = await secureStorage.load(StoredItems.REFRESH_TOKEN).catch(() => null);
+            if (accessToken || refreshToken) {
+                axios.get(PATH_VALIDATE_ACCESS_TOKEN).then(response => {
+                    if (response.status === 200 &&
+                        response.headers.authentication &&
+                        response.headers.refresh_token) {
+                        dispatch({
+                            type: 'RENEW_TOKEN',
+                            accessToken: response.headers.authentication,
+                            refreshToken: response.headers.refresh_token
+                        });
+                    } else { //will go to login screen
+                        clearTokens();
+                    }
+                }).catch(() => {
+                    clearTokens();
+                });
+            }
+        }
+        bootStrapAsync();
     }, []);
-
+    const clearTokens = async () => {
+        await secureStorage.remove(StoredItems.ACCESS_TOKEN);
+        await secureStorage.remove(StoredItems.REFRESH_TOKEN);
+        dispatch({type: 'RENEW_TOKEN', accessToken: null, refreshToken: null});
+    }
     const authContext = React.useMemo(
         () => ({
             signIn: async (data, errors) => {
-                axios.post('/login', {
-                    headers: {
-                        'Authorization': 'Basic dXNlcm5hbWU6cGFzc3dvcmQ='
+                let errorMsg = null;
+                axios.post(PATH_LOGIN).then(response => {
+                    if (response.status === 200 &&
+                        response.headers.authentication &&
+                        response.headers.refresh_token) {
+                        dispatch({
+                            type: 'SIGN_IN',
+                            accessToken: response.headers.authentication,
+                            refreshToken: response.headers.refresh_token
+                        });
+                    } else {
+                        errorMsg = 'could not log in, please try again later';
+                    }
+                }).catch(error => {
+                    if (error.response.status === 401) {
+                        errorMsg = 'username or password incorrect';
+                    } else {
+                        errorMsg = 'could not log in, please try again.';
+                    }
+                }).then(() => {
+                    if (errorMsg !== null) {
+                        errors.setErrors({
+                            username: errorMsg,
+                            password: errorMsg
+                        })
                     }
                 })
-                    .then(response => {
-                        if (response.status === 200) {
-                            dispatch({type: 'SIGN_IN', accessToken: response.data.accessToken});
-                        }
-                    }).catch(response => {
-                    if (response.status === 401) {
-                        errors.setErrors({username: 'username or password incorrect', password: 'username or password incorrect'})
-                    }
-                })
-                //sign in
-                //save token in securestore
-                //handle errors
             },
-            signOut: () => dispatch({type: 'SIGN_OUT'}),
+            signOut: () => dispatch({type: 'SIGN_OUT', accessToken: 'dummy_token', refreshToken: 'dummy_token'}),
             signUp: async (data) => {
                 //register api call
                 //handle error
                 //save token
-                dispatch({type: 'SIGN_IN', token: 'dummy_token'});
+                dispatch({type: 'SIGN_IN', accessToken: 'dummy_token', refreshToken: 'dummy_token'});
             },
         }),
         []
@@ -137,8 +167,8 @@ export default function App({navigation}) {
             <NavigationContainer>
                 <Stack.Navigator>
                     {authState.accessToken == null ? (
-			    <Stack.Screen name="Login" component={LoginScreen}/>
-                //        <Stack.Screen name="Login" component={RegistrationForm}/>
+                        <Stack.Screen name="Login" component={LoginScreen}/>
+                        //<Stack.Screen name="Login" component={RegistrationForm}/>
                     ) : (
                         <Stack.Screen name="Home" component={HomeScreen}/>
                     )}
