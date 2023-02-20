@@ -60,6 +60,6 @@ client.interceptors.response.use(async function (response) {
 )
 
 if (process.env.NODE_ENV == 'development' || process.env.NODE_ENV == 'test') {
-    initializeMocks(client);
+    // initializeMocks(client);
 }
 export default client;
