@@ -61,9 +61,6 @@
   "engines": {
     "node": "= 17.x"
   },
-  "expo": {
-    "scheme": "wg-planer-mobile"
-  },
   "jest": {
     "preset": "jest-expo",
     "testEnvironment": "jsdom",

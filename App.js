@@ -12,42 +12,11 @@ import {
   PATH_VALIDATE_ACCESS_TOKEN,
   URL_AUTH_SERVER,
 } from "./lib/UrlPaths";
-import * as WebBrowser from "expo-web-browser";
-import * as AuthSession from "expo-auth-session";
-import { Alert } from "react-native-web";
-import { getToken } from "./LoginRequests";
-import {Platform} from "react-native";
+import LoginScreen from "./lib/Authentication/Authentication";
 
 const Stack = createStackNavigator();
 
-const clientId = "wg-planer";
-const clientSecret = "secret";
-const grantType = "authorization_code";
-
-const useProxy = Platform.select({ web: false, default: true });
-
 export default function App({ navigation }) {
-  WebBrowser.maybeCompleteAuthSession();
-  //const redirectUri = "http://127.0.0.1:19006/wg-planer/login";
-  const redirectUri = AuthSession.makeRedirectUri({
-    scheme: 'wg-planer',
-    path: '/wg-planer/login',
-    native: 'wg-planer-mobile://wg-planer/login',
-  });
-  console.log("REdirect" + JSON.stringify(redirectUri));
-
-  const discovery = AuthSession.useAutoDiscovery(URL_AUTH_SERVER);
-  const [request, response, promptAsync] = AuthSession.useAuthRequest(
-    {
-      clientId,
-      responseType: AuthSession.ResponseType.Code,
-      redirectUri,
-      scopes: ["openid"],
-      usePKCE: false,
-    },
-    discovery
-  );
-
   const [authState, dispatch] = React.useReducer(
     (prevState, action) => {
       switch (action.type) {
@@ -118,30 +87,8 @@ export default function App({ navigation }) {
       }
     };
 
-    if (response) {
-      console.log("RESPONSE: " + JSON.stringify(response));
-      if (response.error) {
-        Alert.alert(
-          "Authentication error",
-          response.params.error_description || "something went wrong"
-        );
-      }
-      if (response.type === "success") {
-        getToken(
-          discovery.tokenEndpoint,
-          clientId,
-          clientSecret,
-          redirectUri,
-          response.params.code,
-          grantType
-        ).then((r) => console.log("tokendto: " + r?.accessToken))
-        .catch((e) => console.log("An error occured: " + e));
-        // console.log("TOKEN" + getToken());
-      }
-    }
-
     // bootStrapAsync();
-  }, [discovery, request, response]);
+  }, []);
 
   const clearTokens = async () => {
     await secureStorage.remove(StoredItems.ACCESS_TOKEN);
@@ -212,47 +159,51 @@ export default function App({ navigation }) {
   //         <RegistrationForm/>
   //     </View>
   // );
-  function LoginScreen() {
-    return <Button title="Login" onPress={() => promptAsync(useProxy)} />;
-    // const { signIn } = React.useContext(AuthContext);
-    // return (
-    //   <Formik
-    //     initialValues={{ username: "", password: "" }}
-    //     onSubmit={(values, errors) => signIn(values, errors)}
-    //   >
-    //     {({
-    //       handleChange,
-    //       handleBlur,
-    //       handleSubmit,
-    //       values,
-    //       errors,
-    //       touched,
-    //     }) => (
-    //       <View>
-    //         <TextInput
-    //           onChangeText={handleChange("username")}
-    //           onBlur={handleBlur("username")}
-    //           style={loginScreenStyles.input}
-    //           value={values.username}
-    //           placeholder={"username"}
-    //         />
-    //         <TextInput
-    //           onChangeText={handleChange("password")}
-    //           onBlur={handleBlur("password")}
-    //           style={loginScreenStyles.input}
-    //           value={values.password}
-    //           placeholder={"password"}
-    //           secureTextEntry
-    //         />
-    //         {errors.username && errors.password && (
-    //           <Text style={styles.fieldError}>{errors.username}</Text>
-    //         )}
-    //         <Button onPress={handleSubmit} title={"Login"} />
-    //       </View>
-    //     )}
-    //   </Formik>
-    // );
-  }
+  // function LoginScreen() {
+  //   return (
+  //     <Button
+  //       title="Login"
+  //       onPress={() => startAuth(Authentication.useProxy)}//todo take useProxy from Authentication
+  //     />
+  //   );
+  // const { signIn } = React.useContext(AuthContext);
+  // return (
+  //   <Formik
+  //     initialValues={{ username: "", password: "" }}
+  //     onSubmit={(values, errors) => signIn(values, errors)}
+  //   >
+  //     {({
+  //       handleChange,
+  //       handleBlur,
+  //       handleSubmit,
+  //       values,
+  //       errors,
+  //       touched,
+  //     }) => (
+  //       <View>
+  //         <TextInput
+  //           onChangeText={handleChange("username")}
+  //           onBlur={handleBlur("username")}
+  //           style={loginScreenStyles.input}
+  //           value={values.username}
+  //           placeholder={"username"}
+  //         />
+  //         <TextInput
+  //           onChangeText={handleChange("password")}
+  //           onBlur={handleBlur("password")}
+  //           style={loginScreenStyles.input}
+  //           value={values.password}
+  //           placeholder={"password"}
+  //           secureTextEntry
+  //         />
+  //         {errors.username && errors.password && (
+  //           <Text style={styles.fieldError}>{errors.username}</Text>
+  //         )}
+  //         <Button onPress={handleSubmit} title={"Login"} />
+  //       </View>
+  //     )}
+  //   </Formik>
+  // );
 
   return (
     <AuthContext.Provider value={authContext}>
