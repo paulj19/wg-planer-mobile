@@ -3,7 +3,6 @@ import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { HomeScreen } from "./Home/HomeScreen";
-import { Formik } from "formik";
 import axios from "./lib/axiosConfig";
 import * as secureStorage from "./util/storage/SecureStore";
 import { StoredItems } from "./util/storage/SecureStore";
@@ -16,6 +15,8 @@ import LoginScreen from "./lib/Authentication/Authentication";
 
 const Stack = createStackNavigator();
 
+export const AuthContext = React.createContext();
+
 export default function App({ navigation }) {
   const [authState, dispatch] = React.useReducer(
     (prevState, action) => {
@@ -25,6 +26,10 @@ export default function App({ navigation }) {
             ...prevState,
             accessToken: action.accessToken,
             refreshToken: action.refreshToken,
+            idToken: action.idToken,
+            tokenType: action.tokenType,
+            expiresIn: action.expiresIn,
+            scope: action.scope,
             isLoading: false,
           };
         case "SIGN_IN":
@@ -32,14 +37,22 @@ export default function App({ navigation }) {
             ...prevState,
             accessToken: action.accessToken,
             refreshToken: action.refreshToken,
+            idToken: action.idToken,
+            tokenType: action.tokenType,
+            expiresIn: action.expiresIn,
+            scope: action.scope,
             isSignout: false,
           };
         case "SIGN_OUT":
           return {
             ...prevState,
-            isSignout: true,
             accessToken: null,
             refreshToken: null,
+            idToken: null,
+            expiresIn: null,
+            tokenType: null,
+            scope: null,
+            isSignout: true,
           };
       }
     },
@@ -48,6 +61,10 @@ export default function App({ navigation }) {
       isSignout: false,
       accessToken: null,
       refreshToken: null,
+      idToken: null,
+      expiresIn: null,
+      tokenType: null,
+      scope: null,
     }
   );
 
@@ -86,7 +103,6 @@ export default function App({ navigation }) {
           });
       }
     };
-
     // bootStrapAsync();
   }, []);
 
@@ -97,40 +113,41 @@ export default function App({ navigation }) {
   };
   const authContext = React.useMemo(
     () => ({
-      signIn: async (data, errors) => {
-        let errorMsg = null;
-        axios
-          .post(PATH_LOGIN)
-          .then((response) => {
-            if (
-              response.status === 200 &&
-              response.headers.authentication &&
-              response.headers.refresh_token
-            ) {
-              dispatch({
-                type: "SIGN_IN",
-                accessToken: response.headers.authentication,
-                refreshToken: response.headers.refresh_token,
-              });
-            } else {
-              errorMsg = "could not log in, please try again later";
-            }
-          })
-          .catch((error) => {
-            if (error.response.status === 401) {
-              errorMsg = "username or password incorrect";
-            } else {
-              errorMsg = "could not log in, please try again.";
-            }
-          })
-          .then(() => {
-            if (errorMsg !== null) {
-              errors.setErrors({
-                username: errorMsg,
-                password: errorMsg,
-              });
-            }
-          });
+      signIn: async (data) => {
+      //signIn: async (data, errors) => {
+        console.log("DATA: " + data);
+        // let errorMsg = null;
+        // axios
+        //   .post(PATH_LOGIN)
+        //   .then((response) => {
+        //     if (
+        //       response.status === 200 &&
+        //       response.headers.authentication &&
+        //       response.headers.refresh_token
+        //     ) {
+        dispatch({
+          type: "SIGN_IN",
+          ...data,
+        });
+        // } else {
+        //   errorMsg = "could not log in, please try again later";
+        // }
+        // })
+        // .catch((error) => {
+        // if (error.response.status === 401) {
+        //   errorMsg = "username or password incorrect";
+        // } else {
+        //   errorMsg = "could not log in, please try again.";
+        // }
+        // })
+        // .then(() => {
+        // if (errorMsg !== null) {
+        //   errors.setErrors({
+        //     username: errorMsg,
+        //     password: errorMsg,
+        //   });
+        // }
+        // });
       },
       signOut: () =>
         dispatch({
@@ -151,8 +168,6 @@ export default function App({ navigation }) {
     }),
     []
   );
-
-  const AuthContext = React.createContext(authContext);
 
   // return (
   //     <View style={styles.container}>
@@ -209,7 +224,7 @@ export default function App({ navigation }) {
     <AuthContext.Provider value={authContext}>
       <NavigationContainer>
         <Stack.Navigator>
-          {authState.accessToken == null ? (
+          {!console.log("AuthState: " + JSON.stringify(authState)) && authState.accessToken == null ? (
             <Stack.Screen name="Login" component={LoginScreen} />
           ) : (
             //<Stack.Screen name="Login" component={RegistrationForm}/>
@@ -220,6 +235,7 @@ export default function App({ navigation }) {
     </AuthContext.Provider>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

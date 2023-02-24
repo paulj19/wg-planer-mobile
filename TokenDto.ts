@@ -1,8 +1,8 @@
-export interface TokenDto {
+export default interface TokenDto {
   accessToken: string,
   refreshToken: string, 
   idToken: string,
-  expiresIn:Date,
+  expiresIn: string,
   tokenType: string,
   scope?: string, 
 }
