@@ -1,5 +1,6 @@
 import * as SecureStore from "expo-secure-store";
 import { Platform } from "react-native";
+import TokenDto from "../../TokenDto";
 import { aStorage } from "./AsyncStorage";
 
 export enum StoredItems {
@@ -9,6 +10,16 @@ export enum StoredItems {
   TOKEN_TYPE,
   SCOPE,
   EXPIRES_IN,
+}
+export function saveAllTokens(tokens: TokenDto) {
+  return Promise.allSettled([
+    save(StoredItems.ACCESS_TOKEN, tokens.accessToken),
+    save(StoredItems.REFRESH_TOKEN, tokens.refreshToken),
+    save(StoredItems.ID_TOKEN, tokens.idToken),
+    save(StoredItems.TOKEN_TYPE, tokens.tokenType),
+    save(StoredItems.EXPIRES_IN, tokens.expiresIn),
+    save(StoredItems.SCOPE, tokens.scope),
+  ]);
 }
 
 export async function save(key_: StoredItems, value: string): Promise<void> {
@@ -23,7 +34,7 @@ export async function save(key_: StoredItems, value: string): Promise<void> {
   return SecureStore.setItemAsync(key_.toString(), value);
 }
 
-export async function load(key_: StoredItems): Promise<string> {
+export function load(key_: StoredItems) {
   if (Platform.OS === "web") {
     return aStorage.load({
       key: key_.toString(),

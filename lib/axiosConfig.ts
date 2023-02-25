@@ -1,7 +1,7 @@
 import axios from "axios";
 import axiosRetry from "axios-retry";
-import * as secureStorage from "../util/storage/SecureStore";
-import { StoredItems } from "../util/storage/SecureStore";
+import * as secureStorage from "Storage";
+import { StoredItems } from "Storage";
 import { BASE_URL_DEV } from "./UrlPaths";
 import { initializeMocks } from "./MockRequests";
 

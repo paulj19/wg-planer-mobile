@@ -1,18 +1,17 @@
 import * as React from "react";
-import { Button, View } from "react-native";
+import { Button } from "react-native";
 import * as WebBrowser from "expo-web-browser";
 import axios from "./../axiosConfig";
-import { tokenDto, TokenDto } from "./../../TokenDto";
 import * as AuthSession from "expo-auth-session";
 import { Platform } from "react-native";
 import { URL_AUTH_SERVER } from "./../UrlPaths";
-import * as secureStorage from "../../util/storage/SecureStore";
-import { StoredItems } from "../../util/storage/SecureStore";
+import * as storage from "../../util/storage/Store";
 import { AuthContext } from "../../App.js";
 
 const clientId = "wg-planer";
 const clientSecret = "secret";
 const grantType = "authorization_code";
+const scopes = ["openid"];
 
 export default function LoginScreen() {
   const useProxy = Platform.select({ web: false, default: true });
@@ -32,7 +31,7 @@ export default function LoginScreen() {
       clientId,
       responseType: AuthSession.ResponseType.Code,
       redirectUri,
-      scopes: ["openid"],
+      scopes: scopes,
       usePKCE: false,
     },
     discovery
@@ -44,30 +43,20 @@ export default function LoginScreen() {
         console.error(response.error);
       }
       if (response.type === "success") {
-        authInfo = getToken(response, redirectUri, discovery)
-          .then(async (r) => {
-            await Promise.allSettled([
-              secureStorage.save(StoredItems.ACCESS_TOKEN, r.accessToken),
-              secureStorage.save(StoredItems.REFRESH_TOKEN, r.refreshToken),
-              secureStorage.save(StoredItems.ID_TOKEN, r.idToken),
-              secureStorage.save(StoredItems.TOKEN_TYPE, r.tokenType),
-              secureStorage.save(StoredItems.EXPIRES_IN, r.expiresIn),
-              secureStorage.save(StoredItems.SCOPE, r.scope),
-            ]);
-  console.log("XXCC" + r);
-  console.log(authContext.signIn(r));
-            return r;
+        getToken(response, redirectUri, discovery)
+          .then(async (tokens) => {
+            if (tokens) {
+              await storage.saveAllTokens(tokens);
+              authContext.signIn(tokens);
+            }
           })
           .catch((e) => {
             console.error(e);
           });
       }
     }
-
   }, [discovery, request, response]);
 
-  // console.log("XXX: " + xxx.signIn);
-// xxx.signIn(authInfo);
   return (
     <Button
       title="Login"
@@ -100,8 +89,6 @@ export const getToken = async (
     },
   })
     .then((response) => {
-      console.log("RESPONSE" + response);
-      //todo test will catch catch a npe
       if (response?.data) {
         const tokenDto: TokenDto = {
           accessToken: response.data?.access_token,
@@ -116,6 +103,5 @@ export const getToken = async (
     })
     .catch((e) => {
       console.log("Failed to load token: " + e);
-      return null;
     });
 };

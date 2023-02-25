@@ -4,8 +4,8 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { HomeScreen } from "./Home/HomeScreen";
 import axios from "./lib/axiosConfig";
-import * as secureStorage from "./util/storage/SecureStore";
-import { StoredItems } from "./util/storage/SecureStore";
+import * as storge from "./util/storage/Store";
+import { StoredItems } from "./util/storage/Store";
 import { PATH_VALIDATE_ACCESS_TOKEN } from "./lib/UrlPaths";
 import LoginScreen from "./lib/Authentication/Authentication";
 
@@ -69,42 +69,42 @@ export default function App({ navigation }) {
       //non-lenient if any internal or http error => set token to null, go to login.
       //remove this after fixing stack.nav flow
       //isAvail check instead
-      let accessToken = await secureStorage
-        .load(StoredItems.ACCESS_TOKEN)
-        .catch(() => null);
-      let refreshToken = await secureStorage
-        .load(StoredItems.REFRESH_TOKEN)
-        .catch(() => null);
-      if (accessToken || refreshToken) {
-        axios
-          .get(PATH_VALIDATE_ACCESS_TOKEN)
-          .then((response) => {
-            if (
-              response.status === 200 &&
-              response.headers.authentication &&
-              response.headers.refresh_token
-            ) {
-              dispatch({
-                type: "RENEW_TOKEN",
-                accessToken: response.headers.authentication,
-                refreshToken: response.headers.refresh_token,
-              });
-            } else {
-              //will go to login screen
+      try {
+        const accessToken = await storge.load(StoredItems.ACCESS_TOKEN);
+        const refreshToken = await storge.load(StoredItems.REFRESH_TOKEN);
+        if (accessToken || refreshToken) {
+          axios
+            .get(PATH_VALIDATE_ACCESS_TOKEN)
+            .then((response) => {
+              if (
+                response.status === 200 &&
+                response.headers.authentication &&
+                response.headers.refresh_token
+              ) {
+                dispatch({
+                  type: "RENEW_TOKEN",
+                  accessToken: response.headers.authentication,
+                  refreshToken: response.headers.refresh_token,
+                });
+              } else {
+                //will go to login screen
+                clearTokens();
+              }
+            })
+            .catch(() => {
               clearTokens();
-            }
-          })
-          .catch(() => {
-            clearTokens();
-          });
+            });
+        }
+      } catch (e) {
+        console.error("Error during validation: " + e);
       }
     };
     // bootStrapAsync();
   }, []);
 
   const clearTokens = async () => {
-    await secureStorage.remove(StoredItems.ACCESS_TOKEN);
-    await secureStorage.remove(StoredItems.REFRESH_TOKEN);
+    await storge.remove(StoredItems.ACCESS_TOKEN);
+    await storge.remove(StoredItems.REFRESH_TOKEN);
     dispatch({ type: "RENEW_TOKEN", accessToken: null, refreshToken: null });
   };
   const authContext = React.useMemo(
