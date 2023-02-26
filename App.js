@@ -8,6 +8,7 @@ import * as storge from "./util/storage/Store";
 import { StoredItems } from "./util/storage/Store";
 import { PATH_VALIDATE_ACCESS_TOKEN } from "./lib/UrlPaths";
 import LoginScreen from "./lib/Authentication/Authentication";
+import { introspectToken } from "./lib/Authentication/AuthenticationRequests";
 
 const Stack = createStackNavigator();
 
@@ -70,36 +71,32 @@ export default function App({ navigation }) {
       //remove this after fixing stack.nav flow
       //isAvail check instead
       try {
-        const accessToken = await storge.load(StoredItems.ACCESS_TOKEN);
-        const refreshToken = await storge.load(StoredItems.REFRESH_TOKEN);
-        if (accessToken || refreshToken) {
-          axios
-            .get(PATH_VALIDATE_ACCESS_TOKEN)
-            .then((response) => {
-              if (
-                response.status === 200 &&
-                response.headers.authentication &&
-                response.headers.refresh_token
-              ) {
-                dispatch({
-                  type: "RENEW_TOKEN",
-                  accessToken: response.headers.authentication,
-                  refreshToken: response.headers.refresh_token,
-                });
-              } else {
-                //will go to login screen
-                clearTokens();
-              }
-            })
-            .catch(() => {
-              clearTokens();
-            });
-        }
+        // const accessToken = await storge.load(StoredItems.ACCESS_TOKEN);
+        // const refreshToken = await storge.load(StoredItems.REFRESH_TOKEN);
+        await storge.loadAllTokens();
+        //if (accessToken || refreshToken) {
+        //  introspectToken(accessToken)
+        //    .then((response) => {
+        //      if (response) {
+        //        dispatch({
+        //          type: "RENEW_TOKEN",
+        //          accessToken: accessToken,
+        //          refreshToken: response.headers.refresh_token,
+        //        });
+        //      } else {
+        //        //will go to login screen
+        //        clearTokens();
+        //      }
+        //    })
+        //    .catch(() => {
+        //      clearTokens();
+        //    });
+        //}
       } catch (e) {
         console.error("Error during validation: " + e);
       }
     };
-    // bootStrapAsync();
+    bootStrapAsync();
   }, []);
 
   const clearTokens = async () => {

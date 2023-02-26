@@ -1,17 +1,19 @@
 import * as React from "react";
 import { Button } from "react-native";
 import * as WebBrowser from "expo-web-browser";
-import axios from "./../axiosConfig";
 import * as AuthSession from "expo-auth-session";
 import { Platform } from "react-native";
 import { URL_AUTH_SERVER } from "./../UrlPaths";
 import * as storage from "../../util/storage/Store";
 import { AuthContext } from "../../App.js";
+import { getToken } from "./AuthenticationRequests";
 
-const clientId = "wg-planer";
-const clientSecret = "secret";
-const grantType = "authorization_code";
+export const clientId = "wg-planer";
+export const clientSecret = "secret";
+export const grantType = "authorization_code";
 const scopes = ["openid"];
+export let discovery: any;
+export let redirectUri: any;
 
 export default function LoginScreen() {
   const useProxy = Platform.select({ web: false, default: true });
@@ -19,13 +21,13 @@ export default function LoginScreen() {
 
   WebBrowser.maybeCompleteAuthSession();
 
-  const redirectUri = AuthSession.makeRedirectUri({
+  redirectUri = AuthSession.makeRedirectUri({
     scheme: "wg-planer",
     path: "/wg-planer/login",
     native: "wg-planer-mobile://wg-planer/login",
   });
 
-  const discovery = AuthSession.useAutoDiscovery(URL_AUTH_SERVER);
+  discovery = AuthSession.useAutoDiscovery(URL_AUTH_SERVER);
   const [request, response, promptAsync] = AuthSession.useAuthRequest(
     {
       clientId,
@@ -43,7 +45,8 @@ export default function LoginScreen() {
         console.error(response.error);
       }
       if (response.type === "success") {
-        getToken(response, redirectUri, discovery)
+        // console.log("zzz" + getToken(response.params.code, redirectUri, discovery, clientId, clientSecret, grantType));
+        getToken(response.params.code)
           .then(async (tokens) => {
             if (tokens) {
               await storage.saveAllTokens(tokens);
@@ -66,42 +69,3 @@ export default function LoginScreen() {
   );
 }
 
-export const getToken = async (
-  response: any,
-  redirectUri: string,
-  discovery: any
-): Promise<TokenDto> => {
-  return axios({
-    method: "post",
-    url: discovery.tokenEndpoint,
-    auth: {
-      username: clientId,
-      password: clientSecret,
-    },
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-    data: {
-      code: response.params.code,
-      client_id: clientId,
-      redirect_uri: redirectUri,
-      grant_type: grantType,
-    },
-  })
-    .then((response) => {
-      if (response?.data) {
-        const tokenDto: TokenDto = {
-          accessToken: response.data?.access_token,
-          refreshToken: response.data?.refresh_token,
-          idToken: response.data?.id_token, //todo remove
-          expiresIn: response.data?.expires_in,
-          tokenType: response.data?.token_type,
-          scope: response.data?.scope,
-        };
-        return tokenDto;
-      }
-    })
-    .catch((e) => {
-      console.log("Failed to load token: " + e);
-    });
-};
