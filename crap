@@ -1,0 +1,53 @@
+* closing brances
+* markdown support
+* signature support lsp
+* cursor color 
+* auto import
+* bottom white strip to black 
+
+
+* sigin canada
+* buy dog
+* buy thinkpad fan
+* vodafone
+* adhd diagnosis
+* about you refunds
+* Tim book refunds
+*** startup meetup
+*** social work?
+
+
+
+
+** ya{
+** viw
+** yt( yiW
+** ciW
+** vy
+** dt{
+
+
+
+
+
+
+-why useEffect loads after login clicked -> nothing about click -> it loads as the page is loaded again
+-what happens after login --> where does the redirect url go --> does Authsession close the popup and fill in the response?
+
+
+
+
+
+
+
+
+
+-Lex, Rex
+* Use <c-6>/<c-^> to go back to the previous buffer. :
+* In command-mode, press m[letter]. For example, ma sets a mark at the current line using a as the mark identifier.
+To get back to the mark press ' [letter]. For example, 'a takes you back to the line mark set in step 1. To get back to the column position of the row where you marked the line, use `a (back-tick [letter]).To see all of the marks that currently set, type :marks.
+* `. will take you to the last change you made.
+* Use `` to jump back to the exact position you were in before you searched/jumped, or '' to jump back to the start of the line you were on before you searched/jumped.
+
+
+
