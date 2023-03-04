@@ -1,6 +1,9 @@
 {
   "compilerOptions": {
-    "lib": ["es5", "es6", "dom", "dom.iterable"]
+    "lib": ["es5", "es6", "dom", "dom.iterable"],
+    "baseUrl": "src",
+    "strictNullChecks": true
   },
-  "extends": "expo/tsconfig.base"
+  "extends": "expo/tsconfig.base",
+  "include": ["src"]
 }
