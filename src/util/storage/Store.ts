@@ -19,17 +19,6 @@ const tokenNames = [
   EXPIRY_DATE,
 ];
 
-export function saveAllTokens(tokens: AuthToken) {
-  return Promise.allSettled([
-    save(ACCESS_TOKEN, tokens.accessToken),
-    save(REFRESH_TOKEN, tokens.refreshToken),
-    save(ID_TOKEN, tokens.idToken),
-    save(TOKEN_TYPE, tokens.tokenType),
-    save(EXPIRY_DATE, tokens.expiryDate),
-    save(SCOPE, tokens.scope),
-  ]);
-}
-
 export async function save(key_: string, value: any): Promise<void> {
   //sync instead of /validate, securestorage?
   //needd just for login, this will do it for all req.
@@ -52,27 +41,6 @@ export function load(key_: string) {
   }
   //await here?
   return SecureStore.getItemAsync(key_.toString());
-}
-
-export async function loadAllTokens(): Promise<AuthToken> {
-  //TODO how to return just TokenDto
-  return Promise.allSettled([
-    load(ACCESS_TOKEN),
-    load(REFRESH_TOKEN),
-    load(ID_TOKEN),
-    load(TOKEN_TYPE),
-    load(EXPIRY_DATE),
-    load(SCOPE),
-  ]).then((results) => {
-    const tokens = results
-      .map((result) => result.value)
-      .reduce((a, token, i) => ({ ...a, [tokenNames[i]]: token }), {});
-    //TODO analyse what happens here without {}
-    //.reduce((a, token, i) => ({...a, [tokens[i]]: token}));
-    tokens.accessToken = null;
-    console.log("***" + JSON.stringify(tokens));
-    return tokenDto(tokens);
-  });
 }
 
 export async function remove(key_: string): Promise<void> {

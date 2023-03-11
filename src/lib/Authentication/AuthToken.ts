@@ -1,3 +1,5 @@
+import * as storage from "../../util/storage/Store";
+
 export default class AuthToken {
   _accessToken: string;
   _refreshToken: string;
@@ -7,19 +9,19 @@ export default class AuthToken {
   _scope: string;
 
   constructor(
-    accessToken: string,
-    refreshToken: string,
-    idToken: string,
-    expiresIn: number | Date,
-    tokenType: string,
-    scope: string
+    _accessToken: string,
+    _refreshToken: string,
+    _idToken: string,
+    _expiresIn: number | Date,
+    _tokenType: string,
+    _scope: string
   ) {
-    this.accessToken = accessToken;
-    this.refreshToken = refreshToken;
-    this.idToken = idToken;
-    this.expiryDate = expiresIn;
-    this.tokenType = tokenType;
-    this.scope = scope;
+    this.accessToken = _accessToken;
+    this.refreshToken = _refreshToken;
+    this.idToken = _idToken;
+    this.expiryDate = _expiresIn;
+    this.tokenType = _tokenType;
+    this.scope = _scope;
   }
 
   public static fromApiResponse(responseData: any): AuthToken {
@@ -33,8 +35,19 @@ export default class AuthToken {
     );
   }
 
+  static fromStorage(fields): AuthToken {
+    return new AuthToken(
+      fields._accessToken,
+      fields._refreshToken,
+      fields._idToken,
+      fields._expiresIn,
+      fields._tokenType,
+      fields._scope
+    );
+  }
+
   get accessToken(): string {
-    return this._refreshToken;
+    return this._accessToken;
   }
 
   get refreshToken(): string {
@@ -74,7 +87,11 @@ export default class AuthToken {
 
   set expiryDate(value: number | Date) {
     this.notNull(value);
-    this._expiryDate = AuthToken.computeTokenExpiryDate(new Date(), value);
+    if (value instanceof Date) {
+      this._expiryDate = value;
+    } else {
+      this._expiryDate = AuthToken.computeTokenExpiryDate(new Date(), value);
+    }
   }
 
   set tokenType(value) {
@@ -88,6 +105,7 @@ export default class AuthToken {
   }
 
   notNull(value: any) {
+    //TODO change and test empty string etc..
     if (value == null) {
       throw Error("value must not be null");
     }
@@ -105,5 +123,20 @@ export default class AuthToken {
     return false;
   }
 
-}
+  public saveAllTokens() {
+    try {
+      return storage.save("access_token", JSON.stringify(this));
+    } catch (e) {
+      throw Error("Error saving AuthToken: " + e);
+    }
+  }
 
+  public static async loadAllTokens(): Promise<AuthToken> {
+    try {
+      const authToken = await storage.load("access_token");
+      return this.fromStorage(authToken);
+    } catch (e) {
+      throw Error("Error loading AuthToken: " + e);
+    }
+  }
+}
