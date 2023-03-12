@@ -1,57 +1,29 @@
-import AuthToken from "../../TokenDto";
-import { URL_AUTH_SERVER, URL_REFRESH_TOKEN } from "../UrlPaths";
-import axios from "./../axiosConfig";
-import {
-  clientId,
-  clientSecret,
-  discovery,
-  grantType,
-  redirectUri,
-} from "./Authentication";
+import axios from "../lib/axiosConfig";
+import AuthToken from "../lib/Authentication/AuthToken";
+import { URL_AUTH_SERVER, URL_REFRESH_TOKEN } from "../lib/UrlPaths";
+import { authProps } from "../lib/Authentication/AuthProps";
 
-export const getToken = (code: string): Promise<AuthToken> => {
+export async function getToken(url: string, code: string, redirectUri: string): Promise<AuthToken> {
   return axios({
     method: "post",
-    url: discovery.tokenEndpoint,
+    url: url,
     auth: {
-      username: clientId,
-      password: clientSecret,
+      username: authProps.clientId,
+      password: authProps.clientSecret,
     },
     headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
+      "Content-Type": "application/x-w ww-form-urlencoded",
     },
     data: {
       code: code,
-      client_id: clientId,
+      client_id: authProps.clientId,
       redirect_uri: redirectUri,
-      grant_type: grantType,
+      grant_type: "authorization_code",
     },
   })
-    .then((response) => extractTokensFromResponse(response))
+    .then((response) => AuthToken.fromApiResponse(response.data))
     .catch((e) => {
       throw Error("Failed to load token: " + e);
-    });
-};
-
-export async function introspectToken(token: string) {
-  console.log("DD" + discovery);
-  return axios({
-    method: "post",
-    url: URL_AUTH_SERVER + "/oauth2/introspect",
-    auth: {
-      username: clientId,
-      password: clientSecret,
-    },
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-    data: {
-      token: token,
-    },
-  })
-    .then((response) => String(response.data?.active) === "true")
-    .catch((e) => {
-      throw new Error("accessToken introspect failed: " + e);
     });
 }
 
@@ -62,8 +34,8 @@ export async function refreshExpiredAccessToken(
     method: "post",
     url: URL_REFRESH_TOKEN,
     auth: {
-      username: clientId,
-      password: clientSecret,
+      username: authProps.clientId,
+      password: authProps.clientSecret,
     },
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
@@ -73,26 +45,29 @@ export async function refreshExpiredAccessToken(
       refresh_token: refreshToken,
     },
   })
-    .then((response) => extractTokensFromResponse(response))
+    .then((response) => AuthToken.fromApiResponse(response.data))
     .catch((e) => {
       throw Error("accessToken refresh failed: " + e);
     });
 }
 
-function extractTokensFromResponse(response: any): AuthToken {
-response.data = null;
-  if (response.data) {
-    const tokenDto: AuthToken = {
-      accessToken: response.data.access_token,
-      refreshToken: response.data.refresh_token,
-      idToken: response.data.id_token,
-      expiryDate: computeTokenExpiryDate(response.data.expires_in),
-      tokenType: response.data.token_type,
-      scope: response.data.scope,
-    };
-    return tokenDto;
-  } else {
-    throw Error("token response does not contain data");
-  }
-}
-
+// export async function introspectToken(token: string) {
+//   return axios({
+//     method: "post",
+//     url: URL_AUTH_SERVER + "/oauth2/introspect",
+//     auth: {
+//       username: clientId,
+//       password: clientSecret,
+//     },
+//     headers: {
+//       "Content-Type": "application/x-www-form-urlencoded",
+//     },
+//     data: {
+//       token: token,
+//     },
+//   })
+//     .then((response) => String(response.data?.active) === "true")
+//     .catch((e) => {
+//       throw new Error("accessToken introspect failed: " + e);
+//     });
+// }

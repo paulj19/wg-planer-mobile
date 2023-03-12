@@ -2,8 +2,9 @@
   "compilerOptions": {
     "lib": ["es5", "es6", "dom", "dom.iterable"],
     "baseUrl": "src",
-    "strictNullChecks": true
+    "strictNullChecks": true,
+    "jsx": "react"
   },
-  "extends": "expo/tsconfig.base",
-  "include": ["src"]
+  "include": [ "./src/**/*.ts"],
+  "jsx": "react"
 }
