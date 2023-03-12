@@ -1,3 +1,4 @@
+import { refreshExpiredAccessToken } from "../../api/AuthenticationRequests";
 import * as storage from "../../util/storage/Store";
 
 export default class AuthToken {
@@ -12,14 +13,14 @@ export default class AuthToken {
     _accessToken: string,
     _refreshToken: string,
     _idToken: string,
-    _expiresIn: number | Date,
+    _expires: number | Date,
     _tokenType: string,
     _scope: string
   ) {
     this.accessToken = _accessToken;
     this.refreshToken = _refreshToken;
     this.idToken = _idToken;
-    this.expiryDate = _expiresIn;
+    this.expiryDate = _expires;
     this.tokenType = _tokenType;
     this.scope = _scope;
   }
@@ -40,10 +41,60 @@ export default class AuthToken {
       fields._accessToken,
       fields._refreshToken,
       fields._idToken,
-      fields._expiresIn,
+      fields._expiryDate,
       fields._tokenType,
       fields._scope
     );
+  }
+
+  public static computeTokenExpiryDate(dateNow: Date, expiresIn: number): Date {
+    dateNow.setSeconds(dateNow.getSeconds() + (expiresIn - 20));
+    return dateNow;
+  }
+
+  public isAccessTokenExpired() {
+    if (this.expiryDate.getTime() <= new Date().getTime()) {
+      return true;
+    }
+    return false;
+  }
+
+  public save() {
+    try {
+      return storage.save("auth_token", JSON.stringify(this));
+    } catch (e) {
+      throw Error("Error saving AuthToken: " + e);
+    }
+  }
+
+  public static async load(): Promise<AuthToken> {
+    try {
+      const authToken = await storage.load("auth_token");
+      return AuthToken.fromStorage(authToken);
+    } catch (e) {
+      throw Error("Error loading AuthToken: " + e);
+    }
+  }
+
+  public static async loadAndRefreshAccessTokenIfExpired(): Promise<AuthToken> {
+    try {
+      const authToken: AuthToken = await AuthToken.load();
+
+
+      if (!authToken.isAccessTokenExpired()) {
+        return authToken;
+      }
+
+      const newAuthToken: AuthToken = await refreshExpiredAccessToken(
+        authToken.refreshToken
+      );
+
+      //TODO remove in prod
+      await newAuthToken.save();
+      return newAuthToken;
+    } catch (e) {
+      throw Error("Expired accessToken refresh failed: " + e);
+    }
   }
 
   get accessToken(): string {
@@ -71,6 +122,7 @@ export default class AuthToken {
   }
 
   set accessToken(value) {
+
     this.notNull(value);
     this._accessToken = value;
   }
@@ -106,37 +158,9 @@ export default class AuthToken {
 
   notNull(value: any) {
     //TODO change and test empty string etc..
+    //TODO meaningful msg
     if (value == null) {
       throw Error("value must not be null");
-    }
-  }
-
-  public static computeTokenExpiryDate(dateNow: Date, expiresIn: number): Date {
-    dateNow.setSeconds(dateNow.getSeconds() + (expiresIn - 20));
-    return dateNow;
-  }
-
-  public isAccessTokenExpired() {
-    if (this.expiryDate.getTime() <= new Date().getTime()) {
-      return true;
-    }
-    return false;
-  }
-
-  public saveAllTokens() {
-    try {
-      return storage.save("access_token", JSON.stringify(this));
-    } catch (e) {
-      throw Error("Error saving AuthToken: " + e);
-    }
-  }
-
-  public static async loadAllTokens(): Promise<AuthToken> {
-    try {
-      const authToken = await storage.load("access_token");
-      return this.fromStorage(authToken);
-    } catch (e) {
-      throw Error("Error loading AuthToken: " + e);
     }
   }
 }
