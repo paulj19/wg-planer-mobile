@@ -11,7 +11,7 @@ test("should return AuthToken from getToken request", async () => {
     access_token: "sam accessToken",
     refresh_token: "sam refreshToken",
     id_token: "sam idToken",
-    expires_in: "299",
+    expires_in: "1800",
     token_type: "sam tokenType",
     scope: "sam scope",
   };
@@ -45,7 +45,7 @@ test("should return AuthToken from token refresh request", async () => {
     access_token: "sam accessToken",
     refresh_token: "sam refreshToken",
     id_token: "sam idToken",
-    expires_in: "299",
+    expires_in: "1800",
     token_type: "sam tokenType",
     scope: "sam scope",
   };
