@@ -4,16 +4,13 @@ import * as WebBrowser from "expo-web-browser";
 import * as AuthSession from "expo-auth-session";
 import { Platform } from "react-native";
 import { URL_AUTH_SERVER } from "./../UrlPaths";
-import * as storage from "../../util/storage/Store";
 import { AuthContext } from "../../App.js";
-import { getToken } from "./AuthenticationRequests";
+import { getToken } from "../../api/AuthenticationRequests";
+import { authProps } from "./AuthProps";
+import AuthToken from "./AuthToken";
 
-export const clientId = "wg-planer";
-export const clientSecret = "secret";
-export const grantType = "authorization_code";
-const scopes = ["openid"];
-export let discovery: any;
-export let redirectUri: any;
+let discovery: any;
+let redirectUri: any;
 
 export default function LoginScreen() {
   const useProxy = Platform.select({ web: false, default: true });
@@ -21,20 +18,19 @@ export default function LoginScreen() {
 
   WebBrowser.maybeCompleteAuthSession();
 
-  redirectUri = AuthSession.makeRedirectUri({
-    scheme: "wg-planer",
-    path: "/wg-planer/login",
-    native: "wg-planer-mobile://wg-planer/login",
-  });
-
   discovery = AuthSession.useAutoDiscovery(URL_AUTH_SERVER);
+  redirectUri = AuthSession.makeRedirectUri({
+    scheme: authProps.redirectUri.scheme,
+    path:authProps.redirectUri.path,
+    native:authProps.redirectUri.native,
+  });
 
   const [request, response, promptAsync] = AuthSession.useAuthRequest(
     {
-      clientId,
+      clientId: authProps.clientId,
       responseType: AuthSession.ResponseType.Code,
       redirectUri,
-      scopes: scopes,
+      scopes: authProps.scopes,
       usePKCE: false,
     },
     discovery
@@ -43,19 +39,18 @@ export default function LoginScreen() {
   React.useEffect(() => {
     if (response) {
       if (response.error) {
-        console.error(response.error);
+        console.error("getting authCode failed: " + response.error);
       }
       if (response.type === "success") {
-        // console.log("zzz" + getToken(response.params.code, redirectUri, discovery, clientId, clientSecret, grantType));
-        getToken(response.params.code)
-          .then(async (tokens) => {
-            if (tokens) {
-              await storage.saveAllTokens(tokens);
-              authContext.signIn(tokens);
+        getToken(discovery.tokenEndpoint, response.params.code, redirectUri)
+          .then(async (authToken: AuthToken) => {
+            if (authToken) {
+              authToken.save();
+              authContext.signIn(authToken);
             }
           })
           .catch((e) => {
-            console.error(e);
+            console.error("getToken failed after gettting authCode: " + e);
           });
       }
     }
@@ -69,4 +64,3 @@ export default function LoginScreen() {
     />
   );
 }
-

@@ -16,22 +16,29 @@ describe("AuthToken", () => {
     expect(expiryDate).toStrictEqual(new Date("2023-02-28T22:08:25.189Z"));
   });
 
-  it("computes correct expiryDate", () => {
+  it("computes correct expiryDate from constructor", () => {
     const dateNow = new Date("2023-02-28T21:38:45.189Z");
     const authToken = new AuthToken(
       "authtoken",
       "refreshToken",
-      "",
+      "idToken",
       dateNow,
-      "",
-      ""
+      "tokenType",
+      "scope"
     );
     expect(authToken.expiryDate).toStrictEqual(dateNow);
   });
 
   it("sets expiryDate correctly", () => {
     const dateNow = new Date();
-    const authToken = new AuthToken("", "", "", 0, "", "");
+    const authToken = new AuthToken(
+      "authtoken",
+      "refreshToken",
+      "idToken",
+      1,
+      "tokenType",
+      "scope"
+    );
     authToken.expiryDate = 1800;
     const expiryDate = AuthToken.computeTokenExpiryDate(dateNow, 1800);
     expect(authToken.expiryDate).toBeInstanceOf(Date);
@@ -65,6 +72,48 @@ describe("AuthToken", () => {
 
     expect(loadedAuthToken).toStrictEqual(expectedAuthToken);
   });
+});
+
+describe("loadAndRefreshAccessTokenIfExpired", () => {
+  it("returns null when authToken not stored", async () => {
+    initJestPlatformMock();
+
+    jest.spyOn(storage, "load").mockReturnValue(Promise.resolve(null));
+
+    const loadedAuthToken =
+      await AuthToken.loadAndRefreshAccessTokenIfExpired();
+
+    expect(loadedAuthToken).toBeNull();
+  });
+
+  it("loads and returns old non-expired authToken", async () => {
+    initJestPlatformMock();
+
+    const date = new Date();
+    date.setSeconds(date.getSeconds() + 20);
+
+    const expectedAuthToken = {
+      _accessToken: "sam accessToken old",
+      _refreshToken: "sam refreshToken old",
+      _idToken: "sam idToken old",
+      _expiryDate: date,
+      _tokenType: "sam tokenType old",
+      _scope: "sam scope old",
+    };
+    jest
+      .spyOn(storage, "load")
+      .mockReturnValue(Promise.resolve(expectedAuthToken));
+
+    const loadedAuthToken =
+      await AuthToken.loadAndRefreshAccessTokenIfExpired();
+
+    expect(loadedAuthToken.accessToken).toBe(expectedAuthToken._accessToken);
+    expect(loadedAuthToken.refreshToken).toBe(expectedAuthToken._refreshToken);
+    expect(loadedAuthToken.idToken).toBe(expectedAuthToken._idToken);
+    expect(loadedAuthToken.expiryDate).toBeInstanceOf(Date);
+    expect(loadedAuthToken.tokenType).toBe(expectedAuthToken._tokenType);
+    expect(loadedAuthToken.scope).toBe(expectedAuthToken._scope);
+  });
 
   it("loads and returns new authToken as old expired", async () => {
     initAllMocks();
@@ -96,35 +145,6 @@ describe("AuthToken", () => {
     expect(loadedAuthToken.expiryDate).toBeInstanceOf(Date);
     expect(loadedAuthToken.tokenType).toBe(expectedAuthToken.tokenType);
     expect(loadedAuthToken.scope).toBe(expectedAuthToken.scope);
-  });
-
-  it("loads and returns old authToken as not expired", async () => {
-    initJestPlatformMock();
-
-    const date = new Date();
-    date.setSeconds(date.getSeconds() + 20);
-
-    const expectedAuthToken  = {
-      _accessToken: "sam accessToken old",
-      _refreshToken: "sam refreshToken old",
-      _idToken: "sam idToken old",
-      _expiryDate: date,
-      _tokenType: "sam tokenType old",
-      _scope: "sam scope old",
-    };
-    jest
-      .spyOn(storage, "load")
-      .mockReturnValue(Promise.resolve(expectedAuthToken));
-
-    const loadedAuthToken =
-      await AuthToken.loadAndRefreshAccessTokenIfExpired();
-
-    expect(loadedAuthToken.accessToken).toBe(expectedAuthToken._accessToken);
-    expect(loadedAuthToken.refreshToken).toBe(expectedAuthToken._refreshToken);
-    expect(loadedAuthToken.idToken).toBe(expectedAuthToken._idToken);
-    expect(loadedAuthToken.expiryDate).toBeInstanceOf(Date);
-    expect(loadedAuthToken.tokenType).toBe(expectedAuthToken._tokenType);
-    expect(loadedAuthToken.scope).toBe(expectedAuthToken._scope);
   });
 });
 

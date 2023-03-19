@@ -3,7 +3,11 @@ import AuthToken from "../lib/Authentication/AuthToken";
 import { URL_AUTH_SERVER, URL_REFRESH_TOKEN } from "../lib/UrlPaths";
 import { authProps } from "../lib/Authentication/AuthProps";
 
-export async function getToken(url: string, code: string, redirectUri: string): Promise<AuthToken> {
+export async function getToken(
+  url: string,
+  code: string,
+  redirectUri: string
+): Promise<AuthToken> {
   return axios({
     method: "post",
     url: url,
@@ -12,7 +16,7 @@ export async function getToken(url: string, code: string, redirectUri: string): 
       password: authProps.clientSecret,
     },
     headers: {
-      "Content-Type": "application/x-w ww-form-urlencoded",
+      "Content-Type": "application/x-www-form-urlencoded",
     },
     data: {
       code: code,

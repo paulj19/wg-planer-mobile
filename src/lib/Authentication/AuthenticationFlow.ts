@@ -1,23 +1,21 @@
-import AuthToken from "../../TokenDto";
-import { loadAllTokens, saveAllTokens } from "../../util/storage/Store";
-import { refreshExpiredAccessToken } from "./AuthenticationRequests";
+// import { refreshExpiredAccessToken } from "api/AuthenticationRequests";
+// import AuthToken from "./AuthToken";
 
-export async function loadAndRefreshAccessTokenIfExpired(): Promise<AuthToken> {
-  try {
-    let tokens: AuthToken = await loadAllTokens();
-    console.log("&&&" + JSON.stringify(tokens));
+// export async function loadAndRefreshAccessTokenIfExpired(): Promise<AuthToken> {
+//   try {
+//     let authToken: AuthToken = await AuthToken.load();
 
-    if (tokens?.expiryDate?.getTime() > new Date().getTime()) {
-      return tokens;
-    }
-    console.log("XXX" + tokens);
-    const newTokens: AuthToken = await refreshExpiredAccessToken(
-      tokens.refreshToken
-    );
+//     if (!authToken.isAccessTokenExpired()) {
+//       return authToken;
+//     }
 
-    saveAllTokens(newTokens); //TODO test if needs to be cleared
-    return newTokens;
-  } catch (e) {
-    throw Error("expired accessToken refresh failed: " + e);
-  }
-}
+//     const newAuthToken: AuthToken = await refreshExpiredAccessToken(
+//       tokens.refreshToken
+//     );
+
+//     saveAllTokens(newTokens); //TODO test if needs to be cleared
+//     return newTokens;
+//   } catch (e) {
+//     throw Error("expired accessToken refresh failed: " + e);
+//   }
+// }

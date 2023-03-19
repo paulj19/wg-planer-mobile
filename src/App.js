@@ -4,7 +4,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { HomeScreen } from "./Home/HomeScreen";
 import LoginScreen from "./lib/Authentication/Authentication";
-import { loadAndRefreshAccessTokenIfExpired } from "./lib/Authentication/AuthenticationFlow";
+import AuthToken from "./lib/Authentication/AuthToken";
 
 const Stack = createStackNavigator();
 
@@ -17,34 +17,19 @@ export default function App({ navigation }) {
         case "LOAD_TOKEN":
           return {
             ...prevState,
-            accessToken: action.accessToken,
-            refreshToken: action.refreshToken,
-            idToken: action.idToken,
-            tokenType: action.tokenType,
-            expiryDate: action.expiryDate,
-            scope: action.scope,
+            ...action,
             isLoading: false,
           };
         case "SIGN_IN":
           return {
             ...prevState,
-            accessToken: action.accessToken,
-            refreshToken: action.refreshToken,
-            idToken: action.idToken,
-            tokenType: action.tokenType,
-            expiryDate: action.expiryDate,
-            scope: action.scope,
+            ...action,
             isSignout: false,
           };
         case "SIGN_OUT":
           return {
             ...prevState,
-            accessToken: null,
-            refreshToken: null,
-            idToken: null,
-            expiryDate: null,
-            tokenType: null,
-            scope: null,
+            ...action,
             isSignout: true,
           };
       }
@@ -52,12 +37,12 @@ export default function App({ navigation }) {
     {
       isLoading: true,
       isSignout: false,
-      accessToken: null,
-      refreshToken: null,
-      idToken: null,
-      expiryDate: null,
-      tokenType: null,
-      scope: null,
+      _accessToken: null,
+      _refreshToken: null,
+      _idToken: null,
+      _expiryDate: null,
+      _tokenType: null,
+      _scope: null,
     }
   );
 
@@ -66,11 +51,17 @@ export default function App({ navigation }) {
   React.useEffect(() => {
     const bootStrapAsync = async () => {
       try {
-        const tokens = await loadAndRefreshAccessTokenIfExpired();
-        dispatch({
-          type: "LOAD_TOKEN",
-          ...tokens,
-        });
+        console.log("loading token");
+        const authToken = await AuthToken.loadAndRefreshAccessTokenIfExpired();
+
+        console.log("xxx: " + JSON.stringify(authToken));
+        if (authToken) {
+          dispatch({
+            type: "LOAD_TOKEN",
+            ...authToken,
+          });
+          authToken.save();
+        }
       } catch (e) {
         console.error("Error loading token: " + e);
       }
@@ -81,7 +72,7 @@ export default function App({ navigation }) {
   const clearTokens = async () => {
     // await storge.remove(StoredItems.ACCESS_TOKEN);
     // await storge.remove(StoredItems.REFRESH_TOKEN);
-    dispatch({ type: "LOAD_TOKEN", accessToken: null, refreshToken: null });
+    // dispatch({ type: "LOAD_TOKEN",_accessToken: null, _refreshToken: null });
   };
   const authContext = React.useMemo(
     () => ({
@@ -91,19 +82,19 @@ export default function App({ navigation }) {
           ...data,
         });
       },
-      signOut: () =>
-        dispatch({
-          type: "SIGN_OUT",
-          accessToken: "dummy_token",
-          refreshToken: "dummy_token",
-        }),
-      signUp: async (data) => {
-        dispatch({
-          type: "SIGN_IN",
-          accessToken: "dummy_token",
-          refreshToken: "dummy_token",
-        });
-      },
+      // signOut: () =>
+      //   dispatch({
+      //     type: "SIGN_OUT",
+      //     _accessToken: "dummy_token",
+      //     _refreshToken: "dummy_token",
+      //   }),
+      // signUp: async (data) => {
+      //   dispatch({
+      //     type: "SIGN_IN",
+      //     _accessToken: "dummy_token",
+      //     _refreshToken: "dummy_token",
+      //   });
+      // },
     }),
     []
   );
@@ -113,7 +104,7 @@ export default function App({ navigation }) {
       <NavigationContainer>
         <Stack.Navigator>
           {!console.log("AuthState: " + JSON.stringify(authState)) &&
-          authState.accessToken == null ? (
+          authState._accessToken == null ? (
             <Stack.Screen name="Login" component={LoginScreen} />
           ) : (
             //<Stack.Screen name="Login" component={RegistrationForm}/>
