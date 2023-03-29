@@ -4,6 +4,7 @@ import * as storage from "../src/util/storage/Store";
 import { aStorage } from "../src/util/storage/AsyncStorage";
 import MockAdapter from "axios-mock-adapter";
 import { URL_REFRESH_TOKEN } from "../src/lib/UrlPaths";
+import { initJestPlatformMock } from "./common_mocks";
 
 let storedAuthToken;
 let expectedAuthToken;
@@ -152,23 +153,21 @@ const initAllMocks = () => {
   initMockData();
   initJestMocks();
 };
+
 const initJestMocks = () => {
   initJestLoadMock();
   initJestSaveMock();
   initJestPlatformMock();
 };
+
 const initJestLoadMock = () => {
   jest.spyOn(storage, "load").mockReturnValue(Promise.resolve(storedAuthToken));
 };
+
 const initJestSaveMock = () => {
   jest.spyOn(aStorage, "save").mockReturnValue(Promise.resolve());
 };
-const initJestPlatformMock = () => {
-  jest.mock("react-native/Libraries/Utilities/Platform", () => ({
-    OS: "web", // or 'ios'
-    select: () => null,
-  }));
-};
+
 
 const initMockData = () => {
   storedAuthToken = {
