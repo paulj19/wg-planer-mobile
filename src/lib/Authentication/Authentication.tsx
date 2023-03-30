@@ -3,7 +3,12 @@ import { Button } from "react-native";
 import * as WebBrowser from "expo-web-browser";
 import * as AuthSession from "expo-auth-session";
 import { Platform } from "react-native";
-import { URL_AUTH_SERVER } from "./../UrlPaths";
+import {
+  URL_AUTHORIZATION,
+  URL_AUTH_SERVER,
+  URL_GET_TOKEN,
+  URL_REVOKE_TOKEN,
+} from "./../UrlPaths";
 import { AuthContext } from "../../App.js";
 import { getToken } from "../../api/AuthenticationRequests";
 import { authProps } from "./AuthProps";
@@ -18,11 +23,19 @@ export default function LoginScreen() {
 
   WebBrowser.maybeCompleteAuthSession();
 
-  discovery = AuthSession.useAutoDiscovery(URL_AUTH_SERVER);
+  // discovery = AuthSession.useAutoDiscovery(URL_AUTH_SERVER);
+  discovery = React.useMemo(
+    () => ({
+      authorizationEndpoint: URL_AUTHORIZATION,
+      tokenEndpoint: URL_GET_TOKEN,
+      revocationEndpoint: URL_REVOKE_TOKEN,
+    }),
+    []
+  );
   redirectUri = AuthSession.makeRedirectUri({
     scheme: authProps.redirectUri.scheme,
-    path:authProps.redirectUri.path,
-    native:authProps.redirectUri.native,
+    path: authProps.redirectUri.path,
+    native: authProps.redirectUri.native,
   });
 
   const [request, response, promptAsync] = AuthSession.useAuthRequest(
