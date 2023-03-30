@@ -40,7 +40,6 @@ export default class AuthToken {
 
   public static fromStorage(fields): AuthToken {
     AuthToken.validateNotNull(fields);
-    console.log("zzz" + JSON.stringify(fields));
     return new AuthToken(
       fields._accessToken,
       fields._refreshToken,
@@ -55,10 +54,7 @@ export default class AuthToken {
     dateNow: Date,
     expiresIn: number
   ): Date {
-    console.log("datenow" + dateNow);
-    console.log("expiresIn" + expiresIn);
     dateNow.setSeconds(dateNow.getSeconds() + (expiresIn - 20));
-    console.log("DATENOW" + dateNow);
     return dateNow;
   }
 
@@ -94,7 +90,6 @@ export default class AuthToken {
     try {
       //why did you think typescript would not do something
       const authToken = await AuthToken.load();
-      console.log("ggg" + authToken);
       if (authToken) {
         if (authToken.isAccessTokenNotExpired()) {
           return authToken;
