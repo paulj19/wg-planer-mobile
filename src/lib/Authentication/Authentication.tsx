@@ -5,7 +5,6 @@ import * as AuthSession from "expo-auth-session";
 import { Platform } from "react-native";
 import {
   URL_AUTHORIZATION,
-  URL_AUTH_SERVER,
   URL_GET_TOKEN,
   URL_REVOKE_TOKEN,
 } from "./../UrlPaths";

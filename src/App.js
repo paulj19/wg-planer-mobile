@@ -10,7 +10,7 @@ const Stack = createStackNavigator();
 
 export const AuthContext = React.createContext();
 
-export default function App({ navigation }) {
+export default function App() {
   const [authState, dispatch] = React.useReducer(
     (prevState, action) => {
       switch (action.type) {
@@ -51,10 +51,8 @@ export default function App({ navigation }) {
   React.useEffect(() => {
     const bootStrapAsync = async () => {
       try {
-        console.log("loading token");
         const authToken = await AuthToken.loadAndRefreshAccessTokenIfExpired();
 
-        console.log("xxx: " + JSON.stringify(authToken));
         if (authToken) {
           dispatch({
             type: "LOAD_TOKEN",
@@ -103,8 +101,7 @@ export default function App({ navigation }) {
     <AuthContext.Provider value={authContext}>
       <NavigationContainer>
         <Stack.Navigator>
-          {!console.log("AuthState: " + JSON.stringify(authState)) &&
-          authState._accessToken == null ? (
+          {authState._accessToken == null ? (
             <Stack.Screen name="Login" component={LoginScreen} />
           ) : (
             //<Stack.Screen name="Login" component={RegistrationForm}/>
