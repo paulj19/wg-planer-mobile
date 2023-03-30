@@ -60,6 +60,7 @@ describe("AuthToken", () => {
 
   it("loads valid AuthToken", async () => {
     initMockData();
+    initJestPlatformMock();
     initJestLoadMock();
     const loadedAuthToken = await AuthToken.load();
     expect(loadedAuthToken).toStrictEqual(expectedAuthToken);
