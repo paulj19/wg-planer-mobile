@@ -5,6 +5,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { HomeScreen } from "./Home/HomeScreen";
 import LoginScreen from "./lib/Authentication/Authentication";
 import AuthToken from "./lib/Authentication/AuthToken";
+import registerRootComponent from 'expo/build/launch/registerRootComponent';
 
 const Stack = createStackNavigator();
 
@@ -112,6 +113,7 @@ export default function App() {
     </AuthContext.Provider>
   );
 }
+registerRootComponent(App);
 
 const styles = StyleSheet.create({
   container: {
