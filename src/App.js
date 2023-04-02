@@ -5,7 +5,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { HomeScreen } from "./Home/HomeScreen";
 import LoginScreen from "./lib/Authentication/Authentication";
 import AuthToken from "./lib/Authentication/AuthToken";
-import registerRootComponent from 'expo/build/launch/registerRootComponent';
+import { registerRootComponent } from "expo";
 
 const Stack = createStackNavigator();
 

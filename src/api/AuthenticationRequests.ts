@@ -33,7 +33,7 @@ export async function getToken(
 
 export async function refreshExpiredAccessToken(
   refreshToken: string
-): Promise<AuthToken> {
+): Promise<AuthToken | null> {
   return axios({
     method: "post",
     url: URL_REFRESH_TOKEN,
@@ -51,6 +51,13 @@ export async function refreshExpiredAccessToken(
   })
     .then((response) => AuthToken.fromApiResponse(response.data))
     .catch((e) => {
+      //refreshToken expired
+      if (
+        e.response?.status === 400 &&
+        e.response?.data?.error === "invalid_grant"
+      ) {
+        return null;
+      }
       throw Error("accessToken refresh failed: " + e);
     });
 }
