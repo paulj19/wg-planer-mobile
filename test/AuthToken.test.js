@@ -3,7 +3,6 @@ import AuthToken from "../src/lib/Authentication/AuthToken";
 import * as storage from "../src/util/storage/Store";
 import { aStorage } from "../src/util/storage/AsyncStorage";
 import MockAdapter from "axios-mock-adapter";
-import { URL_REFRESH_TOKEN } from "../src/lib/UrlPaths";
 import { initJestPlatformMock } from "./common_mocks";
 
 let storedAuthToken;
@@ -99,23 +98,6 @@ describe("AuthToken", () => {
     expect(AuthToken.tokenType).toBe(storedAuthToken._tokenType);
     expect(AuthToken.scope).toBe(storedAuthToken._scope);
   });
-
-  // it("loads valid AuthToken", async () => {
-  //   initMockData();
-  //   initJestPlatformMock();
-  //   initJestLoadMock();
-  //   const loadedAuthToken = await AuthToken.load();
-  //   expect(loadedAuthToken).toStrictEqual(expectedAuthToken);
-  // });
-
-  // it("saves and returns AuthToken", async () => {
-  //   initAllMocks();
-
-  //   await expectedAuthToken.save(storedAuthToken);
-  //   const loadedAuthToken = await AuthToken.load();
-
-  //   expect(loadedAuthToken).toStrictEqual(expectedAuthToken);
-  // });
 });
 
 describe("loadAndRefreshAccessTokenIfExpired", () => {

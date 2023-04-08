@@ -2,7 +2,7 @@ import * as SecureStore from "expo-secure-store";
 import { Platform } from "react-native";
 import { aStorage } from "./AsyncStorage";
 
-export async function save(key_: string, value: object): Promise<void> {
+export async function save(key_: string, value: string): Promise<void> {
   //sync instead of /validate, securestorage?
   //needd just for login, this will do it for all req.
   if (Platform.OS === "web") {

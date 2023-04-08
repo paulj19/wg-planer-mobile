@@ -1,6 +1,3 @@
-import { refreshExpiredAccessToken } from "../../api/AuthenticationRequests";
-import * as storage from "../../util/storage/Store";
-
 class AuthToken_ {
   _accessToken: string | null;
   _refreshToken: string | null;
@@ -49,49 +46,6 @@ class AuthToken_ {
   public static computeTokenExpiryDate(dateNow: Date, expiresIn: number): Date {
     dateNow.setSeconds(dateNow.getSeconds() + (expiresIn - 20));
     return dateNow;
-  }
-
-  public isAccessTokenExpired(): boolean {
-    //will redirect to loginScreen when null
-    if (this.expiryDate && this.expiryDate.getTime() < new Date().getTime()) {
-      return false;
-    }
-    return true;
-  }
-
-  public save(): void {
-    try {
-      storage.save("auth-token", this);
-    } catch (e) {
-      throw Error("Error saving AuthToken: " + e);
-    }
-  }
-
-  public async load(): Promise<void> {
-    try {
-      const tokens = await storage.load("auth-token");
-      if (tokens) {
-        this.fromStorage(tokens);
-      }
-    } catch (e) {
-      throw Error("Error loading AuthToken: " + e);
-    }
-  }
-
-  //move to util
-  public async loadAndRefreshAccessTokenIfExpired(): Promise<void> {
-    try {
-      //why did you think typescript would not do something
-      await this.load();
-      if (!this.isAccessTokenExpired() && this.refreshToken) {//convert to function 
-        const newAuthToken = await refreshExpiredAccessToken(this.refreshToken);
-        if (newAuthToken) {
-          this.fromApiResponse(newAuthToken);
-        }
-      }
-    } catch (e) {
-      throw Error("Expired accessToken refresh failed: " + e);
-    }
   }
 
   get accessToken(): string | null {
