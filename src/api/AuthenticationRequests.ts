@@ -25,7 +25,7 @@ export async function getToken(
       grant_type: "authorization_code",
     },
   })
-    .then((response) => AuthToken.fromApiResponse(response.data))
+    .then((response) => response.data)
     .catch((e) => {
       throw Error("Failed to load token: " + e);
     });
@@ -33,7 +33,7 @@ export async function getToken(
 
 export async function refreshExpiredAccessToken(
   refreshToken: string
-): Promise<AuthToken | null> {
+): Promise<any> {
   return axios({
     method: "post",
     url: URL_REFRESH_TOKEN,
@@ -49,7 +49,7 @@ export async function refreshExpiredAccessToken(
       refresh_token: refreshToken,
     },
   })
-    .then((response) => AuthToken.fromApiResponse(response.data))
+    .then((response) => response.data)
     .catch((e) => {
       //refreshToken expired
       if (
