@@ -1,166 +1,150 @@
-import debugPrint from "lib/util/debugPrint";
 import { refreshExpiredAccessToken } from "../../api/AuthenticationRequests";
 import * as storage from "../../util/storage/Store";
 
-export default class AuthToken {
-  _accessToken: string;
-  _refreshToken: string;
-  _idToken: string;
-  _expiryDate: Date;
-  _tokenType: string;
-  _scope: string;
+class AuthToken_ {
+  _accessToken: string | null;
+  _refreshToken: string | null;
+  _idToken: string | null;
+  _expiryDate: Date | null;
+  _tokenType: string | null;
+  _scope: string | null;
 
-  constructor(
-    _accessToken: string,
-    _refreshToken: string,
-    _idToken: string,
-    _expires: number | Date,
-    _tokenType: string,
-    _scope: string
-  ) {
-    this.accessToken = _accessToken;
-    this.refreshToken = _refreshToken;
-    this.idToken = _idToken;
-    this.expiryDate = _expires;
-    this.tokenType = _tokenType;
-    this.scope = _scope;
+  private constructor() {}
+
+  private static INSTANCE: AuthToken_ = new AuthToken_();
+
+  public static getInstance(): AuthToken_ {
+    return AuthToken_.INSTANCE;
   }
 
-  public static fromApiResponse(responseData: any): AuthToken {
-    AuthToken.validateNotNull(responseData);
-    return new AuthToken(
-      responseData.access_token,
-      responseData.refresh_token,
-      responseData.id_token,
-      responseData.expires_in,
-      responseData.token_type,
-      responseData.scope
-    );
+  public fromApiResponse(responseData: any): void {
+    AuthToken_.validateNotNull(responseData);
+    this.accessToken = responseData.access_token;
+    this.refreshToken = responseData.refresh_token;
+    this.idToken = responseData.id_token;
+    this.expiryDate = responseData.expires_in;
+    this.tokenType = responseData.token_type;
+    this.scope = responseData.scope;
   }
 
-  public static fromStorage(fields): AuthToken {
-    AuthToken.validateNotNull(fields);
-    return new AuthToken(
-      fields._accessToken,
-      fields._refreshToken,
-      fields._idToken,
-      new Date(fields._expiryDate),
-      fields._tokenType,
-      fields._scope
-    );
+  public fromStorage(fields): void {
+    AuthToken_.validateNotNull(fields);
+    this.accessToken = fields._accessToken;
+    this.refreshToken = fields._refreshToken;
+    this.idToken = fields._idToken;
+    this.expiryDate = new Date(fields._expiryDate);
+    this.tokenType = fields._tokenType;
+    this.scope = fields._scope;
   }
 
-  private static computeTokenExpiryDate(
-    dateNow: Date,
-    expiresIn: number
-  ): Date {
+  public clear(): void {
+    this.accessToken = null;
+    this.refreshToken = null;
+    this.idToken = null;
+    this.expiryDate = null;
+    this.tokenType = null;
+    this.scope = null;
+  }
+
+  public static computeTokenExpiryDate(dateNow: Date, expiresIn: number): Date {
     dateNow.setSeconds(dateNow.getSeconds() + (expiresIn - 20));
     return dateNow;
   }
 
-  public isAccessTokenNotExpired() {
-    if (this.expiryDate.getTime() <= new Date().getTime()) {
+  public isAccessTokenExpired(): boolean {
+    //will redirect to loginScreen when null
+    if (this.expiryDate && this.expiryDate.getTime() < new Date().getTime()) {
       return false;
     }
     return true;
   }
 
-  public save() {
+  public save(): void {
     try {
-      return storage.save("auth-token", this);
+      storage.save("auth-token", this);
     } catch (e) {
       throw Error("Error saving AuthToken: " + e);
     }
   }
 
-  public static async load(): Promise<AuthToken | null> {
+  public async load(): Promise<void> {
     try {
-      const authToken = await storage.load("auth-token");
-      if (authToken) {
-        return AuthToken.fromStorage(authToken);
-      } else {
-        return null;
+      const tokens = await storage.load("auth-token");
+      if (tokens) {
+        this.fromStorage(tokens);
       }
     } catch (e) {
       throw Error("Error loading AuthToken: " + e);
     }
   }
 
-  public static async loadAndRefreshAccessTokenIfExpired(): Promise<AuthToken | null> {
+  //move to util
+  public async loadAndRefreshAccessTokenIfExpired(): Promise<void> {
     try {
       //why did you think typescript would not do something
-      const authToken = await AuthToken.load();
-      if (authToken) {
-        if (authToken.isAccessTokenNotExpired()) {
-          return authToken;
+      await this.load();
+      if (!this.isAccessTokenExpired() && this.refreshToken) {//convert to function 
+        const newAuthToken = await refreshExpiredAccessToken(this.refreshToken);
+        if (newAuthToken) {
+          this.fromApiResponse(newAuthToken);
         }
-        const newAuthToken = await refreshExpiredAccessToken(
-          authToken.refreshToken
-        );
-        return newAuthToken;
-      } else {
-        return null;
       }
     } catch (e) {
       throw Error("Expired accessToken refresh failed: " + e);
     }
   }
 
-  get accessToken(): string {
+  get accessToken(): string | null {
     return this._accessToken;
   }
 
-  get refreshToken(): string {
+  get refreshToken(): string | null {
     return this._refreshToken;
   }
 
-  get idToken(): string {
+  get idToken(): string | null {
     return this._idToken;
   }
 
-  get expiryDate(): Date {
+  get expiryDate(): Date | null {
     return this._expiryDate;
   }
 
-  get tokenType(): string {
+  get tokenType(): string | null {
     return this._tokenType;
   }
 
-  get scope(): string {
+  get scope(): string | null {
     return this._scope;
   }
 
   set accessToken(value) {
-    AuthToken.validateNotNull(value);
     this._accessToken = value;
   }
 
   set refreshToken(value) {
-    AuthToken.validateNotNull(value);
     this._refreshToken = value;
   }
 
   set idToken(value) {
-    AuthToken.validateNotNull(value);
     this._idToken = value;
   }
 
-  set expiryDate(value: number | Date) {
-    AuthToken.validateNotNull(value);
+  set expiryDate(value: number | Date | null) {
     if (value instanceof Date) {
       this._expiryDate = value;
+    } else if (value) {
+      this._expiryDate = AuthToken_.computeTokenExpiryDate(new Date(), value);
     } else {
-      this._expiryDate = AuthToken.computeTokenExpiryDate(new Date(), value);
+      this._expiryDate = null;
     }
   }
 
   set tokenType(value) {
-    AuthToken.validateNotNull(value);
     this._tokenType = value;
   }
 
   set scope(value) {
-    AuthToken.validateNotNull(value);
     this._scope = value;
   }
 
@@ -172,3 +156,5 @@ export default class AuthToken {
     }
   }
 }
+const AuthToken: AuthToken_ = AuthToken_.getInstance();
+export default AuthToken;
