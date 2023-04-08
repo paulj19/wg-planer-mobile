@@ -34,6 +34,20 @@ class AuthToken_ {
     this.scope = fields._scope;
   }
 
+  public isInitialized(): boolean {
+    if (
+      this.accessToken &&
+      this.refreshToken &&
+      this.idToken &&
+      this.expiryDate &&
+      this.tokenType &&
+      this.scope
+    ) {
+      return true;
+    }
+    return false;
+  }
+
   public clear(): void {
     this.accessToken = null;
     this.refreshToken = null;
