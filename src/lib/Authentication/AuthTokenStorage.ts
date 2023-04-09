@@ -33,20 +33,27 @@ export async function loadAuthToken(): Promise<void> {
 
 function isAccessTokenExpired(): boolean {
   //will redirect to loginScreen when null
-  if (AuthToken.expiryDate && AuthToken.expiryDate.getTime() < new Date().getTime()) {
+  if (
+    AuthToken.expiryDate &&
+    AuthToken.expiryDate.getTime() < new Date().getTime()
+  ) {
     return true;
   }
   return false;
 }
 
-async function checkAndRefreshExpiredAccessToken(): Promise<void> {
+export async function checkAndRefreshExpiredAccessToken(): Promise<void> {
   if (isAccessTokenExpired() && AuthToken.refreshToken) {
     const newAuthToken = await refreshExpiredAccessToken(
       AuthToken.refreshToken
     );
-    if (newAuthToken) {
-      AuthToken.fromApiResponse(newAuthToken);
-      storeAuthToken();
-    }
+    updateAndStoreAuthToken(newAuthToken);
+  }
+}
+
+export function updateAndStoreAuthToken(newAuthToken: any) {
+  if (newAuthToken) {
+    AuthToken.fromApiResponse(newAuthToken);
+    storeAuthToken();
   }
 }

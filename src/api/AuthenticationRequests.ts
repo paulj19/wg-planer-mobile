@@ -1,13 +1,12 @@
 import axios from "../lib/axiosConfig";
-import AuthToken from "../lib/Authentication/AuthToken";
-import { URL_AUTH_SERVER, URL_REFRESH_TOKEN } from "../lib/UrlPaths";
+import { URL_REFRESH_TOKEN } from "../lib/UrlPaths";
 import { authProps } from "../lib/Authentication/AuthProps";
 
 export async function getToken(
   url: string,
   code: string,
   redirectUri: string
-): Promise<AuthToken> {
+): Promise<any> {
   return axios({
     method: "post",
     url: url,

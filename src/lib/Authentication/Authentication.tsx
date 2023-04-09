@@ -12,6 +12,7 @@ import { AuthContext } from "../../App.js";
 import { getToken } from "../../api/AuthenticationRequests";
 import { authProps } from "./AuthProps";
 import AuthToken from "./AuthToken";
+import { updateAndStoreAuthToken } from "./AuthTokenStorage";
 
 let discovery: any;
 let redirectUri: any;
@@ -55,11 +56,8 @@ export default function LoginScreen() {
       }
       if (response.type === "success") {
         getToken(discovery.tokenEndpoint, response.params.code, redirectUri)
-          .then(async (authToken: AuthToken) => {
-            if (authToken) {
-              authToken.save();
-              authContext.signIn(authToken);
-            }
+          .then((apiResponse) => {
+            updateAndStoreAuthToken(apiResponse);
           })
           .catch((e) => {
             console.error("getToken failed after gettting authCode: " + e);

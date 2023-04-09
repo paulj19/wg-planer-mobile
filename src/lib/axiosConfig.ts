@@ -2,8 +2,10 @@ import axios from "axios";
 import axiosRetry from "axios-retry";
 import * as secureStorage from "Storage";
 import { StoredItems } from "Storage";
-import { BASE_URL_DEV } from "./UrlPaths";
+import { BASE_URL_DEV, URL_GET_TOKEN } from "./UrlPaths";
 import { initializeMocks } from "./MockRequests";
+import { checkAndRefreshExpiredAccessToken } from "./Authentication/AuthTokenStorage";
+import AuthToken from "./Authentication/AuthToken";
 
 const client = axios.create({ baseURL: BASE_URL_DEV });
 
@@ -39,6 +41,18 @@ client.interceptors.request.use(
     //else if(not includes in non-auth urls) {
     //redirect to login page with correct nav.stack/can return to target url
     //}
+    //ignoring refresh url as same
+    if (!config.url?.includes(URL_GET_TOKEN)) {
+      checkAndRefreshExpiredAccessToken();
+      if (AuthToken.accessToken) {
+        config.headers.authentication = "Bearer: ".concat(
+          AuthToken.accessToken
+        );
+      }
+      if (AuthToken.refreshToken) {
+        config.headers.refresh_token = AuthToken.refreshToken;
+      }
+    }
     return config;
   },
   (error) => {
