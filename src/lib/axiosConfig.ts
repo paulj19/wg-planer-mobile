@@ -23,34 +23,17 @@ axiosRetry(client, {
 
 client.interceptors.request.use(
   async (config) => {
-    //todo make this fetch and set parallel vs cost of making things parallel
-    //do profiling, secure store has cache?
-    //why await?
-    // const accessToken = await secureStorage
-    //   .load(StoredItems.ACCESS_TOKEN)
-    //   .catch(() => null);
-    // const refreshToken = await secureStorage
-    //   .load(StoredItems.REFRESH_TOKEN)
-    //   .catch(() => null);
-    // if (accessToken) {
-    //   config.headers.authentication = "Bearer: ".concat(accessToken);
-    // }
-    // if (refreshToken) {
-    //   config.headers.refresh_token = refreshToken;
-    // }
-    //else if(not includes in non-auth urls) {
-    //redirect to login page with correct nav.stack/can return to target url
-    //}
     //ignoring refresh url as same
     if (!config.url?.includes(URL_GET_TOKEN)) {
-      checkAndRefreshExpiredAccessToken();
+      await checkAndRefreshExpiredAccessToken().catch((e) =>
+        console.error(
+          "error occured while token refresh, continuing with request. " + e
+        )
+      );
       if (AuthToken.accessToken) {
         config.headers.authentication = "Bearer: ".concat(
           AuthToken.accessToken
         );
-      }
-      if (AuthToken.refreshToken) {
-        config.headers.refresh_token = AuthToken.refreshToken;
       }
     }
     return config;
@@ -59,14 +42,17 @@ client.interceptors.request.use(
     return Promise.reject(error);
   }
 );
+
 client.interceptors.response.use(
   async function (response) {
     return response;
   },
   function (error) {
-    //todo cleanup
-    //xxx if access token null, clear previous => only for /validate => clear in /validate
-    //401 => login screen
+    if (error.response.status === 401) {
+      //will RS send 401 for 400
+      AuthToken.clear();
+      //navigate to login screen => ideally saving current stack
+    }
     return Promise.reject(error);
   }
 );
