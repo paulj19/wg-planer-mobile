@@ -32,7 +32,7 @@ export async function loadAuthToken(): Promise<void> {
 }
 
 function isAccessTokenExpired(): boolean {
-  //will redirect to loginScreen when null
+  //first condition is imp bc it breaks the flow for non auth req
   if (
     AuthToken.expiryDate &&
     AuthToken.expiryDate.getTime() < new Date().getTime()
@@ -55,5 +55,7 @@ export function updateAndStoreAuthToken(newAuthToken: any) {
   if (newAuthToken) {
     AuthToken.fromApiResponse(newAuthToken);
     storeAuthToken();
+  } else if (newAuthToken == null) {
+    AuthToken.clear();
   }
 }
