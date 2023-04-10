@@ -8,18 +8,16 @@ import {
   URL_GET_TOKEN,
   URL_REVOKE_TOKEN,
 } from "./../UrlPaths";
-import { AuthContext } from "../../App.js";
 import { getToken } from "../../api/AuthenticationRequests";
 import { authProps } from "./AuthProps";
-import AuthToken from "./AuthToken";
 import { updateAndStoreAuthToken } from "./AuthTokenStorage";
 
 let discovery: any;
 let redirectUri: any;
 
-export default function LoginScreen() {
+export default function LoginScreen({ route, navigation }) {
+  const { setIsTokenLoaded } = route.params;
   const useProxy = Platform.select({ web: false, default: true });
-  const authContext = React.useContext(AuthContext);
 
   WebBrowser.maybeCompleteAuthSession();
 
@@ -55,9 +53,11 @@ export default function LoginScreen() {
         console.error("getting authCode failed: " + response.error);
       }
       if (response.type === "success") {
+        setIsTokenLoaded(false);
         getToken(discovery.tokenEndpoint, response.params.code, redirectUri)
           .then((apiResponse) => {
             updateAndStoreAuthToken(apiResponse);
+            setIsTokenLoaded(true);
           })
           .catch((e) => {
             console.error("getToken failed after gettting authCode: " + e);

@@ -13,29 +13,35 @@ const Stack = createStackNavigator();
 export const AuthContext = React.createContext();
 
 export default function App() {
+  const [isTokenLoaded, setIsTokenLoaded] = React.useState(false);
   //TODO think about optimising useEffect => only during mount?
   //TODO test this flow => iterate through all the possible cases
   React.useEffect(() => {
     const bootStrapAsync = async () => {
       try {
         await loadAndRefreshAccessTokenIfExpired();
+        setIsTokenLoaded(true);
       } catch (e) {
-        console.error("Error loading token: " + e);//TODO test if execution would stop here
+        console.error("Error loading token: " + e); //TODO test if execution would stop here
       }
     };
     bootStrapAsync();
   }, []);
 
   return (
-      <NavigationContainer>
-        <Stack.Navigator>
-          {AuthToken.isInitialized ? (
-            <Stack.Screen name="Home" component={HomeScreen} />
-          ) : (
-            <Stack.Screen name="Login" component={LoginScreen} />
-          )}
-        </Stack.Navigator>
-      </NavigationContainer>
+    <NavigationContainer>
+      <Stack.Navigator>
+        {AuthToken.isInitialized() ? (
+          <Stack.Screen name="Home" component={HomeScreen} />
+        ) : (
+          <Stack.Screen
+            name="Login"
+            component={LoginScreen}
+            initialParams={{ setIsTokenLoaded }}
+          />
+        )}
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 registerRootComponent(App);

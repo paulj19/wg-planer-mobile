@@ -14,7 +14,7 @@ export async function loadAndRefreshAccessTokenIfExpired(): Promise<void> {
 
 export function storeAuthToken(): void {
   try {
-    storage.save("auth-token", JSON.stringify(AuthToken));
+    storage.save("auth-token", AuthToken);
   } catch (e) {
     throw Error("Error saving AuthToken: " + e);
   }
@@ -23,8 +23,10 @@ export function storeAuthToken(): void {
 export async function loadAuthToken(): Promise<void> {
   try {
     const tokens = await storage.load("auth-token");
+    console.log("loadAuthToken " + JSON.stringify(tokens));
     if (tokens) {
       AuthToken.fromStorage(tokens);
+    console.log("AuthToken.fromStorage(tokens); " + JSON.stringify(AuthToken));
     }
   } catch (e) {
     throw Error("Error loading AuthToken: " + e);
@@ -55,7 +57,7 @@ export function updateAndStoreAuthToken(newAuthToken: any) {
   if (newAuthToken) {
     AuthToken.fromApiResponse(newAuthToken);
     storeAuthToken();
-  } else if (newAuthToken == null) {
+  } else if (newAuthToken === null) {
     AuthToken.clear();
   }
 }

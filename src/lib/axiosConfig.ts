@@ -25,11 +25,14 @@ client.interceptors.request.use(
   async (config) => {
     //ignoring refresh url as same
     if (!config.url?.includes(URL_GET_TOKEN)) {
+      console.log("REQ INTERCEPTOR ", config.url);
+      console.log("REQ INTERCEPTOR ", AuthToken.accessToken);
       await checkAndRefreshExpiredAccessToken().catch((e) =>
         console.error(
           "error occured while token refresh, continuing with request. " + e
         )
       );
+      console.log("REQ INTERCEPTOR NEW TOKEN ", AuthToken.accessToken);
       if (AuthToken.accessToken) {
         config.headers.authentication = "Bearer: ".concat(
           AuthToken.accessToken
