@@ -33,6 +33,11 @@ export async function loadAuthToken(): Promise<void> {
   }
 }
 
+export async function clearAuthToken(): Promise<void> {
+  AuthToken.clear();
+  await storage.remove("auth-token");
+}
+
 function isAccessTokenExpired(): boolean {
   //first condition is imp bc it breaks the flow for non auth req
   if (
@@ -58,6 +63,6 @@ export function updateAndStoreAuthToken(newAuthToken: any) {
     AuthToken.fromApiResponse(newAuthToken);
     storeAuthToken();
   } else if (newAuthToken === null) {
-    AuthToken.clear();
+    clearAuthToken();
   }
 }
