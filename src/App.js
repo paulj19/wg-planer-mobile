@@ -2,7 +2,7 @@ import { StyleSheet } from "react-native";
 import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { HomeScreen } from "./Home/HomeScreen";
+import HomeScreen from "./Home/HomeScreen";
 import { registerRootComponent } from "expo";
 import { loadAndRefreshAccessTokenIfExpired } from "./lib/Authentication/AuthTokenStorage";
 import AuthToken from "./lib/Authentication/AuthToken";
@@ -31,7 +31,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        {AuthToken.isInitialized() ? (
+        {AuthToken.isPresent() ? (
           <Stack.Screen name="Home" component={HomeScreen} />
         ) : (
           <Stack.Screen

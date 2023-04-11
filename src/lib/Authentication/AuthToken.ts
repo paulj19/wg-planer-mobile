@@ -34,7 +34,7 @@ class AuthToken_ {
     this.scope = fields._scope;
   }
 
-  public isInitialized(): boolean {
+  public isPresent(): boolean {
     if (
       this.accessToken &&
       this.refreshToken &&
