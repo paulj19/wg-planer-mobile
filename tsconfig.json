@@ -8,11 +8,8 @@
     ],
     "baseUrl": "src",
     "strictNullChecks": true,
-    "jsx": "react"
+    "jsx": "react-jsx"
   },
-  "include": [
-    "./src/**/*.ts"
-  ],
-  "jsx": "react",
+  "include": ["**/*.tsx"],
   "extends": "expo/tsconfig.base"
 }

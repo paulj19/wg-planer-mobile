@@ -4,7 +4,7 @@ import * as secureStorage from "Storage";
 import { StoredItems } from "Storage";
 import { BASE_URL_DEV, URL_GET_TOKEN } from "./UrlPaths";
 import { initializeMocks } from "./MockRequests";
-import { checkAndRefreshExpiredAccessToken } from "./Authentication/AuthTokenStorage";
+import { checkAndRefreshExpiredAccessToken, clearAuthToken } from "./Authentication/AuthTokenStorage";
 import AuthToken from "./Authentication/AuthToken";
 
 const client = axios.create({ baseURL: BASE_URL_DEV });
@@ -53,7 +53,7 @@ client.interceptors.response.use(
   function (error) {
     if (error.response.status === 401) {
       //will RS send 401 for 400
-      AuthToken.clear();
+      clearAuthToken()
       //navigate to login screen => ideally saving current stack
     }
     return Promise.reject(error);
