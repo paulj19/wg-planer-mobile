@@ -23,10 +23,8 @@ export function storeAuthToken(): void {
 export async function loadAuthToken(): Promise<void> {
   try {
     const tokens = await storage.load("auth-token");
-    console.log("loadAuthToken " + JSON.stringify(tokens));
     if (tokens) {
       AuthToken.fromStorage(tokens);
-    console.log("AuthToken.fromStorage(tokens); " + JSON.stringify(AuthToken));
     }
   } catch (e) {
     throw Error("Error loading AuthToken: " + e);
