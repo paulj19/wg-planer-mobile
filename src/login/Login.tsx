@@ -7,16 +7,15 @@ import {
   URL_AUTHORIZATION,
   URL_GET_TOKEN,
   URL_REVOKE_TOKEN,
-} from "./../UrlPaths";
-import { getToken } from "../../api/AuthenticationRequests";
-import { authProps } from "./AuthProps";
-import { updateAndStoreAuthToken } from "./AuthTokenStorage";
+} from "../lib/UrlPaths";
+import { authProps } from "../lib/Authentication/AuthProps";
+import { getToken } from "../api/AuthenticationRequests";
+import { updateAndStoreAuthToken } from "../lib/Authentication/AuthTokenStorage";
 
 let discovery: any;
 let redirectUri: any;
 
-export default function LoginScreen({ route, navigation }) {
-  const { setIsTokenLoaded } = route.params;
+export default function Login({setIsTokenLoaded}) {
   const useProxy = Platform.select({ web: false, default: true });
 
   WebBrowser.maybeCompleteAuthSession();

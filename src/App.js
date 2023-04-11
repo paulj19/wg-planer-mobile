@@ -3,10 +3,10 @@ import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { HomeScreen } from "./Home/HomeScreen";
-import LoginScreen from "./lib/Authentication/Authentication";
 import { registerRootComponent } from "expo";
 import { loadAndRefreshAccessTokenIfExpired } from "./lib/Authentication/AuthTokenStorage";
 import AuthToken from "./lib/Authentication/AuthToken";
+import EntryScreen from "./EntryScreen";
 
 const Stack = createStackNavigator();
 
@@ -36,7 +36,7 @@ export default function App() {
         ) : (
           <Stack.Screen
             name="Login"
-            component={LoginScreen}
+            component={EntryScreen}
             initialParams={{ setIsTokenLoaded }}
           />
         )}
