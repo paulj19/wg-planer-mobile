@@ -47,6 +47,10 @@ class AuthToken_ {
     }
     return false;
   }
+  
+  public isAccessTokenPresent(): boolean {
+    return this.accessToken ? true : false;
+  }
 
   public clear(): void {
     this.accessToken = null;

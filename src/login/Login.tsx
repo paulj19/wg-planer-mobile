@@ -67,7 +67,7 @@ export default function Login({setIsTokenLoaded}) {
 
   return (
     <Button
-      title="LOGOUT"
+      title="LOGIN"
       disabled={!request}
       onPress={() => promptAsync(useProxy)} //todo take useProxy from Authentication
     />

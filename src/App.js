@@ -4,7 +4,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import HomeScreen from "./Home/HomeScreen";
 import { registerRootComponent } from "expo";
-import { loadAndRefreshAccessTokenIfExpired } from "./lib/Authentication/AuthTokenStorage";
+import { clearAuthToken, loadAndRefreshAccessTokenIfExpired } from "./lib/Authentication/AuthTokenStorage";
 import AuthToken from "./lib/Authentication/AuthToken";
 import EntryScreen from "./EntryScreen";
 
@@ -22,6 +22,7 @@ export default function App() {
         await loadAndRefreshAccessTokenIfExpired();
         setIsTokenLoaded(true);
       } catch (e) {
+        clearAuthToken();
         console.error("Error loading token: " + e); //TODO test if execution would stop here
       }
     };

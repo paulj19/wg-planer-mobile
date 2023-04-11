@@ -6,3 +6,4 @@ export const URL_AUTHORIZATION = URL_AUTH_SERVER + "/oauth2/authorize";
 export const URL_REFRESH_TOKEN = URL_AUTH_SERVER + "/oauth2/token";
 export const URL_GET_TOKEN = URL_AUTH_SERVER + "/oauth2/token";
 export const URL_REVOKE_TOKEN = URL_AUTH_SERVER + "/oauth2/revoke";
+export const URL_INTROSPECT_TOKEN = URL_AUTH_SERVER + "/oauth2/introspect";

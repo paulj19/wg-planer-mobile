@@ -1,5 +1,5 @@
 import axios from "../lib/axiosConfig";
-import { URL_REFRESH_TOKEN } from "../lib/UrlPaths";
+import { URL_INTROSPECT_TOKEN, URL_REFRESH_TOKEN } from "../lib/UrlPaths";
 import { authProps } from "../lib/Authentication/AuthProps";
 
 export async function getToken(
@@ -61,23 +61,24 @@ export async function refreshExpiredAccessToken(
     });
 }
 
-// export async function introspectToken(token: string) {
-//   return axios({
-//     method: "post",
-//     url: URL_AUTH_SERVER + "/oauth2/introspect",
-//     auth: {
-//       username: clientId,
-//       password: clientSecret,
-//     },
-//     headers: {
-//       "Content-Type": "application/x-www-form-urlencoded",
-//     },
-//     data: {
-//       token: token,
-//     },
-//   })
-//     .then((response) => String(response.data?.active) === "true")
-//     .catch((e) => {
-//       throw new Error("accessToken introspect failed: " + e);
-//     });
-// }
+export async function introspectToken(accessToken: string) {
+  return axios({
+    method: "post",
+    url: URL_INTROSPECT_TOKEN,
+    auth: {
+      username: authProps.clientId,
+      password: authProps.clientSecret,
+    },
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    data: {
+      token: accessToken,
+    },
+  })
+    .then((response) => String(response.data?.active) === "true")
+    .catch((e) => {
+      throw new Error("accessToken introspect failed: " + e);
+    });
+}
+

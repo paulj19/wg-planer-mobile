@@ -2,7 +2,7 @@ import axios from "axios";
 import axiosRetry from "axios-retry";
 import * as secureStorage from "Storage";
 import { StoredItems } from "Storage";
-import { BASE_URL_DEV, URL_GET_TOKEN } from "./UrlPaths";
+import { BASE_URL_DEV, URL_GET_TOKEN, URL_INTROSPECT_TOKEN } from "./UrlPaths";
 import { initializeMocks } from "./MockRequests";
 import { checkAndRefreshExpiredAccessToken, clearAuthToken } from "./Authentication/AuthTokenStorage";
 import AuthToken from "./Authentication/AuthToken";
@@ -24,7 +24,7 @@ axiosRetry(client, {
 client.interceptors.request.use(
   async (config) => {
     //ignoring refresh url as same
-    if (!config.url?.includes(URL_GET_TOKEN)) {
+    if (!config.url?.includes(URL_GET_TOKEN) && !config.url?.includes(URL_INTROSPECT_TOKEN)) {
       // console.log("REQ INTERCEPTOR ", config.url);
       // console.log("REQ INTERCEPTOR ", AuthToken.accessToken);
       await checkAndRefreshExpiredAccessToken().catch((e) =>
