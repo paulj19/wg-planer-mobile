@@ -1,9 +1,19 @@
-import * as React from "react";
+import { Button } from "react-native";
+import { RegistrationForm } from "RegistrationForm";
 import Login from "./login/Login";
 
 export default function EntryScreen({ route, navigation }) {
   const { setIsTokenLoaded } = route.params;
-  return(
-    <Login setIsTokenLoaded={setIsTokenLoaded} />
+  function navigateToRegisterScreen() {}
+  return (
+    <div>
+      <div>
+        <Login setIsTokenLoaded={setIsTokenLoaded} />
+      </div>
+      <Button title="REGISTER" onPress={() => navigateToRegisterScreen} />
+      <div>
+        <RegistrationForm />
+      </div>
+    </div>
   );
 }
