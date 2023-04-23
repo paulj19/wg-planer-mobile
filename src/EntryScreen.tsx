@@ -1,5 +1,5 @@
 import { Button } from "react-native";
-import { RegistrationForm } from "RegistrationForm";
+import { RegistrationForm } from "../src/RegistrationForm";
 import Login from "./login/Login";
 
 export default function EntryScreen({ route, navigation }) {
