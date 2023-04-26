@@ -47,7 +47,7 @@ const registrationValidationSchema = Yup.object().shape({
     .required("Confirm password is required"),
 });
 
-export const RegistrationForm = (props) => (
+export const RegistrationForm = ({navigation}) => (
   <Formik
     initialValues={{
       username: "",
@@ -69,7 +69,7 @@ export const RegistrationForm = (props) => (
       console.log(valuesToSend);
       httpRequest.submitRegistrationData(
         JSON.stringify({ ...valuesToSend, oid: null, authServer: "HOME_BREW" })
-      );
+      ).then((r) => navigation.navigate("Login"));
 
       // httpRequest.isUsernameAvailable(values.username)
       //                 .then((usernameAvailable) => {

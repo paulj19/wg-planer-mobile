@@ -11,7 +11,7 @@ export async function loadAndRefreshAccessTokenIfExpired(): Promise<void> {
   if (AuthToken.isAccessTokenPresent()) {
     const isAccessTokenValid_ = await introspectToken(AuthToken.accessToken!);
     if (!isAccessTokenValid_) {
-      await checkAndRefreshExpiredAccessToken();
+      await refreshAccessToken();
     }
   }
 }
@@ -32,7 +32,13 @@ export async function clearAuthToken(): Promise<void> {
   await storage.remove("auth-token");
 }
 
-export async function checkAndRefreshExpiredAccessToken(): Promise<void> {
+export async function refreshAccessTokenIfExpired(): Promise<void> {
+  if (isAccessTokenExpired()) {
+    refreshAccessToken();
+  }
+}
+
+export async function refreshAccessToken(): Promise<void> {
   if (AuthToken.refreshToken) {
     const newAuthToken = await refreshExpiredAccessToken(
       AuthToken.refreshToken

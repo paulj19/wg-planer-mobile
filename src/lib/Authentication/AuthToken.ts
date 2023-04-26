@@ -62,7 +62,7 @@ class AuthToken_ {
   }
 
   public static computeTokenExpiryDate(dateNow: Date, expiresIn: number): Date {
-    dateNow.setSeconds(dateNow.getSeconds() + (expiresIn - 20));
+    dateNow.setSeconds(dateNow.getSeconds() + (expiresIn - 60));
     return dateNow;
   }
 

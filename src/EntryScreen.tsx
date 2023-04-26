@@ -3,17 +3,16 @@ import { RegistrationForm } from "../src/RegistrationForm";
 import Login from "./login/Login";
 
 export default function EntryScreen({ route, navigation }) {
-  const { setIsTokenLoaded } = route.params;
-  function navigateToRegisterScreen() {}
+
   return (
     <div>
       <div>
-        <Login setIsTokenLoaded={setIsTokenLoaded} />
+        <Login {...{navigation, route}}/>
       </div>
-      <Button title="REGISTER" onPress={() => navigateToRegisterScreen} />
-      <div>
-        <RegistrationForm />
-      </div>
+      <Button
+        title="REGISTER"
+        onPress={() => navigation.navigate("RegistrationForm")}
+      />
     </div>
   );
 }

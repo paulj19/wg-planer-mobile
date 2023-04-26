@@ -15,7 +15,7 @@ import { updateAndStoreAuthToken } from "../lib/Authentication/AuthTokenStorage"
 let discovery: any;
 let redirectUri: any;
 
-export default function Login({setIsTokenLoaded}) {
+export default function Login({ navigation, route }) {
   const useProxy = Platform.select({ web: false, default: true });
 
   WebBrowser.maybeCompleteAuthSession();
@@ -47,16 +47,21 @@ export default function Login({setIsTokenLoaded}) {
   );
 
   React.useEffect(() => {
+    if (request && route.params?.promptWindow) {
+      promptAsync(useProxy);
+    }
+  }, []);
+
+  React.useEffect(() => {
     if (response) {
       if (response.error) {
         console.error("getting authCode failed: " + response.error);
       }
       if (response.type === "success") {
-        setIsTokenLoaded(false);
         getToken(discovery.tokenEndpoint, response.params.code, redirectUri)
           .then((apiResponse) => {
             updateAndStoreAuthToken(apiResponse);
-            setIsTokenLoaded(true);
+            navigation.navigate("Home");
           })
           .catch((e) => {
             console.error("getToken failed after gettting authCode: " + e);

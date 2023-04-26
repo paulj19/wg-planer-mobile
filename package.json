@@ -41,6 +41,7 @@
     "react-native-screens": "~3.18.2",
     "react-native-storage": "^1.0.1",
     "react-native-web": "~0.18.10",
+    "typescript-language-server": "^3.3.2",
     "yarn": "^1.22.19",
     "yup": "^0.32.11"
   },

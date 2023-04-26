@@ -2,23 +2,24 @@ import { URL_REGISTER_NEW } from "../lib/UrlPaths";
 import axios from "../lib/axiosConfig";
 import { authProps } from "../lib/Authentication/AuthProps";
 
-export const submitRegistrationData = (formValues: string) => {
-  return axios({
-    method: "post",
-    url: URL_REGISTER_NEW,
-    auth: {
-      username: authProps.clientId,
-      password: authProps.clientSecret,
-    },
-    headers: {
-      "Content-Type": "application/json",
-    },
-    data: formValues,
-  })
-    .then((response) => console.log(response))
-    .catch((e) => {
-      console.log(e);
-    });
+export async function submitRegistrationData(formValues: string): Promise<void> {
+  try {
+        const response = await axios({
+            method: "post",
+            url: URL_REGISTER_NEW,
+            auth: {
+                username: authProps.clientId,
+                password: authProps.clientSecret,
+            },
+            headers: {
+                "Content-Type": "application/json",
+            },
+            data: formValues,
+        });
+        return console.log(response);
+    } catch (e) {
+        console.error(e);
+    }
 };
 
 export const isUsernameAvailable = (username: string): Promise<boolean> => {

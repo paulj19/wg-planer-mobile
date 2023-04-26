@@ -4,7 +4,7 @@ import * as secureStorage from "Storage";
 import { StoredItems } from "Storage";
 import { BASE_URL_DEV, URL_GET_TOKEN, URL_INTROSPECT_TOKEN, URL_REGISTER_NEW } from "./UrlPaths";
 import { initializeMocks } from "./MockRequests";
-import { checkAndRefreshExpiredAccessToken, clearAuthToken } from "./Authentication/AuthTokenStorage";
+import { refreshExpiredAccessToken, clearAuthToken } from "./Authentication/AuthTokenStorage";
 import AuthToken from "./Authentication/AuthToken";
 
 const client = axios.create({ baseURL: BASE_URL_DEV });
@@ -27,7 +27,7 @@ client.interceptors.request.use(
     if (!config.url?.includes(URL_GET_TOKEN) && !config.url?.includes(URL_INTROSPECT_TOKEN) && !config.url?.includes(URL_REGISTER_NEW)) {
       // console.log("REQ INTERCEPTOR ", config.url);
       // console.log("REQ INTERCEPTOR ", AuthToken.accessToken);
-      await checkAndRefreshExpiredAccessToken().catch((e) =>
+      await refreshExpiredAccessToken().catch((e) =>
         console.error(
           "error occured while token refresh, continuing with request. " + e
         )

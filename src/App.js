@@ -4,15 +4,21 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import HomeScreen from "./Home/HomeScreen";
 import { registerRootComponent } from "expo";
-import { clearAuthToken, loadAndRefreshAccessTokenIfExpired } from "./lib/Authentication/AuthTokenStorage";
+import {
+  clearAuthToken,
+  loadAndRefreshAccessTokenIfExpired,
+} from "./lib/Authentication/AuthTokenStorage";
 import AuthToken from "./lib/Authentication/AuthToken";
 import EntryScreen from "./EntryScreen";
+import { RegistrationForm } from "../src/RegistrationForm";
+import Login from "../src/login/Login";
 
 const Stack = createStackNavigator();
 
 export const AuthContext = React.createContext();
 
 export default function App() {
+  initializeNavigators();
   const [isTokenLoaded, setIsTokenLoaded] = React.useState(false);
   //TODO think about optimising useEffect => only during mount?
   //TODO test this flow => iterate through all the possible cases
@@ -31,21 +37,28 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        {AuthToken.isPresent() ? (
-          <Stack.Screen name="Home" component={HomeScreen} />
-        ) : (
-          <Stack.Screen
-            name="Login"
-            component={EntryScreen}
-            initialParams={{ setIsTokenLoaded }}
-          />
-        )}
+      <Stack.Navigator
+        initialRouteName={AuthToken.isPresent() ? "Home" : "EntryScreen"}
+      >
+        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen
+          name="EntryScreen"
+          component={EntryScreen}
+          initialParams={{ setIsTokenLoaded }}
+        />
+        <Stack.Screen name="RegistrationForm" component={RegistrationForm} />
+        <Stack.Screen name="Login" component={Login} />
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
 registerRootComponent(App);
+
+function initializeNavigators() {
+  <Stack.Navigator>
+    <Stack.Screen name="RegistrationForm" component={RegistrationForm} />
+  </Stack.Navigator>;
+}
 
 const styles = StyleSheet.create({
   container: {
