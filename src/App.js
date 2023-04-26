@@ -41,11 +41,7 @@ export default function App() {
         initialRouteName={AuthToken.isPresent() ? "Home" : "EntryScreen"}
       >
         <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen
-          name="EntryScreen"
-          component={EntryScreen}
-          initialParams={{ setIsTokenLoaded }}
-        />
+        <Stack.Screen name="EntryScreen" component={EntryScreen} />
         <Stack.Screen name="RegistrationForm" component={RegistrationForm} />
         <Stack.Screen name="Login" component={Login} />
       </Stack.Navigator>

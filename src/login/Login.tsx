@@ -50,7 +50,7 @@ export default function Login({ navigation, route }) {
     if (request && route.params?.promptWindow) {
       promptAsync(useProxy);
     }
-  }, []);
+  }, [request]);
 
   React.useEffect(() => {
     if (response) {
