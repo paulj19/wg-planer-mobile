@@ -1,10 +1,10 @@
 import { Button } from "react-native";
 import { clearAuthToken } from "../lib/Authentication/AuthTokenStorage";
 
-export default function Logout() {
+export default function Logout({ navigation }) {
   function clearAuthTokenAndNavigate() {
     clearAuthToken();
-    // navigation.navigate('EntryScreen');
+    navigation.navigate('EntryScreen');
   }
   return (
     <Button
