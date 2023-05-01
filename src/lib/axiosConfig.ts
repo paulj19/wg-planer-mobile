@@ -2,9 +2,17 @@ import axios from "axios";
 import axiosRetry from "axios-retry";
 import * as secureStorage from "Storage";
 import { StoredItems } from "Storage";
-import { BASE_URL_DEV, URL_GET_TOKEN, URL_INTROSPECT_TOKEN, URL_REGISTER_NEW } from "./UrlPaths";
+import {
+  BASE_URL_DEV,
+  URL_GET_TOKEN,
+  URL_INTROSPECT_TOKEN,
+  URL_REGISTER_NEW,
+} from "./UrlPaths";
 import { initializeMocks } from "./MockRequests";
-import { refreshExpiredAccessToken, clearAuthToken } from "./Authentication/AuthTokenStorage";
+import {
+  clearAuthToken,
+  refreshAccessTokenIfExpired,
+} from "./Authentication/AuthTokenStorage";
 import AuthToken from "./Authentication/AuthToken";
 
 const client = axios.create({ baseURL: BASE_URL_DEV });
@@ -24,15 +32,16 @@ axiosRetry(client, {
 client.interceptors.request.use(
   async (config) => {
     //ignoring refresh url as same
-    if (!config.url?.includes(URL_GET_TOKEN) && !config.url?.includes(URL_INTROSPECT_TOKEN) && !config.url?.includes(URL_REGISTER_NEW)) {
-      // console.log("REQ INTERCEPTOR ", config.url);
-      // console.log("REQ INTERCEPTOR ", AuthToken.accessToken);
-      await refreshExpiredAccessToken().catch((e) =>
+    if (
+      !config.url?.includes(URL_GET_TOKEN) &&
+      !config.url?.includes(URL_INTROSPECT_TOKEN) &&
+      !config.url?.includes(URL_REGISTER_NEW)
+    ) {
+      await refreshAccessTokenIfExpired().catch((e) =>
         console.error(
           "error occured while token refresh, continuing with request. " + e
         )
       );
-      // console.log("REQ INTERCEPTOR NEW TOKEN ", AuthToken.accessToken);
       if (AuthToken.accessToken) {
         config.headers.authentication = "Bearer: ".concat(
           AuthToken.accessToken
@@ -53,7 +62,7 @@ client.interceptors.response.use(
   function (error) {
     if (error.response.status === 401) {
       //will RS send 401 for 400
-      clearAuthToken()
+      clearAuthToken();
       //navigate to login screen => ideally saving current stack
     }
     return Promise.reject(error);
