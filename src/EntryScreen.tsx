@@ -5,7 +5,7 @@ export default function EntryScreen({ route, navigation }) {
   return (
     <div>
       <div>
-        <Login/>
+        <Login {...{ navigation, route }} />
       </div>
       <Button
         title="REGISTER"

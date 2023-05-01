@@ -15,7 +15,7 @@ import { AuthContext } from "./../../src/App";
 let discovery: any;
 let redirectUri: any;
 
-export default function Login() {
+export default function Login({ navigation, route }) {
   const useProxy = Platform.select({ web: false, default: true });
   const authContext = React.useContext(AuthContext);
 

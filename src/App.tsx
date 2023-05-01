@@ -80,6 +80,7 @@ export default function App() {
               name="RegistrationForm"
               component={RegistrationForm}
             />
+            <Stack.Screen name="Login" component={Login} />
           </>
         </Stack.Navigator>
       </NavigationContainer>
