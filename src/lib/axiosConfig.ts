@@ -1,14 +1,11 @@
 import axios from "axios";
 import axiosRetry from "axios-retry";
-import * as secureStorage from "Storage";
-import { StoredItems } from "Storage";
 import {
   BASE_URL_DEV,
   URL_GET_TOKEN,
   URL_INTROSPECT_TOKEN,
   URL_REGISTER_NEW,
 } from "./UrlPaths";
-import { initializeMocks } from "./MockRequests";
 import {
   clearAuthToken,
   refreshAccessTokenIfExpired,
@@ -24,7 +21,7 @@ axiosRetry(client, {
   },
   retryCondition: (error) => {
     // if retry condition is not specified, by default idempotent requests are retried
-    return 500 <= error.response.status && error.response.status < 600;
+    return 500 <= error?.response?.status && error?.response?.status < 600;
   },
   retries: 3,
 });
@@ -60,6 +57,7 @@ client.interceptors.response.use(
     return response;
   },
   function (error) {
+    //only possibility? request interceptor sends req without accessToken when refresh fails
     if (error.response.status === 401) {
       //will RS send 401 for 400
       clearAuthToken();
