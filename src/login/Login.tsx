@@ -11,12 +11,13 @@ import {
 import { authProps } from "../lib/Authentication/AuthProps";
 import { getToken } from "../api/AuthenticationRequests";
 import { updateAndStoreAuthToken } from "../lib/Authentication/AuthTokenStorage";
-
+import { AuthContext } from "./../../src/App";
 let discovery: any;
 let redirectUri: any;
 
-export default function Login({ navigation, route }) {
+export default function Login() {
   const useProxy = Platform.select({ web: false, default: true });
+  const authContext = React.useContext(AuthContext);
 
   WebBrowser.maybeCompleteAuthSession();
 
@@ -61,7 +62,7 @@ export default function Login({ navigation, route }) {
         getToken(discovery.tokenEndpoint, response.params.code, redirectUri)
           .then((apiResponse) => {
             updateAndStoreAuthToken(apiResponse);
-            navigation.navigate("Home");
+            authContext.signIn();
           })
           .catch((e) => {
             console.error("getToken failed after gettting authCode: " + e);

@@ -1,13 +1,11 @@
 import { Button } from "react-native";
-import { RegistrationForm } from "../src/RegistrationForm";
 import Login from "./login/Login";
 
 export default function EntryScreen({ route, navigation }) {
-
   return (
     <div>
       <div>
-        <Login {...{navigation, route}}/>
+        <Login/>
       </div>
       <Button
         title="REGISTER"

@@ -75,7 +75,7 @@ export const RegistrationForm = ({ navigation }) => (
           })
         )
         .then((r) => navigation.navigate("Login", { promptWindow: true }))
-        .catch(e => console.error(e));
+        .catch((e) => console.error(e));
 
       // httpRequest.isUsernameAvailable(values.username)
       //                 .then((usernameAvailable) => {
