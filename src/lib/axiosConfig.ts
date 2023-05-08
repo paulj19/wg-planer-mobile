@@ -58,7 +58,7 @@ client.interceptors.response.use(
   },
   function (error) {
     //only possibility? request interceptor sends req without accessToken when refresh fails
-    if (error.response.status === 401) {
+    if (error?.response?.status === 401) {
       //will RS send 401 for 400
       clearAuthToken();
       //navigate to login screen => ideally saving current stack

@@ -26,7 +26,7 @@ export async function load(key_: string) {
     } else {
       authToken = await SecureStore.getItemAsync(key_.toString());
     }
-    return authToken;
+    return JSON.parse(authToken);
   } catch (e) {
     return null;
   }

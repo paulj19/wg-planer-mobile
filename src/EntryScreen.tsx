@@ -1,16 +1,16 @@
-import { Button } from "react-native";
+import { Button, View } from "react-native";
 import Login from "./login/Login";
 
 export default function EntryScreen({ route, navigation }) {
   return (
-    <div>
-      <div>
+    <View>
+      <View>
         <Login {...{ navigation, route }} />
-      </div>
+      </View>
       <Button
         title="REGISTER"
         onPress={() => navigation.navigate("RegistrationForm")}
       />
-    </div>
+    </View>
   );
 }

@@ -12,6 +12,7 @@ import AuthToken from "./lib/Authentication/AuthToken";
 import EntryScreen from "./EntryScreen";
 import { RegistrationForm } from "../src/RegistrationForm";
 import Login from "../src/login/Login";
+import {decode, encode} from 'base-64';
 
 const Stack = createStackNavigator();
 export let AuthContext;
@@ -47,6 +48,7 @@ export default function App() {
       try {
         await loadAndRefreshAccessTokenIfExpired();
         if (AuthToken.isPresent()) {
+        console.log("TTTT ZZZZ ", AuthToken);
           authContext.signIn();
         }
       } catch (e) {
@@ -59,14 +61,10 @@ export default function App() {
 
   return (
     <AuthContext.Provider value={authContext}>
+    {console.log("XXX")}
       <NavigationContainer>
         <Stack.Navigator>
           <>
-            {console.log(
-              "authToken",
-              JSON.stringify(AuthToken),
-              state.signedIn
-            )}
             {state.signedIn ? (
               <>
                 <Stack.Screen name="Home" component={HomeScreen} />
@@ -84,10 +82,18 @@ export default function App() {
           </>
         </Stack.Navigator>
       </NavigationContainer>
-      );
     </AuthContext.Provider>
   );
 }
+
+if (!global.btoa) {
+global.btoa = encode;
+}
+
+if (!global.atob) {
+global.atob = decode;
+}
+
 
 registerRootComponent(App);
 
