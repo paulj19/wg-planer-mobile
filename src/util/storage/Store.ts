@@ -23,10 +23,11 @@ export async function load(key_: string) {
         autoSync: false,
         syncInBackground: false,
       });
+      return authToken;
     } else {
       authToken = await SecureStore.getItemAsync(key_.toString());
+      return JSON.parse(authToken);
     }
-    return JSON.parse(authToken);
   } catch (e) {
     return null;
   }

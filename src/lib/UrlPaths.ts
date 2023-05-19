@@ -1,6 +1,6 @@
 // export const BASE_URL_DEV = "http://localhost:8080";
-export const BASE_URL_DEV = "https://wg-planer-resource-server.onrender.com";
-export const URL_AUTH_SERVER = "https://wg-planer-auth-server.onrender.com";
+export const BASE_URL_DEV = "http://116.203.96.104:8080";
+export const URL_AUTH_SERVER = "http://116.203.96.104:5000";
 export const PATH_VALIDATE_ACCESS_TOKEN = "/validate-access-token";
 export const PATH_LOGIN = "/login";
 export const URL_AUTHORIZATION = URL_AUTH_SERVER + "/oauth2/authorize";
