@@ -12,9 +12,10 @@ import AuthToken from "./lib/Authentication/AuthToken";
 import EntryScreen from "./EntryScreen";
 import { RegistrationForm } from "../src/RegistrationForm";
 import Login from "../src/login/Login";
-import {decode, encode} from 'base-64';
+import initBase64 from "./lib/util/Base64"
 
 const Stack = createStackNavigator();
+initBase64();
 export let AuthContext;
 export default function App() {
   AuthContext = React.createContext({});
@@ -48,7 +49,6 @@ export default function App() {
       try {
         await loadAndRefreshAccessTokenIfExpired();
         if (AuthToken.isPresent()) {
-        console.log("TTTT ZZZZ ", AuthToken);
           authContext.signIn();
         }
       } catch (e) {
@@ -61,7 +61,6 @@ export default function App() {
 
   return (
     <AuthContext.Provider value={authContext}>
-    {console.log("XXX")}
       <NavigationContainer>
         <Stack.Navigator>
           <>
@@ -85,15 +84,6 @@ export default function App() {
     </AuthContext.Provider>
   );
 }
-
-if (!global.btoa) {
-global.btoa = encode;
-}
-
-if (!global.atob) {
-global.atob = decode;
-}
-
 
 registerRootComponent(App);
 
