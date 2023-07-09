@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { Platform, StyleSheet } from "react-native";
 import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -12,11 +12,15 @@ import AuthToken from "./lib/Authentication/AuthToken";
 import EntryScreen from "./EntryScreen";
 import { RegistrationForm } from "../src/RegistrationForm";
 import Login from "../src/login/Login";
-import initBase64 from "./lib/util/Base64"
+import initBase64 from "./lib/util/Base64";
+import { server } from "./mocks/server";
+import { URL_GET_TOKEN } from "./lib/UrlPaths";
+import { setupURLPolyfill } from "react-native-url-polyfill";
 
 const Stack = createStackNavigator();
 initBase64();
 export let AuthContext;
+
 export default function App() {
   AuthContext = React.createContext({});
   //TODO think about optimising useEffect => only during mount?
@@ -86,6 +90,14 @@ export default function App() {
 }
 
 registerRootComponent(App);
+
+if (process.env.NODE_ENV === "development") {
+  server.listen({ onUnhandledRequest: "bypass" });
+}
+
+if (Platform.OS !== "web") {
+  setupURLPolyfill();
+}
 
 const styles = StyleSheet.create({
   container: {
