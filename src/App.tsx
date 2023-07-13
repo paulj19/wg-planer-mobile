@@ -16,6 +16,9 @@ import initBase64 from "./lib/util/Base64";
 import { server } from "./mocks/server";
 import { URL_GET_TOKEN } from "./lib/UrlPaths";
 import { setupURLPolyfill } from "react-native-url-polyfill";
+import { Provider } from "react-redux";
+import store from "./store";
+import axios from "./lib/axiosConfig";
 
 const Stack = createStackNavigator();
 initBase64();
@@ -53,6 +56,7 @@ export default function App() {
       try {
         await loadAndRefreshAccessTokenIfExpired();
         if (AuthToken.isPresent()) {
+          //TODO do not clear AuthToken if userprofile fails
           authContext.signIn();
         }
       } catch (e) {
@@ -64,28 +68,30 @@ export default function App() {
   }, []);
 
   return (
-    <AuthContext.Provider value={authContext}>
-      <NavigationContainer>
-        <Stack.Navigator>
-          <>
-            {state.signedIn ? (
-              <>
-                <Stack.Screen name="Home" component={HomeScreen} />
-              </>
-            ) : (
-              <>
-                <Stack.Screen name="EntryScreen" component={EntryScreen} />
-              </>
-            )}
-            <Stack.Screen
-              name="RegistrationForm"
-              component={RegistrationForm}
-            />
-            <Stack.Screen name="Login" component={Login} />
-          </>
-        </Stack.Navigator>
-      </NavigationContainer>
-    </AuthContext.Provider>
+    <Provider store={store}>
+      <AuthContext.Provider value={authContext}>
+        <NavigationContainer>
+          <Stack.Navigator>
+            <>
+              {state.signedIn ? (
+                <>
+                  <Stack.Screen name="Home" component={HomeScreen} />
+                </>
+              ) : (
+                <>
+                  <Stack.Screen name="EntryScreen" component={EntryScreen} />
+                </>
+              )}
+              <Stack.Screen
+                name="RegistrationForm"
+                component={RegistrationForm}
+              />
+              <Stack.Screen name="Login" component={Login} />
+            </>
+          </Stack.Navigator>
+        </NavigationContainer>
+      </AuthContext.Provider>
+    </Provider>
   );
 }
 

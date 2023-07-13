@@ -1,7 +1,7 @@
 import axios from "axios";
 import axiosRetry from "axios-retry";
 import {
-  BASE_URL_DEV,
+  RESOURCE_SERVER_DEV,
   URL_GET_TOKEN,
   URL_INTROSPECT_TOKEN,
   URL_REGISTER_NEW,
@@ -12,7 +12,7 @@ import {
 } from "./Authentication/AuthTokenStorage";
 import AuthToken from "./Authentication/AuthToken";
 
-const client = axios.create({ baseURL: BASE_URL_DEV });
+const client = axios.create({ baseURL: RESOURCE_SERVER_DEV });
 
 axiosRetry(client, {
   retryDelay: (retryCount) => {
