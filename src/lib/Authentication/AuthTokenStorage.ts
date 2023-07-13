@@ -18,7 +18,7 @@ export async function loadAndRefreshAccessTokenIfExpired(): Promise<void> {
 
 export async function loadAuthToken(): Promise<void> {
   try {
-    const tokens = await storage.load("auth-token");
+    const tokens = await storage.getItem("auth-token");
     if (tokens) {
       AuthToken.fromStorage(tokens);
     }
@@ -29,7 +29,7 @@ export async function loadAuthToken(): Promise<void> {
 
 export async function clearAuthToken(): Promise<void> {
   AuthToken.clear();
-  await storage.remove("auth-token");
+  await storage.removeItem("auth-token");
 }
 
 export async function refreshAccessTokenIfExpired(): Promise<void> {
@@ -60,7 +60,7 @@ export function updateAndStoreAuthToken(newAuthToken: any) {
 
 export function storeAuthToken(): void {
   try {
-    storage.save("auth-token", AuthToken);
+    storage.setItem("auth-token", AuthToken);
   } catch (e) {
     throw Error("Error saving AuthToken: " + e);
   }
