@@ -12,6 +12,6 @@ export default function HomeScreen() {
     </View>
     );
   } else {
-    throw Error("userprofile must not be null");
+    //throw Error("userprofile must not be null");
   }
 }

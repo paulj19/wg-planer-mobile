@@ -9,11 +9,7 @@ const userprofile: UserProfile = {
 
 export const userHandlers = [
   rest.get(URL_USER_PROFILE, (req, res, ctx) => {
-    console.log("URL_USER_PROFILE")
-    return res(ctx.json(userprofile), ctx.status(200));
-  }),
-  rest.get("http://localhost/xxx", (req, res, ctx) => {
-    console.log("XXX")
+    console.log(req);
     return res(ctx.json(userprofile), ctx.status(200));
   }),
 ];
