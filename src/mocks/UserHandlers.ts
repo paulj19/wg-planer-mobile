@@ -9,7 +9,6 @@ const userprofile: UserProfile = {
 
 export const userHandlers = [
   rest.get(URL_USER_PROFILE, (req, res, ctx) => {
-    console.log(req);
     return res(ctx.json(userprofile), ctx.status(200));
   }),
 ];
