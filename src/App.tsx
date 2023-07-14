@@ -17,7 +17,7 @@ import { server } from "./mocks/server";
 import { URL_GET_TOKEN } from "./lib/UrlPaths";
 import { setupURLPolyfill } from "react-native-url-polyfill";
 import { Provider } from "react-redux";
-import store from "./store";
+import { store}  from "./store";
 import axios from "./lib/axiosConfig";
 
 const Stack = createStackNavigator();
