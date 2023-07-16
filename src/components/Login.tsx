@@ -16,7 +16,7 @@ let discovery: any;
 let redirectUri: any;
 
 export default function Login({ navigation, route }) {
-  const authContext: any = React.useContext(AuthContext);
+  const authContext = React.useContext(AuthContext);
   let useProxy = true;
   if (isDeviceDesktop()) {
     useProxy = false;
@@ -30,6 +30,7 @@ export default function Login({ navigation, route }) {
       authorizationEndpoint: URL_AUTHORIZATION,
       tokenEndpoint: URL_GET_TOKEN,
       revocationEndpoint: URL_REVOKE_TOKEN,
+      projectNameForProxy: "@paulo48/wg-planer-mobile"
     }),
     []
   );
@@ -52,7 +53,7 @@ export default function Login({ navigation, route }) {
 
   React.useEffect(() => {
     if (request && route.params?.promptWindow) {
-      promptAsync({useProxy});
+      promptAsync(useProxy);
     }
   }, [request]);
 
@@ -78,7 +79,8 @@ export default function Login({ navigation, route }) {
     <Button
       title="LOGIN"
       disabled={!request}
-      onPress={() => promptAsync({useProxy})} //todo take useProxy from Authentication
+      onPress={() => promptAsync(useProxy)} //todo take useProxy from Authentication
+    
     />
   );
 }

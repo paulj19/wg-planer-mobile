@@ -23,7 +23,7 @@ const Stack = createStackNavigator();
 initBase64();
 export let AuthContext;
 
-export default function Appx() {
+export default function App() {
   AuthContext = React.createContext({});
   //TODO think about optimising useEffect => only during mount?
   //TODO test this flow => iterate through all the possible cases
@@ -93,7 +93,8 @@ export default function Appx() {
   );
 }
 
-registerRootComponent(Appx);
+registerRootComponent(App);
+
 if (isDevicePhoneOrTablet()) {
   setupURLPolyfill();
 }
