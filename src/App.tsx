@@ -1,5 +1,8 @@
 import * as React from "react";
-import { NavigationContainer } from "@react-navigation/native";
+import {
+  NavigationContainer,
+  useNavigationContainerRef,
+} from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import HomeScreen from "features/home/HomeScreen";
 import { registerRootComponent } from "expo";
@@ -25,6 +28,8 @@ export let AuthContext;
 
 export default function App() {
   AuthContext = React.createContext({});
+  const navigationRef = useNavigationContainerRef();
+  const routeNameRef = React.useRef();
   //TODO think about optimising useEffect => only during mount?
   //TODO test this flow => iterate through all the possible cases
   const [state, dispatch] = React.useReducer(
@@ -68,7 +73,24 @@ export default function App() {
   return (
     <Provider store={store}>
       <AuthContext.Provider value={authContext}>
-        <NavigationContainer>
+        <NavigationContainer
+          ref={navigationRef}
+          onReady={() => {
+            routeNameRef.current = navigationRef.getCurrentRoute().name;
+          }}
+          onStateChange={async () => {
+            console.log("analytics")
+            const previousRouteName = routeNameRef.current;
+            const currentRouteName = navigationRef.getCurrentRoute().name;
+            if (previousRouteName !== currentRouteName) {
+              await analytics().logScreenView({
+                screen_name: currentRouteName,
+                screen_class: currentRouteName,
+              });
+            }
+            routeNameRef.current = currentRouteName;
+          }}
+        >
           <Stack.Navigator>
             <>
               {state.signedIn ? (

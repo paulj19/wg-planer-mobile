@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "594491784193",
+    "project_id": "wgplaner-a091e",
+    "storage_bucket": "wgplaner-a091e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:594491784193:android:91a81610f7c975205fd400",
+        "android_client_info": {
+          "package_name": "com.wgplaner"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "594491784193-fhi8cgj004lc7kbq277ljpkpc96psu6m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB1VC3YcwL93hz3xF3sqpbOyUCWfHuUJ7M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "594491784193-fhi8cgj004lc7kbq277ljpkpc96psu6m.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "594491784193-p59kh53ug2322lp0f80mguo4ekrb5peg.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.wgplaner"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

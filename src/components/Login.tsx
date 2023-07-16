@@ -1,4 +1,5 @@
 import * as React from "react";
+import analytics from "@react-native-firebase/analytics";
 import { Button } from "react-native";
 import * as WebBrowser from "expo-web-browser";
 import * as AuthSession from "expo-auth-session";
@@ -12,6 +13,8 @@ import { getToken } from "features/auth/AuthenticationRequests";
 import { updateAndStoreAuthToken } from "features/auth/AuthTokenStorage";
 import { AuthContext } from "App";
 import { isDeviceDesktop } from "util/Device";
+import * as Analytics from "util/analytics/Analytics";
+
 let discovery: any;
 let redirectUri: any;
 
@@ -30,7 +33,7 @@ export default function Login({ navigation, route }) {
       authorizationEndpoint: URL_AUTHORIZATION,
       tokenEndpoint: URL_GET_TOKEN,
       revocationEndpoint: URL_REVOKE_TOKEN,
-      projectNameForProxy: "@paulo48/wg-planer-mobile"
+      projectNameForProxy: "@paulo48/wg-planer-mobile",
     }),
     []
   );
@@ -71,6 +74,7 @@ export default function Login({ navigation, route }) {
           .catch((e) => {
             console.error("getToken failed after gettting authCode: " + e);
           });
+          Analytics.logLogin();
       }
     }
   }, [discovery, request, response]);
@@ -80,7 +84,6 @@ export default function Login({ navigation, route }) {
       title="LOGIN"
       disabled={!request}
       onPress={() => promptAsync(useProxy)} //todo take useProxy from Authentication
-    
     />
   );
 }
