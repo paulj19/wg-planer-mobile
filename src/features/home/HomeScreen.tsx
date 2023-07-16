@@ -1,6 +1,6 @@
-import Logout from "../login/Logout";
+import Logout from "components/Logout";
 import { Text, View } from "react-native";
-import { useGetUserProfileQuery } from "../features/user/UserSlice";
+import { useGetUserProfileQuery } from "features/user/UserSlice";
 
 export default function HomeScreen() {
   const { data: userprofile } = useGetUserProfileQuery();

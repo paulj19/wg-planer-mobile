@@ -1,5 +1,3 @@
-import * as AuthSession from "expo-auth-session";
-
 export const authProps = {
   clientId: "wg-planer",
   clientSecret: "secret",

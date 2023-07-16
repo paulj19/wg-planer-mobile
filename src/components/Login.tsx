@@ -2,22 +2,25 @@ import * as React from "react";
 import { Button } from "react-native";
 import * as WebBrowser from "expo-web-browser";
 import * as AuthSession from "expo-auth-session";
-import { Platform } from "react-native";
 import {
   URL_AUTHORIZATION,
   URL_GET_TOKEN,
   URL_REVOKE_TOKEN,
-} from "../lib/UrlPaths";
-import { authProps } from "../lib/Authentication/AuthProps";
-import { getToken } from "../api/AuthenticationRequests";
-import { updateAndStoreAuthToken } from "../lib/Authentication/AuthTokenStorage";
-import { AuthContext } from "./../../src/App";
+} from "util/UrlPaths";
+import { authProps } from "features/auth/AuthProps";
+import { getToken } from "features/auth/AuthenticationRequests";
+import { updateAndStoreAuthToken } from "features/auth/AuthTokenStorage";
+import { AuthContext } from "App";
+import { isDeviceDesktop } from "util/Device";
 let discovery: any;
 let redirectUri: any;
 
 export default function Login({ navigation, route }) {
-  const useProxy = Platform.select({ web: false, default: true });
-  const authContext = React.useContext(AuthContext);
+  const authContext: any = React.useContext(AuthContext);
+  let useProxy = true;
+  if (isDeviceDesktop()) {
+    useProxy = false;
+  }
 
   WebBrowser.maybeCompleteAuthSession();
 
@@ -49,7 +52,7 @@ export default function Login({ navigation, route }) {
 
   React.useEffect(() => {
     if (request && route.params?.promptWindow) {
-      promptAsync(useProxy);
+      promptAsync({useProxy});
     }
   }, [request]);
 
@@ -75,7 +78,7 @@ export default function Login({ navigation, route }) {
     <Button
       title="LOGIN"
       disabled={!request}
-      onPress={() => promptAsync(useProxy)} //todo take useProxy from Authentication
+      onPress={() => promptAsync({useProxy})} //todo take useProxy from Authentication
     />
   );
 }

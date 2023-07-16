@@ -1,6 +1,6 @@
-import { URL_REGISTER_NEW } from "../lib/UrlPaths";
-import axios from "../lib/axiosConfig";
-import { authProps } from "../lib/Authentication/AuthProps";
+import { URL_REGISTER_NEW } from "util/UrlPaths";
+import axios from "util/axiosConfig";
+import { authProps } from "features/auth/AuthProps";
 
 export async function submitRegistrationData(formValues: string): Promise<void> {
   try {

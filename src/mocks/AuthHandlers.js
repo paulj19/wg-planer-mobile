@@ -1,4 +1,4 @@
-import { MOCK_BASE_URL, URL_INTROSPECT_TOKEN } from "./../lib/UrlPaths";
+import { MOCK_BASE_URL, URL_INTROSPECT_TOKEN } from "util/UrlPaths";
 import { rest } from "msw";
 
 const withMockBaseUrl = (path) => {

@@ -1,30 +1,29 @@
-import { Platform, StyleSheet } from "react-native";
 import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import HomeScreen from "./Home/HomeScreen";
+import HomeScreen from "features/home/HomeScreen";
 import { registerRootComponent } from "expo";
 import {
   clearAuthToken,
   loadAndRefreshAccessTokenIfExpired,
-} from "./lib/Authentication/AuthTokenStorage";
-import AuthToken from "./lib/Authentication/AuthToken";
-import EntryScreen from "./EntryScreen";
-import { RegistrationForm } from "../src/RegistrationForm";
-import Login from "../src/login/Login";
-import initBase64 from "./lib/util/Base64";
-import { server } from "./mocks/server";
-import { URL_GET_TOKEN } from "./lib/UrlPaths";
+} from "features/auth/AuthTokenStorage";
+import AuthToken from "features/auth/AuthToken";
+import EntryScreen from "components/EntryScreen";
+import { RegistrationForm } from "features/registration/RegistrationForm";
+import Login from "components/Login";
+import initBase64 from "util/Base64";
+import { server } from "mocks/server";
 import { setupURLPolyfill } from "react-native-url-polyfill";
 import { Provider } from "react-redux";
-import { store}  from "./store";
-import axios from "./lib/axiosConfig";
+import { store } from "store/store";
+import { isDevicePhoneOrTablet } from "util/Device";
+import { StyleSheet } from "react-native";
 
 const Stack = createStackNavigator();
 initBase64();
 export let AuthContext;
 
-export default function App() {
+export default function Appx() {
   AuthContext = React.createContext({});
   //TODO think about optimising useEffect => only during mount?
   //TODO test this flow => iterate through all the possible cases
@@ -56,7 +55,6 @@ export default function App() {
       try {
         await loadAndRefreshAccessTokenIfExpired();
         if (AuthToken.isPresent()) {
-          //TODO do not clear AuthToken if userprofile fails
           authContext.signIn();
         }
       } catch (e) {
@@ -95,14 +93,13 @@ export default function App() {
   );
 }
 
-registerRootComponent(App);
+registerRootComponent(Appx);
+if (isDevicePhoneOrTablet()) {
+  setupURLPolyfill();
+}
 
 if (process.env.NODE_ENV === "development") {
   server.listen({ onUnhandledRequest: "bypass" });
-}
-
-if (Platform.OS !== "web") {
-  setupURLPolyfill();
 }
 
 const styles = StyleSheet.create({

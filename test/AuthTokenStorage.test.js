@@ -10,13 +10,15 @@ import {
 } from "../src/lib/Authentication/AuthTokenStorage";
 import MockAdapter from "axios-mock-adapter";
 import { URL_REFRESH_TOKEN } from "../src/lib/UrlPaths";
+import { server } from "./../src/mocks/server";
 
 const mock = new MockAdapter(axios);
 
 describe("AuthTokenStorage", () => {
-  beforeEach(() => {
-    AuthToken.clear();
-  });
+  beforeAll(() => server.listen());
+  beforeEach(() => AuthToken.clear());
+  afterEach(() => server.resetHandlers())
+  beforeAll(() => server.close());
 
   it("loads into AuthToken", async () => {
     initMockData();
@@ -47,7 +49,7 @@ describe("AuthTokenStorage", () => {
 
   it("returns null when authToken not stored", async () => {
     initJestPlatformMock();
-    jest.spyOn(storage, "load").mockReturnValue(Promise.resolve(null));
+    jest.spyOn(storage, "getItem").mockReturnValue(Promise.resolve(null));
     await loadAndRefreshAccessTokenIfExpired();
     expect(AuthToken.accessToken).toBeNull();
     expect(AuthToken.refreshToken).toBeNull();
@@ -58,6 +60,7 @@ describe("AuthTokenStorage", () => {
   });
 
   it("loads non-expired authToken", async () => {
+    console.log(JSON.stringify(server));
     initJestPlatformMock();
     const date = new Date();
     date.setSeconds(date.getSeconds() + 20);
@@ -70,7 +73,7 @@ describe("AuthTokenStorage", () => {
       _scope: "sam scope old",
     };
     jest
-      .spyOn(storage, "load")
+      .spyOn(storage, "getItem")
       .mockReturnValue(Promise.resolve(expectedAuthToken));
     await loadAndRefreshAccessTokenIfExpired();
     expect(AuthToken.accessToken).toBe(expectedAuthToken._accessToken);
@@ -115,11 +118,13 @@ const initJestMocks = () => {
 };
 
 const initJestLoadMock = () => {
-  jest.spyOn(storage, "load").mockReturnValue(Promise.resolve(storedAuthToken));
+  jest
+    .spyOn(storage, "getItem")
+    .mockReturnValue(Promise.resolve(storedAuthToken));
 };
 
 const initJestSaveMock = () => {
-  jest.spyOn(aStorage, "save").mockReturnValue(Promise.resolve());
+  jest.spyOn(aStorage, "setItem").mockReturnValue(Promise.resolve());
 };
 
 const initMockData = () => {

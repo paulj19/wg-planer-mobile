@@ -1,8 +1,7 @@
 import { Button, TextInput, View, StyleSheet, Text } from "react-native";
-import { ErrorMessage, Form, Formik } from "formik";
+import { Formik } from "formik";
 import * as Yup from "yup";
-import * as httpRequest from "../src/api/RegistrationFormRequests";
-import { setStatusBarBackgroundColor } from "expo-status-bar";
+import * as httpRequest from "features/registration/RegistrationFormRequests";
 
 const registrationValidationSchema = Yup.object().shape({
   username: Yup.string()

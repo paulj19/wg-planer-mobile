@@ -1,6 +1,6 @@
-import { URL_USER_PROFILE } from "./../lib/UrlPaths";
+import { URL_USER_PROFILE } from "util/UrlPaths";
 import { rest } from "msw";
-import type { UserProfile } from "../types/UserProfile";
+import type { UserProfile } from "types";
 
 const userprofile: UserProfile = {
   username: "Max Muster",

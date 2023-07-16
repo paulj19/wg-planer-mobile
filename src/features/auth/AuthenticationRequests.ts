@@ -1,6 +1,6 @@
-import axios from "../lib/axiosConfig";
-import { URL_INTROSPECT_TOKEN, URL_REFRESH_TOKEN } from "../lib/UrlPaths";
-import { authProps } from "../lib/Authentication/AuthProps";
+import axios from "util/axiosConfig";
+import { URL_INTROSPECT_TOKEN, URL_REFRESH_TOKEN } from "util/UrlPaths";
+import { authProps } from "features/auth/AuthProps";
 
 export async function getToken(
   url: string,

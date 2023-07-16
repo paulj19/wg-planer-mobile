@@ -1,5 +1,5 @@
 import MockAdapter from "axios-mock-adapter";
-import { PATH_LOGIN, PATH_VALIDATE_ACCESS_TOKEN } from "./UrlPaths";
+import { PATH_LOGIN, PATH_VALIDATE_ACCESS_TOKEN } from "util/UrlPaths";
 
 let mock;
 

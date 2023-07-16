@@ -1,11 +1,11 @@
 import * as SecureStore from "expo-secure-store";
-import { Platform } from "react-native";
+import { isDeviceDesktop } from "util/Device";
 import { aStorage } from "./AsyncStorage";
 
 export async function setItem(key_: string, value: object): Promise<void> {
   //sync instead of /validate, securestorage?
   //needd just for login, this will do it for all req.
-  if (Platform.OS === "web") {
+  if (isDeviceDesktop()) {
     return aStorage.save({
       key: key_,
       data: value,
@@ -17,7 +17,7 @@ export async function setItem(key_: string, value: object): Promise<void> {
 export async function getItem(key_: string) {
   try {
     let authToken;
-    if (Platform.OS === "web") {
+    if (isDeviceDesktop()) {
       authToken = await aStorage.load({
         key: key_,
         autoSync: false,
@@ -34,7 +34,7 @@ export async function getItem(key_: string) {
 }
 
 export async function removeItem(key_: string): Promise<void> {
-  if (Platform.OS === "web") {
+  if (isDeviceDesktop()) {
     return aStorage.remove({
       key: key_.toString(),
     });

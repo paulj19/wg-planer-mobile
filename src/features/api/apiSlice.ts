@@ -1,6 +1,6 @@
 import { BaseQueryFn, createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { RESOURCE_SERVER_DEV } from "../../lib/UrlPaths";
-import axios from "../../lib/axiosConfig";
+import { RESOURCE_SERVER_DEV } from "util/UrlPaths";
+import axios from "util/axiosConfig";
 import { AxiosRequestConfig, AxiosError } from 'axios';
 
 export const axiosBaseQuery =

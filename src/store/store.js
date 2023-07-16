@@ -9,8 +9,8 @@ import {
   PURGE,
   REGISTER,
 } from "redux-persist";
-import * as  storage from "./util/storage/Storage";
-import { userSlice } from "./features/user/UserSlice";
+import * as  storage from "lib/storage/Storage";
+import { userSlice } from "features/user/UserSlice";
 
 const userSlicePersistConfig = {
   key: "userSlice",

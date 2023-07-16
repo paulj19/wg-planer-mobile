@@ -1,9 +1,9 @@
-import * as storage from "../../util/storage/Store";
+import * as storage from "lib/storage/Store";
 import AuthToken from "./AuthToken";
 import {
   introspectToken,
   refreshExpiredAccessToken,
-} from "../../api/AuthenticationRequests";
+} from "features/auth/AuthenticationRequests";
 
 export async function loadAndRefreshAccessTokenIfExpired(): Promise<void> {
   //why did you think typescript would not do something

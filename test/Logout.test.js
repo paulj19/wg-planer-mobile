@@ -30,6 +30,6 @@ describe("Logout", () => {
 
     const logoutButton = screen.getByText("LOGOUT");
     fireEvent.press(logoutButton);
-    expect(storage.remove).toHaveBeenCalledTimes(1);
+    expect(storage.removeItem).toHaveBeenCalledTimes(1);
   });
 });

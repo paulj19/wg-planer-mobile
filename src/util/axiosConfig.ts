@@ -9,8 +9,8 @@ import {
 import {
   clearAuthToken,
   refreshAccessTokenIfExpired,
-} from "./Authentication/AuthTokenStorage";
-import AuthToken from "./Authentication/AuthToken";
+} from "features/auth/AuthTokenStorage";
+import AuthToken from "features/auth/AuthToken";
 
 const client = axios.create({ baseURL: RESOURCE_SERVER_DEV });
 
