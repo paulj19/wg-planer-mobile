@@ -1,4 +1,4 @@
-import { webAnalytics } from "./WebAnalaytics";
+import webAnalytics from "./WebAnalaytics";
 import analytics from "@react-native-firebase/analytics";
 import { isDeviceDesktop } from "util/Device";
 import { logEvent } from "firebase/analytics";
