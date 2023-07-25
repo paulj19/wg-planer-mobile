@@ -6,7 +6,7 @@ import * as Analytics from "util/analytics/Analytics";
 import { AuthContext } from "App";
 import { UserProfile } from "types/types";
 
-export default function HomeScreen({ navigation, route }) {
+export default function HomeScreen() {
   const [getUserprofile, { data: userprofile }] = useLazyGetUserProfileQuery();
   const { authContext, authState } = useContext(AuthContext);
 

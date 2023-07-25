@@ -16,7 +16,7 @@ describe("Homescreen", () => {
     render(
       <AuthContext.Provider
         value={{
-          AuthContext: {},
+          authContext: {},
           authState: {
             signedIn: false,
             newLogin: false,
