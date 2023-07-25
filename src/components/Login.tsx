@@ -12,13 +12,12 @@ import { getToken } from "features/auth/AuthenticationRequests";
 import { updateAndStoreAuthToken } from "features/auth/AuthTokenStorage";
 import { AuthContext } from "App";
 import { isDeviceDesktop } from "util/Device";
-import * as Analytics from "util/analytics/Analytics";
 
 let discovery: any;
 let redirectUri: any;
 
 export default function Login({ navigation, route }) {
-  const authContext = React.useContext(AuthContext);
+  const { authContext } = React.useContext(AuthContext);
   let useProxy = true;
   if (isDeviceDesktop()) {
     useProxy = false;
@@ -68,12 +67,11 @@ export default function Login({ navigation, route }) {
         getToken(discovery.tokenEndpoint, response.params.code, redirectUri)
           .then((apiResponse) => {
             updateAndStoreAuthToken(apiResponse);
-            authContext.signIn();
+            authContext.signIn({ newLogin: true });
           })
           .catch((e) => {
             console.error("getToken failed after gettting authCode: " + e);
           });
-          Analytics.logLogin();
       }
     }
   }, [discovery, request, response]);

@@ -6,7 +6,7 @@ import * as AuthSession from "expo-auth-session";
 import AuthToken from "../src/lib/Authentication/AuthToken";
 import MockAdapter from "axios-mock-adapter";
 import axios from "../src/lib/axiosConfig";
-import Appx from "../src/App";
+import App from "../src/App";
 import { act, create } from "react-test-renderer";
 
 const mock = new MockAdapter(axios);

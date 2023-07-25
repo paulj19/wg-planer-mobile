@@ -32,26 +32,36 @@ export default function App() {
   const routeNameRef = React.useRef();
   //TODO think about optimising useEffect => only during mount?
   //TODO test this flow => iterate through all the possible cases
-  const [state, dispatch] = React.useReducer(
+  const [authState, dispatch] = React.useReducer(
     (prevState, action) => {
       switch (action.type) {
         case "SIGN_IN":
           return {
             signedIn: true,
+            newLogin: action.payload.newLogin,
           };
         case "SIGN_OUT":
           return {
+            ...prevState,
             signedIn: false,
+          };
+        case "ANALYTICS_INIT_LOGIN":
+          return {
+            ...prevState,
+            newLogin: false,
+            analyticsInitialized: true,
           };
       }
     },
     //signedIn variable could be part of user profile
-    { signedIn: false }
+    { signedIn: false, newLogin: false, analyticsInitialized: false }
   );
   const authContext = React.useMemo(
     () => ({
-      signIn: () => dispatch({ type: "SIGN_IN" }),
+      signIn: ({ newLogin }) =>
+        dispatch({ type: "SIGN_IN", payload: { newLogin } }),
       signOut: () => dispatch({ type: "SIGN_OUT" }),
+      analyticsInitAndLogin: () => dispatch({ type: "ANALYTICS_INIT_LOGIN" }),
     }),
     []
   );
@@ -60,7 +70,7 @@ export default function App() {
       try {
         await loadAndRefreshAccessTokenIfExpired();
         if (AuthToken.isPresent()) {
-          authContext.signIn();
+          authContext.signIn({ newLogin: false });
         }
       } catch (e) {
         clearAuthToken();
@@ -72,28 +82,28 @@ export default function App() {
 
   return (
     <Provider store={store}>
-      <AuthContext.Provider value={authContext}>
+      <AuthContext.Provider value={{ authContext, authState }}>
         <NavigationContainer
           ref={navigationRef}
-          onReady={() => {
-            routeNameRef.current = navigationRef.getCurrentRoute().name;
-          }}
-          onStateChange={async () => {
-            console.log("analytics")
-            const previousRouteName = routeNameRef.current;
-            const currentRouteName = navigationRef.getCurrentRoute().name;
-            if (previousRouteName !== currentRouteName) {
-              await analytics().logScreenView({
-                screen_name: currentRouteName,
-                screen_class: currentRouteName,
-              });
-            }
-            routeNameRef.current = currentRouteName;
-          }}
+          // onReady={() => {
+          //   routeNameRef.current = navigationRef.getCurrentRoute().name;
+          // }}
+          // onStateChange={async () => {
+          //   console.log("analytics");
+          //   const previousRouteName = routeNameRef.current;
+          //   const currentRouteName = navigationRef.getCurrentRoute().name;
+          //   if (previousRouteName !== currentRouteName) {
+          // await analytics().logScreenView({
+          //   screen_name: currentRouteName,
+          //   screen_class: currentRouteName,
+          // });
+          // }
+          // routeNameRef.current = currentRouteName;
+          // }}
         >
           <Stack.Navigator>
             <>
-              {state.signedIn ? (
+              {authState?.signedIn ? (
                 <>
                   <Stack.Screen name="Home" component={HomeScreen} />
                 </>

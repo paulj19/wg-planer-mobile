@@ -60,7 +60,6 @@ describe("AuthTokenStorage", () => {
   });
 
   it("loads non-expired authToken", async () => {
-    console.log(JSON.stringify(server));
     initJestPlatformMock();
     const date = new Date();
     date.setSeconds(date.getSeconds() + 20);

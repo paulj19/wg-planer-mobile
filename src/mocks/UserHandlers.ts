@@ -1,8 +1,9 @@
 import { URL_USER_PROFILE } from "util/UrlPaths";
 import { rest } from "msw";
-import type { UserProfile } from "types";
+import type { UserProfile } from "types/types";
 
 const userprofile: UserProfile = {
+  id: 423,
   username: "Max Muster",
   email: "max@muster.de",
 };
