@@ -1,0 +1,4 @@
+1. merge login and register to single login page with tabs => maybe because login page in expo is a browser based
+2. on number of rooms input => scroll up the room list to top, can be extended also to further fields
+3. what if fails during the transition from create wg to register user => save wg-id in local storage?
+4. imporve validation => room/task duplicates

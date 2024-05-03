@@ -1,5 +1,6 @@
 import { Button, View } from "react-native";
 import Login from "./Login";
+import { Text, TouchableOpacity } from 'react-native';
 
 export default function EntryScreen({ route, navigation }) {
   return (
@@ -11,6 +12,12 @@ export default function EntryScreen({ route, navigation }) {
         title="REGISTER"
         onPress={() => navigation.navigate("RegistrationForm")}
       />
+    <TouchableOpacity onPress={() => navigation.navigate('Create Floor')}>
+      <Text>Go to Details</Text>
+    </TouchableOpacity>
+      
+      
+
     </View>
   );
 }

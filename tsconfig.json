@@ -11,5 +11,6 @@
     "jsx": "react-jsx"
   },
   "include": ["**/*.tsx"],
-  "extends": "expo/tsconfig.base"
+  "extends": "expo/tsconfig.base",
+  "content": ["./App.{js,jsx,ts,tsx}", "./src/**/*.{js,jsx,ts,tsx}"]
 }

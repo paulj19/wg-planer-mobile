@@ -21,6 +21,7 @@ import { Provider } from "react-redux";
 import { store } from "store/store";
 import { isDevicePhoneOrTablet } from "util/Device";
 import { StyleSheet } from "react-native";
+import { CreateFloor } from "features/registration/CreateFloor";
 
 const Stack = createStackNavigator();
 initBase64();
@@ -110,6 +111,7 @@ export default function App() {
               ) : (
                 <>
                   <Stack.Screen name="EntryScreen" component={EntryScreen} />
+                  <Stack.Screen name="Create Floor" component={CreateFloor} />
                 </>
               )}
               <Stack.Screen
