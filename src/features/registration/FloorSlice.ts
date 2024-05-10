@@ -8,22 +8,34 @@ export const floorSlice = createApi({
   baseQuery: axiosBaseQuery({ baseUrl: "http://192.168.1.9:8080" }),
   endpoints: (builder) => ({
     getFloor: builder.query({
-      query: () => ({
-        url: "http://192.168.1.9:8080/floor",
+      query: (floorId) => ({
+        url: `/floor/${floorId}`,
         method: "get",
       }),
     }),
     createFloor: builder.mutation({
       query: (body) => {
-        console.log("Body", body);
         return {
-          url: "/floor",
+          url: "/floor/",
           method: "post",
           headers: {
             "Content-Type": "application/json",
           },
           data: body,
         };
+      },
+      async onQueryStarted({ ...data }, { dispatch, queryFulfilled }) {
+        try {
+          const result = await queryFulfilled;
+          console.log("Result***", result?.data?.Id);
+          dispatch(
+            floorSlice.util.updateQueryData("getFloor", result?.data?.Id, (draft) => {
+              Object.assign(draft, result?.data);
+            })
+          );
+        } catch (e) {
+          console.error(e);
+        }
       },
     }),
   }),

@@ -2,3 +2,7 @@
 2. on number of rooms input => scroll up the room list to top, can be extended also to further fields
 3. what if fails during the transition from create wg to register user => save wg-id in local storage?
 4. imporve validation => room/task duplicates
+5. reset tasks not working
+6. make taking directly from cache in redux via selectFloor() work instead of passing args directly to registration page
+7. enable going back to previous page in registration, wg already created so, needs to update the created wg and then pass to registration page again
+8. golang server panics and exits on duplicate floor id submitted from frontend
