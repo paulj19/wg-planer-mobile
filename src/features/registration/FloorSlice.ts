@@ -1,11 +1,11 @@
-import { RESOURCE_SERVER_DEV } from "util/UrlPaths";
+import { GO_BACKEND, RESOURCE_SERVER_DEV } from "util/UrlPaths";
 import { REHYDRATE } from "redux-persist";
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { axiosBaseQuery } from "features/api/apiSlice";
 
 export const floorSlice = createApi({
   reducerPath: "floorApi",
-  baseQuery: axiosBaseQuery({ baseUrl: "http://192.168.1.9:8080" }),
+  baseQuery: axiosBaseQuery({ baseUrl: GO_BACKEND}),
   endpoints: (builder) => ({
     getFloor: builder.query({
       query: (floorId) => ({
@@ -47,3 +47,4 @@ export const floorSlice = createApi({
 });
 
 export const { useGetFloorQuery, useCreateFloorMutation } = floorSlice;
+

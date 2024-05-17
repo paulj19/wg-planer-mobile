@@ -13,7 +13,8 @@ export default function HomeScreen() {
   useEffect(() => {
     getUserprofile(null, true)
       .unwrap()
-      .then((userprofile) => analyticsInitAndLogLogin(userprofile))
+      .then((userprofile) => {console.log("USERPROFILEXXX", userprofile);
+      analyticsInitAndLogLogin(userprofile)})
       .catch((e) =>
         console.error("error getting userprofile analytics init, login", e)
       );
@@ -30,6 +31,7 @@ export default function HomeScreen() {
     }
   }
   if (userprofile) {
+  console.log("UserProfile XXX", userprofile)
     return (
       <View>
         <Text>{"hello " + userprofile.username + "!"}</Text>

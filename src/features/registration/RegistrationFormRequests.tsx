@@ -16,7 +16,7 @@ export async function submitRegistrationData(formValues: string): Promise<void> 
             },
             data: formValues,
         });
-        return console.log(response);
+        return console.log("XXX OOO YYY", response);
     } catch (e) {
         console.error(e);
     }

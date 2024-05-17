@@ -30,6 +30,7 @@ export async function loadAuthToken(): Promise<void> {
 export async function clearAuthToken(): Promise<void> {
   AuthToken.clear();
   await storage.removeItem("auth-token");
+  console.log("load auth token", AuthToken.accessToken)
 }
 
 export async function refreshAccessTokenIfExpired(): Promise<void> {

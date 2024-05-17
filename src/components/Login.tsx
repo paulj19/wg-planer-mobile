@@ -66,6 +66,7 @@ export default function Login({ navigation, route }) {
       if (response.type === "success") {
         getToken(discovery.tokenEndpoint, response.params.code, redirectUri)
           .then((apiResponse) => {
+            console.log("API RESponse", apiResponse);
             updateAndStoreAuthToken(apiResponse);
             authContext.signIn({ newLogin: true });
           })
