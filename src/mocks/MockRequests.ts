@@ -31,6 +31,6 @@ const getToken = () =>
 
 const validateAccessToken = () =>
   mock.onGet(PATH_VALIDATE_ACCESS_TOKEN).reply(200, mockUser, {
-    authentication: "Bearer: newAccessToken123.",
+    Authorization: "Bearer: newAccessToken123.",
     refresh_token: "refreshToken123!",
   });

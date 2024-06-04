@@ -6,3 +6,5 @@
 6. make taking directly from cache in redux via selectFloor() work instead of passing args directly to registration page
 7. enable going back to previous page in registration, wg already created so, needs to update the created wg and then pass to registration page again
 8. golang server panics and exits on duplicate floor id submitted from frontend
+9. not connected to the internet, toast
+10. authserver redeploy => golang server cant get jwks => periodic ping?!

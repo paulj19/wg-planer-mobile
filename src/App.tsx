@@ -110,15 +110,20 @@ export default function App() {
                 </>
               ) : (
                 <>
-                  <Stack.Screen name="EntryScreen" component={EntryScreen} />
+                  <Stack.Screen name="EntryScreen" component={EntryScreen} options={{headerShown: false}}/>
                   <Stack.Screen name="Create Floor" component={CreateFloor} />
                 </>
               )}
               <Stack.Screen
                 name="RegistrationForm"
                 component={RegistrationForm}
+                options={{title: "Sign Up"}}
               />
-              <Stack.Screen name="Login" component={Login} />
+              <Stack.Screen
+                name="Login"
+                component={Login}
+                options={{ gestureEnabled: false, headerLeft: () => <></> }}
+              />
             </>
           </Stack.Navigator>
         </NavigationContainer>

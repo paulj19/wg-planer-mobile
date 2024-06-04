@@ -1,4 +1,4 @@
-import { RESOURCE_SERVER_DEV } from "util/UrlPaths";
+import { GO_BACKEND, RESOURCE_SERVER_DEV } from "util/UrlPaths";
 import { REHYDRATE } from "redux-persist";
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { axiosBaseQuery } from "features/api/apiSlice";
@@ -8,11 +8,11 @@ import { useState } from "react";
 
 export const userSlice = createApi({
   reducerPath: "userApi",
-  baseQuery: axiosBaseQuery({ baseUrl: RESOURCE_SERVER_DEV }),
+  baseQuery: axiosBaseQuery({ baseUrl: GO_BACKEND }),
   endpoints: (builder) => ({
-    getUserProfile: builder.query({
+    getPostLoginInfo: builder.query({
       query: () => ({
-        url: "/userprofile",
+        url: "/post-login",
         method: "get",
       }),
     }),
@@ -24,9 +24,9 @@ export const userSlice = createApi({
   },
 });
 
-const selectUserProfileResult = userSlice.endpoints.getUserProfile.select();
+// const selectUserProfileResult = userSlice.endpoints.getUserProfile.select();
 
-export const userprofilex = createSelector(selectUserProfileResult, result => result.data)
+// export const userprofilex = createSelector(selectUserProfileResult, result => result.data)
 
-export const { useLazyGetUserProfileQuery, useGetUserProfileQuery } = userSlice;
+export const {useLazyGetPostLoginInfoQuery} = userSlice;
 

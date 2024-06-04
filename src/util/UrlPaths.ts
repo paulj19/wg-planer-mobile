@@ -1,12 +1,12 @@
 import { MOCK_ENABLED } from "@env";
 
 export const MOCK_BASE_URL = "http://localhost";
-export const URL_AUTH_SERVER = "http://192.168.33.237:8081";
+export const URL_AUTH_SERVER = "http://192.168.0.108:8081";
 // export const RESOURCE_SERVER_DEV = MOCK_ENABLED
 //   ? MOCK_BASE_URL
 //   : "http://192.168.33.184:8082";
-export const RESOURCE_SERVER_DEV = "http://192.168.33.237:8082";
-export const GO_BACKEND = "http://192.168.33.237:8080";
+export const RESOURCE_SERVER_DEV = "http://192.168.0.108:8082";
+export const GO_BACKEND = "http://192.168.0.108:8080";
 export const PATH_VALIDATE_ACCESS_TOKEN = "/validate-access-token";
 export const PATH_LOGIN = "/login";
 export const URL_AUTHORIZATION = URL_AUTH_SERVER + "/oauth2/authorize";

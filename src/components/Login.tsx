@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Button } from "react-native";
+import { Button } from "react-native-paper";
 import * as WebBrowser from "expo-web-browser";
 import * as AuthSession from "expo-auth-session";
 import {
@@ -59,6 +59,10 @@ export default function Login({ navigation, route }) {
   }, [request]);
 
   React.useEffect(() => {
+    navigation.addListener("beforeRemove", (e) => {
+      e.preventDefault();
+    });
+
     if (response) {
       if (response.error) {
         console.error("getting authCode failed: " + response.error);
@@ -79,9 +83,14 @@ export default function Login({ navigation, route }) {
 
   return (
     <Button
-      title="LOGIN"
+      mode="contained-tonal"
+      style={{
+        width: "75%",
+      }}
+      onPress={() => promptAsync(useProxy)}
       disabled={!request}
-      onPress={() => promptAsync(useProxy)} //todo take useProxy from Authentication
-    />
+    >
+      LOGIN
+    </Button>
   );
 }

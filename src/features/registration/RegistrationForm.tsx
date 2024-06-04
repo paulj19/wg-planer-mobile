@@ -6,6 +6,7 @@ import { useGetFloorQuery } from "features/registration/FloorSlice";
 import { ActivityIndicator } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 import { TextInput, Button } from "react-native-paper";
+import { ErrorScreen } from "components/ErrorScreen";
 
 const registrationValidationSchema = Yup.object().shape({
   username: Yup.string()
@@ -35,7 +36,11 @@ const registrationValidationSchema = Yup.object().shape({
 });
 
 export const RegistrationForm = ({ route, navigation }) => {
-  const { floorId } = route.params;
+  const floorId = route.params?.floorId;
+  if (!floorId) {
+    return (<ErrorScreen />);
+  }
+
   const { data: floorData, isLoading, isError } = useGetFloorQuery(floorId);
   if (isLoading) {
     return (
@@ -76,7 +81,14 @@ export const RegistrationForm = ({ route, navigation }) => {
             })
           )
           .then((r) => navigation.navigate("Login", { promptWindow: true }))
-          .catch((e) => console.error(e));
+          .catch((e) => {
+            console.error(e);
+            ToastAndroid.showWithGravity(
+              "An error occurred, please try again later.",
+              ToastAndroid.LONG,
+              ToastAndroid.BOTTOM
+            );
+          });
       }}
     >
       {({
@@ -87,7 +99,7 @@ export const RegistrationForm = ({ route, navigation }) => {
         touched,
         errors,
         isValid,
-        reset,
+        resetForm,
       }) => (
         <View>
           <TextInput
@@ -189,7 +201,7 @@ export const RegistrationForm = ({ route, navigation }) => {
               style={{
                 width: "48%",
               }}
-              onPress={() => reset()}
+              onPress={() => resetForm()}
             >
               Reset
             </Button>

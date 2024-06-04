@@ -3,7 +3,7 @@ import axios from "util/axiosConfig";
 import { authProps } from "features/auth/AuthProps";
 
 export async function submitRegistrationData(formValues: string): Promise<void> {
-  try {
+console.log("UUU", formValues)
         const response = await axios({
             method: "post",
             url: URL_REGISTER_NEW,
@@ -17,9 +17,6 @@ export async function submitRegistrationData(formValues: string): Promise<void> 
             data: formValues,
         });
         return console.log("XXX OOO YYY", response);
-    } catch (e) {
-        console.error(e);
-    }
 };
 
 export const isUsernameAvailable = (username: string): Promise<boolean> => {

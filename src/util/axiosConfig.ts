@@ -40,7 +40,7 @@ client.interceptors.request.use(
         )
       );
       if (AuthToken.accessToken) {
-        config.headers.authentication = "Bearer: ".concat(
+        config.headers.Authorization = "Bearer ".concat(
           AuthToken.accessToken
         );
       }

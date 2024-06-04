@@ -4,7 +4,7 @@ import { View, Text, ToastAndroid, ScrollView } from "react-native";
 import { Button, Icon, IconButton, TextInput } from "react-native-paper";
 import { useCreateFloorMutation } from "features/registration/FloorSlice";
 
-export function CreateFloor({navigation}): React.ReactElement {
+export function CreateFloor({ navigation }): React.ReactElement {
   const {
     control,
     reset,
@@ -90,7 +90,11 @@ export function CreateFloor({navigation}): React.ReactElement {
       }));
       const roomsArray = rooms
         .filter((room) => room.number != "")
-        .map((room, i) => ({ id: i.toString(), order: i+1, number: room.number }));
+        .map((room, i) => ({
+          id: i.toString(),
+          order: i + 1,
+          number: room.number,
+        }));
       const floor = {
         floorName,
         tasks: tasksArray,
@@ -105,12 +109,12 @@ export function CreateFloor({navigation}): React.ReactElement {
             ToastAndroid.LONG,
             ToastAndroid.BOTTOM
           );
-        navigation.navigate("RegistrationForm", { floorId: payload.Id });
+          navigation.navigate("RegistrationForm", { floorId: payload.Id });
         });
     } catch (e) {
       console.error(e);
       ToastAndroid.showWithGravity(
-        "Error creating floor, please try again later.",
+        "An error occurred, please try again later.",
         ToastAndroid.LONG,
         ToastAndroid.BOTTOM
       );
@@ -119,7 +123,6 @@ export function CreateFloor({navigation}): React.ReactElement {
 
   return (
     <ScrollView>
-      <Text>Sign Up Form</Text>
       <Controller
         control={control}
         defaultValue=""
