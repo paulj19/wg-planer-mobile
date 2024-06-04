@@ -71,5 +71,6 @@ const commonProp = {
     "@react-native-firebase/app",
     "@react-native-firebase/perf",
     "@react-native-firebase/crashlytics",
+    "expo-secure-store"
   ],
 };
