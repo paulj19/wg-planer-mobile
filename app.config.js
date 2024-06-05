@@ -6,11 +6,11 @@ export default () => {
   } else {
     return {
       ...commonProp,
-      ios: {
-        googleServicesFile: "./GoogleService-Info-development.plist",
-        supportsTablet: true,
-        bundleIdentifier: "com.wgplaner",
-      },
+      // ios: {
+      //   // googleServicesFile: "./GoogleService-Info-development.plist",
+      //   supportsTablet: true,
+      //   bundleIdentifier: "com.wgplaner",
+      // },
       android: {
         googleServicesFile: "./google-services-development.json",
         adaptiveIcon: {
@@ -22,15 +22,15 @@ export default () => {
       web: {
         favicon: "./assets/favicon.png",
         config: {
-          firebase: {
-            apiKey: "AIzaSyDiF7SVsUuB5dK3kuXBI_5sI7XU8_iNuk8",
-            authDomain: "wgplaner-a091e.firebaseapp.com",
-            projectId: "wgplaner-a091e",
-            storageBucket: "wgplaner-a091e.appspot.com",
-            messagingSenderId: "594491784193",
-            appId: "1:594491784193:web:0c68d523eead704e5fd400",
-            measurementId: "G-B4NF2BQTRK",
-          },
+          // firebase: {
+          //   apiKey: "AIzaSyDiF7SVsUuB5dK3kuXBI_5sI7XU8_iNuk8",
+          //   authDomain: "wgplaner-a091e.firebaseapp.com",
+          //   projectId: "wgplaner-a091e",
+          //   storageBucket: "wgplaner-a091e.appspot.com",
+          //   messagingSenderId: "594491784193",
+          //   appId: "1:594491784193:web:0c68d523eead704e5fd400",
+          //   measurementId: "G-B4NF2BQTRK",
+          // },
         },
       },
     };
@@ -68,9 +68,9 @@ const commonProp = {
         },
       },
     ],
-    "@react-native-firebase/app",
-    "@react-native-firebase/perf",
-    "@react-native-firebase/crashlytics",
+    // "@react-native-firebase/app",
+    // "@react-native-firebase/perf",
+    // "@react-native-firebase/crashlytics",
     "expo-secure-store"
   ],
 };
