@@ -1,4 +1,4 @@
-import { URL_USER_PROFILE } from "util/UrlPaths";
+import { URL_POST_LOGIN, URL_USER_PROFILE } from "util/UrlPaths";
 import { rest } from "msw";
 import type { UserProfile } from "types/types";
 
@@ -9,7 +9,39 @@ const userprofile: UserProfile = {
 };
 
 export const userHandlers = [
-  rest.get(URL_USER_PROFILE, (req, res, ctx) => {
-    return res(ctx.json(userprofile), ctx.status(200));
-  }),
+  // rest.get(URL_USER_PROFILE, (req, res, ctx) => {
+  //   return res(ctx.json(userprofile), ctx.status(200));
+  // }),
+
+  rest.get(URL_POST_LOGIN, (req, res, ctx) => {
+    return res(ctx.json({
+    floor: {
+      Id: "66603e2a00afb9bb44b3cadb",
+      FloorName: "Awesome floor",
+      Residents: null,
+      Tasks: [
+        { Id: "0", Name: "Gelbersack weg", AssignedTo: "" },
+        { Id: "1", Name: "Mülltonne ", AssignedTo: "" },
+        { Id: "2", Name: "Küche reinigen ", AssignedTo: "" },
+        { Id: "3", Name: "Schwarz sack", AssignedTo: "" },
+      ],
+      Rooms: [
+        { Id: "0", Number: "301", Order: 1, Resident: "" },
+        { Id: "1", Number: "302", Order: 2, Resident: "" },
+        { Id: "2", Number: "303", Order: 3, Resident: "" },
+        { Id: "3", Number: "304", Order: 4, Resident: "" },
+        { Id: "4", Number: "305", Order: 5, Resident: "" },
+        { Id: "5", Number: "306", Order: 6, Resident: "" },
+      ],
+    },
+    userprofile: {
+      id: 1,
+      username: "Paulo",
+      email: "maxmuster@gmail.com",
+      floorId: "66603e2a00afb9bb44b3cadb",
+      oid: 1,
+      authServer: "HOME_BREW",
+    },
+  }), ctx.status(200))
+  })
 ];

@@ -11,6 +11,7 @@ import {
   refreshAccessTokenIfExpired,
 } from "features/auth/AuthTokenStorage";
 import AuthToken from "features/auth/AuthToken";
+import { initializeMocks } from "mocks/MockRequests";
 
 const client = axios.create({ baseURL: RESOURCE_SERVER_DEV });
 

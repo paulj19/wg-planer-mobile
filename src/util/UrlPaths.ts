@@ -17,3 +17,4 @@ export const URL_INTROSPECT_TOKEN =
   (MOCK_ENABLED ? MOCK_BASE_URL : URL_AUTH_SERVER) + "/oauth2/introspect";
 export const URL_REGISTER_NEW = RESOURCE_SERVER_DEV + "/register/new";
 export const URL_USER_PROFILE = RESOURCE_SERVER_DEV + "/userprofile";
+export const URL_POST_LOGIN = GO_BACKEND + "/post-login";

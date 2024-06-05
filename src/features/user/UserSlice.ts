@@ -1,4 +1,4 @@
-import { GO_BACKEND, RESOURCE_SERVER_DEV } from "util/UrlPaths";
+import { GO_BACKEND, RESOURCE_SERVER_DEV, URL_POST_LOGIN } from "util/UrlPaths";
 import { REHYDRATE } from "redux-persist";
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { axiosBaseQuery } from "features/api/apiSlice";
@@ -8,11 +8,11 @@ import { useState } from "react";
 
 export const userSlice = createApi({
   reducerPath: "userApi",
-  baseQuery: axiosBaseQuery({ baseUrl: GO_BACKEND }),
+  baseQuery: axiosBaseQuery(),
   endpoints: (builder) => ({
     getPostLoginInfo: builder.query({
       query: () => ({
-        url: "/post-login",
+        url: URL_POST_LOGIN,
         method: "get",
       }),
     }),

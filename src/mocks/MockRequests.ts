@@ -1,12 +1,14 @@
 import MockAdapter from "axios-mock-adapter";
-import { PATH_LOGIN, PATH_VALIDATE_ACCESS_TOKEN } from "util/UrlPaths";
+import { PATH_LOGIN, PATH_VALIDATE_ACCESS_TOKEN, URL_POST_LOGIN } from "util/UrlPaths";
 
 let mock;
 
 export function initializeMocks(client) {
+  console.log("initializing mocks");
   mock = new MockAdapter(client);
-  getToken();
-  validateAccessToken();
+  // getToken();
+  // validateAccessToken();
+ // mockPostLoginInfo();
 }
 
 const mockUser = {
@@ -34,3 +36,35 @@ const validateAccessToken = () =>
     Authorization: "Bearer: newAccessToken123.",
     refresh_token: "refreshToken123!",
   });
+
+export function mockPostLoginInfo() {
+  mock.onGet(URL_POST_LOGIN).reply(200, {
+    floor: {
+      Id: "66603e2a00afb9bb44b3cadb",
+      FloorName: "Awesome floor",
+      Residents: null,
+      Tasks: [
+        { Id: "0", Name: "Gelbersack weg", AssignedTo: "" },
+        { Id: "1", Name: "Mülltonne ", AssignedTo: "" },
+        { Id: "2", Name: "Küche reinigen ", AssignedTo: "" },
+        { Id: "3", Name: "Schwarz sack", AssignedTo: "" },
+      ],
+      Rooms: [
+        { Id: "0", Number: "301", Order: 1, Resident: "" },
+        { Id: "1", Number: "302", Order: 2, Resident: "" },
+        { Id: "2", Number: "303", Order: 3, Resident: "" },
+        { Id: "3", Number: "304", Order: 4, Resident: "" },
+        { Id: "4", Number: "305", Order: 5, Resident: "" },
+        { Id: "5", Number: "306", Order: 6, Resident: "" },
+      ],
+    },
+    userprofile: {
+      id: 1,
+      username: "Paulo",
+      email: "maxmuster@gmail.com",
+      floorId: "66603e2a00afb9bb44b3cadb",
+      oid: 1,
+      authServer: "HOME_BREW",
+    },
+  });
+}
