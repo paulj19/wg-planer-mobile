@@ -118,7 +118,6 @@ export const RegistrationForm = ({ route, navigation }) => {
           )}
           <Dropdown
             name="room"
-            search
             data={floorData.Rooms}
             onChange={(item) => handleChange("room")(item.Number)}
             onBlur={() => handleBlur("room")}

@@ -103,7 +103,6 @@ export function CreateFloor({ navigation }): React.ReactElement {
       await createFloor(floor)
         .unwrap()
         .then((payload) => {
-          console.log("Floor created successfully", payload);
           ToastAndroid.showWithGravity(
             "Floor created!",
             ToastAndroid.LONG,

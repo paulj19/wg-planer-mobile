@@ -18,7 +18,6 @@ export default function HomeScreen() {
     getPostLoginInfo(null, true)
       .unwrap()
       .then((userprofile) => {
-        console.log("USERPROFILEXXX", userprofile);
         // analyticsInitAndLogLogin(userprofile);
       })
       .catch((e) => {

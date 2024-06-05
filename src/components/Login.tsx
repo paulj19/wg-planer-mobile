@@ -70,7 +70,6 @@ export default function Login({ navigation, route }) {
       if (response.type === "success") {
         getToken(discovery.tokenEndpoint, response.params.code, redirectUri)
           .then((apiResponse) => {
-            console.log("API RESponse", apiResponse);
             updateAndStoreAuthToken(apiResponse);
             authContext.signIn({ newLogin: true });
           })
@@ -86,6 +85,9 @@ export default function Login({ navigation, route }) {
       mode="contained-tonal"
       style={{
         width: "75%",
+        marginTop: "50%",
+        marginLeft: "auto",
+        marginRight: "auto",
       }}
       onPress={() => promptAsync(useProxy)}
       disabled={!request}

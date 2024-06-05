@@ -27,7 +27,6 @@ export const floorSlice = createApi({
       async onQueryStarted({ ...data }, { dispatch, queryFulfilled }) {
         try {
           const result = await queryFulfilled;
-          console.log("Result***", result?.data?.Id);
           dispatch(
             floorSlice.util.updateQueryData("getFloor", result?.data?.Id, (draft) => {
               Object.assign(draft, result?.data);

@@ -24,7 +24,7 @@ export async function getToken(
       grant_type: "authorization_code",
     },
   })
-    .then((response) => {console.log("response data", response.data);return response.data})
+    .then((response) => (response.data))
     .catch((e) => {
       throw Error("Failed to load token: " + e);
     });

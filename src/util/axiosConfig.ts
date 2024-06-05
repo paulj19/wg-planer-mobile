@@ -16,7 +16,6 @@ const client = axios.create({ baseURL: RESOURCE_SERVER_DEV });
 
 axiosRetry(client, {
   retryDelay: (retryCount) => {
-    console.log(`retry attempt: ${retryCount}`);
     return retryCount * 1000;
   },
   retryCondition: (error) => {

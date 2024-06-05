@@ -3,7 +3,6 @@ import axios from "util/axiosConfig";
 import { authProps } from "features/auth/AuthProps";
 
 export async function submitRegistrationData(formValues: string): Promise<void> {
-console.log("UUU", formValues)
         const response = await axios({
             method: "post",
             url: URL_REGISTER_NEW,
@@ -16,7 +15,6 @@ console.log("UUU", formValues)
             },
             data: formValues,
         });
-        return console.log("XXX OOO YYY", response);
 };
 
 export const isUsernameAvailable = (username: string): Promise<boolean> => {
@@ -33,7 +31,6 @@ export const isUsernameAvailable = (username: string): Promise<boolean> => {
       return response.data === true;
     })
     .catch((e) => {
-      console.log(e);
       return true;
     });
 };
@@ -52,7 +49,6 @@ export const isEmailAvailable = (email: string): Promise<boolean> => {
       return response.data === true;
     })
     .catch((e) => {
-      console.log(e);
       //todo retry until form submission
       return true;
     });
