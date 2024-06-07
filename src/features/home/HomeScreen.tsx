@@ -6,6 +6,13 @@ import * as Analytics from "util/analytics/Analytics";
 import { AuthContext } from "App";
 import { UserProfile } from "types/types";
 import { ErrorScreen } from "components/ErrorScreen";
+import { Settings } from "features/settings/ProfileSettings";
+import { Floor } from "features/floor/Floor";
+import { NavigationContainer } from "@react-navigation/native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { Feed } from "features/feed/Feed";
+import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function HomeScreen() {
   const [getPostLoginInfo, { currentData }] = useLazyGetPostLoginInfoQuery();
@@ -18,7 +25,6 @@ export default function HomeScreen() {
     getPostLoginInfo(null, true)
       .unwrap()
       .then((userprofile) => {
-      console.log("userprofile", JSON.stringify(userprofile));
         // analyticsInitAndLogLogin(userprofile);
       })
       .catch((e) => {
@@ -31,12 +37,17 @@ export default function HomeScreen() {
     return <ErrorScreen />;
   }
   if (!currentData) {
-    return <ActivityIndicator size="large" color="#0000ff" style={{
-      marginTop: "50%",
-      marginLeft: "auto",
-      marginRight: "auto",
-    }}
-    />;
+    return (
+      <ActivityIndicator
+        size="large"
+        color="#0000ff"
+        style={{
+          marginTop: "50%",
+          marginLeft: "auto",
+          marginRight: "auto",
+        }}
+      />
+    );
   }
 
   function analyticsInitAndLogLogin(userprofile: UserProfile) {
@@ -50,21 +61,51 @@ export default function HomeScreen() {
     }
   }
 
-  if (userprofile) {
-    return (
-      <View>
-        <Text>{JSON.stringify(userprofile) + JSON.stringify(floor)}</Text>
-        <Logout />
-      </View>
-    );
-  } else {
-    return (
-      <View>
-        <Text>{"no user profile"}</Text>
-        <Logout />
-      </View>
-    );
+  const Tab = createBottomTabNavigator();
 
-    // throw Error("userprofile must not be null");
-  }
+  return (
+    <>
+      <Tab.Navigator
+        initialRouteName="Feed"
+        screenOptions={({ route }) => ({
+          tabBarActiveTintColor: "#000",
+          tabBarInactiveTintColor: "gray",
+          tabBarIcon: ({ focused, color, size }) => {
+            let iconName;
+            if (route.name === "Feed") {
+              iconName = focused ? "notifications" : "notifications-none";
+              return <MaterialIcons name={iconName} size={24} color="black" />;
+            } else if (route.name === "Settings") {
+              iconName = focused ? "settings" : "settings-outline";
+            } else if (route.name === "Floor") {
+              iconName = focused ? "home" : "home-outline";
+            }
+            return <Ionicons name={iconName} size={24} color="black" />;
+          },
+        })}
+      >
+        <Tab.Screen
+          name="Floor"
+          component={Floor}
+          options={{
+            tabBarLabel: "Home",
+          }}
+        />
+        <Tab.Screen
+          name="Feed"
+          component={Feed}
+          options={{
+            tabBarLabel: "Feed",
+          }}
+        />
+        <Tab.Screen
+          name="Settings"
+          component={Settings}
+          options={{
+            tabBarLabel: "Settings",
+          }}
+        />
+      </Tab.Navigator>
+    </>
+  );
 }

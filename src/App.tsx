@@ -84,40 +84,31 @@ export default function App() {
   return (
     <Provider store={store}>
       <AuthContext.Provider value={{ authContext, authState }}>
-        <NavigationContainer
-          ref={navigationRef}
-          // onReady={() => {
-          //   routeNameRef.current = navigationRef.getCurrentRoute().name;
-          // }}
-          // onStateChange={async () => {
-          //   console.log("analytics");
-          //   const previousRouteName = routeNameRef.current;
-          //   const currentRouteName = navigationRef.getCurrentRoute().name;
-          //   if (previousRouteName !== currentRouteName) {
-          // await analytics().logScreenView({
-          //   screen_name: currentRouteName,
-          //   screen_class: currentRouteName,
-          // });
-          // }
-          // routeNameRef.current = currentRouteName;
-          // }}
-        >
+        <NavigationContainer ref={navigationRef}>
           <Stack.Navigator>
             <>
-              {authState?.signedIn ? (
+              {!authState?.signedIn ? (
                 <>
-                  <Stack.Screen name="Home" component={HomeScreen} />
+                  <Stack.Screen
+                    name="Home"
+                    component={HomeScreen}
+                    options={{ headerShown: false }}
+                  />
                 </>
               ) : (
                 <>
-                  <Stack.Screen name="EntryScreen" component={EntryScreen} options={{headerShown: false}}/>
+                  <Stack.Screen
+                    name="EntryScreen"
+                    component={EntryScreen}
+                    options={{ headerShown: false }}
+                  />
                   <Stack.Screen name="Create Floor" component={CreateFloor} />
                 </>
               )}
               <Stack.Screen
                 name="RegistrationForm"
                 component={RegistrationForm}
-                options={{title: "Sign Up"}}
+                options={{ title: "Sign Up" }}
               />
               <Stack.Screen
                 name="Login"
