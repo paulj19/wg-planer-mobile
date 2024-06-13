@@ -8,3 +8,15 @@
 8. golang server panics and exits on duplicate floor id submitted from frontend
 9. not connected to the internet, toast
 10. authserver redeploy => golang server cant get jwks => periodic ping?!
+
+
+
+COOLIO FEATs
+1. reminder avail again => when will you be back? calender and ask if available on that day?
+2. remind self on this task => notification or alarm to remind in 10 hours/at 6 pm today!
+3. feedback as stars and comments as feedback
+4. number of reminders in feed
+
+
+IMP:
+1. feed refresh

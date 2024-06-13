@@ -63,7 +63,8 @@
     "redux": "^4.2.1",
     "redux-persist": "^6.0.0",
     "yarn": "^1.22.19",
-    "yup": "^0.32.11"
+    "yup": "^0.32.11",
+    "@expo/metro-runtime": "~3.2.1"
   },
   "overrides": {
     "typescript": "5.1.6"
