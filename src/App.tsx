@@ -85,7 +85,12 @@ export default function App() {
     <Provider store={store}>
       <AuthContext.Provider value={{ authContext, authState }}>
         <NavigationContainer ref={navigationRef}>
-          <Stack.Navigator>
+          <Stack.Navigator
+            screenOptions={{
+              headerStyle: { elevation: 0 },
+              cardStyle: { backgroundColor: "#000" },
+            }}
+          >
             <>
               {!authState?.signedIn ? (
                 <>
@@ -141,6 +146,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 });
+
 const loginScreenStyles = StyleSheet.create({
   input: {
     height: 40,

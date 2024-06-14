@@ -16,6 +16,8 @@ COOLIO FEATs
 2. remind self on this task => notification or alarm to remind in 10 hours/at 6 pm today!
 3. feedback as stars and comments as feedback
 4. number of reminders in feed
+5. reminders number in task card clickable => who has reminded you? and message? photos(in remind button option to take photos)
+6. clicking done => pop up UI like in gmeet
 
 
 IMP:

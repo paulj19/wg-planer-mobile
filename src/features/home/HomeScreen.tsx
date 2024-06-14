@@ -4,20 +4,21 @@ import { useLazyGetPostLoginInfoQuery } from "features/user/UserSlice";
 import { useContext, useEffect, useState } from "react";
 import * as Analytics from "util/analytics/Analytics";
 import { AuthContext } from "App";
-import { UserProfile } from "types/types";
+import { FloorItem, UserProfile } from "types/types";
 import { ErrorScreen } from "components/ErrorScreen";
 import { Settings } from "features/settings/ProfileSettings";
-import { Floor } from "features/floor/Floor";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Feed } from "features/feed/Feed";
 import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
+import { Floor} from "features/floor/Floor";
+import floorStub from "mocks/stubs/floorStub";
 
 export default function HomeScreen() {
   const [getPostLoginInfo, { currentData }] = useLazyGetPostLoginInfoQuery();
-  const userprofile = currentData?.userprofile;
-  const floor = currentData?.floor;
+  const userprofile : UserProfile = currentData?.userprofile;
+  const floor: FloorItem = floorStub;
   const { authContext, authState } = useContext(AuthContext);
   const [userprofileError, setUserprofileError] = useState(false);
 
@@ -97,6 +98,7 @@ export default function HomeScreen() {
           options={{
             tabBarLabel: "Feed",
           }}
+          initialParams={{myTasks: floor.Tasks.filter((task) => task.AssignedTo === userprofile.id), myFeed: floor.Feed}}
         />
         <Tab.Screen
           name="Settings"
