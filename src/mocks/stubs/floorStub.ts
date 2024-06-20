@@ -23,12 +23,13 @@ const floorStub: FloorItem = {
       Feed: [
         {
           Type: "NEW_RESIDENT",
-          Name: "John Doe",
+          NewResident: "John Doe",
           Room: "307"
         },
         {
           Type: "NEW_TASK",
-          Name: "Mikrowelle reinigen",
+          Creator: "Max Musterman",
+          TaskName: "Mikrowelle reinigen",
         },
       ]
     }

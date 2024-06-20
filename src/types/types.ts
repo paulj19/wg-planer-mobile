@@ -33,9 +33,16 @@ export type Resident = {
   Available: boolean,
 }
 
-export type FeedItem = {
-  Type: "NEW_RESIDENT" | "NEW_TASK",
-  Name: string,
-  Room?: string,
+export type FeedItem = NewResidentFeedItem | NewTaskFeedItem
+
+export type NewResidentFeedItem = {
+  Type: "NEW_RESIDENT",
+  NewResident: string,
+  Room: string,
 }
 
+export type NewTaskFeedItem = {
+  Type: "NEW_TASK",
+  Creator: string,
+  TaskName: string,
+}
