@@ -23,3 +23,9 @@ COOLIO FEATs
 
 IMP:
 1. feed refresh
+
+
+
+BEFORE PUSH:
+1. remove refetchOnFocus
+

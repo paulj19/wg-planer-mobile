@@ -11,12 +11,12 @@ export default function NewResidentCard({ name, room }: NewResidentCardProps) {
     <View style={styles.container}>
       <View style={styles.infos}>
         <Text style={styles.text}>{
-          `${name} would like to be admitted to room ${room}`}
+          `${name} wants to be admitted to room ${room}`}
         </Text>
       </View>
       <View style={styles.actions}>
         <IconButton  name="check" color="green" onPress={() => {}} />
-        <IconButton  name="close" color="red" onPress={() => {}} />
+        <IconButton  name="close" color="grey" onPress={() => {}} />
       </View>
     </View>
   );
@@ -34,14 +34,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     padding: 10,
-    marginTop: 5,
-    marginBottom: 10,
+    marginTop: 1,
+    marginBottom: 1,
     height: 85,
     backgroundColor: "#fff",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.8,
     shadowRadius: 2,
-    elevation: 5,
+    // elevation: 5,
   },
   infos: {
     display: "flex",

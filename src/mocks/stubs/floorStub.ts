@@ -7,7 +7,7 @@ const floorStub: FloorItem = {
         { Id: "0", Name: "Küche reinigen", AssignedTo: 1, Reminders: 1, AssignmentDate: "2024-06-13T14:48:00.000Z"},
         { Id: "1", Name: "Glastonne wegmachen", AssignedTo: 1, Reminders: 1, AssignmentDate: "2024-05-16T14:48:00.000Z"},
         { Id: "2", Name: "Schwarz sack", AssignedTo: 1, Reminders: 0, AssignmentDate: "2024-06-10T14:48:00.000Z"},
-        { Id: "3", Name: "Mülltonne wegbringen", AssignedTo: 1, Reminders: 2, AssignmentDate: "2024-06-13T14:48:00.000Z"},
+        { Id: "3", Name: "Mülxtonne wegbringen", AssignedTo: 1, Reminders: 2, AssignmentDate: "2024-06-13T14:48:00.000Z"},
         { Id: "4", Name: "Gelbersack wegbringen", AssignedTo: 1, Reminders: 3, AssignmentDate: "2024-06-19:48:00.000Z"},
         { Id: "5", Name: "Ofen Reinigen", AssignedTo: 1, Reminders: 4, AssignmentDate: "2024-06-20T14:48:00.000Z"},
       ],

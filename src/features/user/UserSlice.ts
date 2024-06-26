@@ -24,9 +24,18 @@ export const userSlice = createApi({
   },
 });
 
+// const selectPostLoginInfoResult = userSlice.endpoints.getPostLoginInfo.select();
+// export const postLoginInfo = createSelector(
+//   selectPostLoginInfoResult,
+//   (result) => result.data
+// );
+// export const selectPostLoginInfoByUserId = createSelector(
+//   selectPostLoginInfoResult,
+//   (state, userId) => userId,
+//   (tasks, userId) => tasks.find((task) => task.Assigne === userId)
+// );
 // const selectUserProfileResult = userSlice.endpoints.getUserProfile.select();
 
 // export const userprofilex = createSelector(selectUserProfileResult, result => result.data)
 
-export const {useLazyGetPostLoginInfoQuery} = userSlice;
-
+export const { useLazyGetPostLoginInfoQuery, useGetPostLoginInfoQuery } = userSlice;

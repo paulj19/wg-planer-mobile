@@ -1,3 +1,4 @@
+import { GO_BACKEND, RESOURCE_SERVER_DEV, URL_POST_LOGIN } from "util/UrlPaths";
 import Logout from "components/Logout";
 import { ActivityIndicator, Text, View } from "react-native";
 import { useLazyGetPostLoginInfoQuery } from "features/user/UserSlice";
@@ -17,8 +18,10 @@ import floorStub from "mocks/stubs/floorStub";
 
 export default function HomeScreen() {
   const [getPostLoginInfo, { currentData }] = useLazyGetPostLoginInfoQuery();
+  // const {data: currentData, error, isLoading, isUninitialized, isFetching} = useGetPostLoginInfoQuery(undefined );
+
   const userprofile : UserProfile = currentData?.userprofile;
-  const floor: FloorItem = floorStub;
+  const floor: FloorItem = currentData?.floor;
   const { authContext, authState } = useContext(AuthContext);
   const [userprofileError, setUserprofileError] = useState(false);
 
@@ -34,9 +37,9 @@ export default function HomeScreen() {
       });
   }, []);
 
-  if (userprofileError) {
-    return <ErrorScreen />;
-  }
+  // if (userprofileError) {
+  //   return <ErrorScreen />;
+  // }
   if (!currentData) {
     return (
       <ActivityIndicator
@@ -98,7 +101,6 @@ export default function HomeScreen() {
           options={{
             tabBarLabel: "Feed",
           }}
-          initialParams={{myTasks: floor.Tasks.filter((task) => task.AssignedTo === userprofile.id), myFeed: floor.Feed}}
         />
         <Tab.Screen
           name="Settings"

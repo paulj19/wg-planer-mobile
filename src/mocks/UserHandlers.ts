@@ -17,7 +17,6 @@ export const userHandlers = [
   rest.get(URL_POST_LOGIN, (req, res, ctx) => {
     return res(ctx.json({
     floor: floorStub,
-
     userprofile: {
       id: 1,
       username: "Max Musterman",

@@ -13,7 +13,7 @@ import {
 import AuthToken from "features/auth/AuthToken";
 import { initializeMocks } from "mocks/MockRequests";
 
-const client = axios.create({ baseURL: RESOURCE_SERVER_DEV });
+const client = axios.create();
 
 axiosRetry(client, {
   retryDelay: (retryCount) => {
