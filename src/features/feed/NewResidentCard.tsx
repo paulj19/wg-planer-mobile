@@ -15,14 +15,14 @@ export default function NewResidentCard({ name, room }: NewResidentCardProps) {
         </Text>
       </View>
       <View style={styles.actions}>
-        <IconButton  name="check" color="green" onPress={() => {}} />
-        <IconButton  name="close" color="grey" onPress={() => {}} />
+        <IconButton  name="check" color="green" testID="accept" onPress={() => {}} />
+        <IconButton  name="close" color="grey" testID="reject" onPress={() => {}} />
       </View>
     </View>
   );
 }
-const IconButton = ({ name, color, onPress }) => (
-  <TouchableOpacity style={styles.button} onPress={onPress}>
+const IconButton = ({ name, color, onPress, testID }) => (
+  <TouchableOpacity style={styles.button} onPress={onPress} testID={testID}>
     <FontAwesome name={name} size={24} color={color} />
   </TouchableOpacity>
 );

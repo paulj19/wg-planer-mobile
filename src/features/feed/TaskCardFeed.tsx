@@ -24,10 +24,10 @@ export default function TaskCardFeed({
   reminders,
 }: TaskCardFeedProps) {
   return (
-    <View style={styles.taskCardContainer}>
+    <View style={styles.taskCardContainer} testID="task-card">
       <Text style={styles.taskName}>{taskName}</Text>
       {reminders > 0 ? <Reminders reminders={reminders} /> : null}
-      <Button>DONE</Button>
+      <Button testID="done-button">DONE</Button>
     </View>
   );
 }
@@ -35,7 +35,7 @@ export default function TaskCardFeed({
 const Reminders = ({ reminders }) => {
   const backgroundColor = reminders > 1 ? "#ff704d" : "#ffcc00";
   return (
-    <View style={styles.reminderContainer}>
+    <View style={styles.reminderContainer} testID="reminder">
       <View>
         <Entypo name="bell" size={24} color="black" />
       </View>

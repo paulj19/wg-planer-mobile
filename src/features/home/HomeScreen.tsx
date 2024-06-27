@@ -10,7 +10,7 @@ import { ErrorScreen } from "components/ErrorScreen";
 import { Settings } from "features/settings/ProfileSettings";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Feed } from "features/feed/Feed";
+import Feed from "features/feed/Feed";
 import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { Floor} from "features/floor/Floor";

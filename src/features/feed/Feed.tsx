@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 import { createSelector } from "@reduxjs/toolkit";
 import { FloorItem, Task } from "types/types";
 
-export function Feed(): ReactElement {
+export default function Feed(): ReactElement {
   const sortCriteria = (a, b) =>
     a.Reminders === b.Reminders
       ? a.AssignmentDate - b.AssignmentDate
@@ -43,8 +43,7 @@ export function Feed(): ReactElement {
       {floorInfo?.Feed?.map((feedItem) => {
         if (feedItem.Type === "NEW_RESIDENT") {
           return (
-            <NewResidentCard name={feedItem.NewResident} room={feedItem.Room} />
-          );
+            <NewResidentCard name={feedItem.NewResident} room={feedItem.Room} />);
         } else if (feedItem.Type === "NEW_TASK") {
           return (
             <NewTaskCard
