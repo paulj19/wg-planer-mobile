@@ -7,6 +7,7 @@ import { ActivityIndicator } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 import { TextInput, Button } from "react-native-paper";
 import { ErrorScreen } from "components/ErrorScreen";
+import Loading from "components/Loading";
 
 const registrationValidationSchema = Yup.object().shape({
   username: Yup.string()
@@ -44,9 +45,7 @@ export const RegistrationForm = ({ route, navigation }) => {
   const { data: floorData, isLoading, isError } = useGetFloorQuery(floorId);
   if (isLoading) {
     return (
-      <View style={[styles.container, styles.horizontal]}>
-        <ActivityIndicator />
-      </View>
+      <Loading />
     );
   }
   if (isError) {

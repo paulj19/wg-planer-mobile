@@ -15,13 +15,13 @@ export type FloorItem = {
 export type Task = {
   Id: string,
   Name: string,
-  AssignedTo: number,
+  AssignedTo: number | null,
   Reminders: number,
   AssignmentDate: string,
 }
 
 export type Room = {
-  Id: string,
+  Id: number,
   Number: string,
   Order: number,
   Resident: Resident | null,

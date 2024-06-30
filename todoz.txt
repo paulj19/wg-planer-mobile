@@ -27,5 +27,5 @@ IMP:
 
 
 BEFORE PUSH:
-1. remove refetchOnFocus
+1. remove Number from AllTasks
 

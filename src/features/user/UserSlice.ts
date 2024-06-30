@@ -16,6 +16,12 @@ export const userSlice = createApi({
         method: "get",
       }),
     }),
+    getPostLoginInfox: builder.query({
+      query: () => ({
+        url: URL_POST_LOGIN,
+        method: "get",
+      }),
+    }),
   }),
   extractRehydrationInfo(action, { reducerPath }) {
     if (action.type === REHYDRATE) {
@@ -38,4 +44,4 @@ export const userSlice = createApi({
 
 // export const userprofilex = createSelector(selectUserProfileResult, result => result.data)
 
-export const { useLazyGetPostLoginInfoQuery, useGetPostLoginInfoQuery } = userSlice;
+export const { useLazyGetPostLoginInfoQuery, useGetPostLoginInfoQuery, useGetPostLoginInfoxQuery } = userSlice;
