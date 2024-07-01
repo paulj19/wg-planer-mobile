@@ -1,14 +1,19 @@
 import { useGetPostLoginInfoQuery } from "features/user/UserSlice";
-import { ToastAndroid, View, Text } from "react-native";
+import { ScrollView, Text, View } from "react-native";
+import { StyleSheet } from "react-native";
 import Loading from "components/Loading";
-import { Checkbox, DataTable, Divider } from "react-native-paper";
+import { ToastAndroid } from "react-native";
+import { AssignTaskRecord } from "./AssignTaskRecord";
+import { Divider } from "react-native-paper";
 import Button from "components/Button";
-import { ScrollView, StyleSheet } from "react-native";
-import AllResidentsRecord from "features/floor/AllResidentsRecord";
 
-export default function AllResidents() {
+export function AssignTask({route, params}) {
   const { data, isLoading, isError, error } =
     useGetPostLoginInfoQuery(undefined);
+  const {taskId} = route.params;
+  const assignedTo = data.floor?.Tasks?.find(
+    (task) => task.Id === taskId
+  )?.AssignedTo;
 
   if (isLoading) {
     return <Loading />;
@@ -27,15 +32,17 @@ export default function AllResidents() {
       <View style={styles.header}>
         <Text style={styles.residentName}>Resident Name</Text>
         <Text>Room</Text>
-        <Text>Availability</Text>
       </View>
       <Divider />
-      {data.floor.Rooms?.map((room) => {
+
+      {data.floor?.Rooms?.filter((room)=> assignedTo !== room.Id).map((room) => {
         return (
-          <>
-            <AllResidentsRecord room={room} />
-            <Divider />
-          </>
+          room.Resident?.Available && (
+            <>
+              <AssignTaskRecord room={room} />
+              <Divider />
+            </>
+          )
         );
       })}
     </ScrollView>
@@ -54,9 +61,8 @@ const styles = StyleSheet.create({
   header: {
     display: "flex",
     flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-around",
-    width: "100%",
+    gap: 10,
+    paddingLeft: 20,
   },
   residentName: {
     width: 140,

@@ -22,6 +22,8 @@ import { store } from "store/store";
 import { isDevicePhoneOrTablet } from "util/Device";
 import { StyleSheet } from "react-native";
 import { CreateFloor } from "features/registration/CreateFloor";
+import TaskActionsModal from "features/floor/TaskActionsModal";
+import {AssignTask} from "features/floor/AssignTask";
 
 const Stack = createStackNavigator();
 initBase64();
@@ -52,7 +54,7 @@ export default function App() {
             newLogin: false,
             analyticsInitialized: true,
           };
-      }
+     }
     },
     //signedIn variable could be part of user profile
     { signedIn: false, newLogin: false, analyticsInitialized: false }
@@ -99,6 +101,10 @@ export default function App() {
                     component={HomeScreen}
                     options={{ headerShown: false }}
                   />
+                    <Stack.Screen name="AssignTask" component={AssignTask} />
+                  <Stack.Group screenOptions={{ presentation: "modal" }}>
+                    <Stack.Screen name="TaskActionsModal" component={TaskActionsModal} />
+                  </Stack.Group>
                 </>
               ) : (
                 <>

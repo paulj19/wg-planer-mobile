@@ -1,4 +1,6 @@
-import { useGetPostLoginInfoQuery, useGetPostLoginInfoxQuery } from "features/user/UserSlice";
+import {
+  useGetPostLoginInfoQuery,
+} from "features/user/UserSlice";
 import {
   View,
   Text,
@@ -12,7 +14,7 @@ import type { Room } from "types/types";
 import Loading from "components/Loading";
 
 export default function AllTasks() {
-  const { data, isLoading, isError, error } =useGetPostLoginInfoxQuery(
+  const { data, isLoading, isError, error } = useGetPostLoginInfoQuery(
     undefined,
     {
       refetchOnFocus: true,
@@ -32,13 +34,12 @@ export default function AllTasks() {
   }
   let assignedTo: Room | undefined;
 
-  //todo remove Number
   return (
     <ScrollView>
       {data?.floor?.Tasks?.map((task) => {
         assignedTo = task.AssignedTo
           ? data.floor?.Rooms?.find(
-              (room) => Number(room.Id) === task.AssignedTo
+              (room) => room.Id === task.AssignedTo
             )
           : undefined;
         return <TaskCardFloor task={task} assignedTo={assignedTo} />;

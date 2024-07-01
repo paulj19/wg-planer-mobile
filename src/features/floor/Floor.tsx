@@ -8,7 +8,7 @@ const Tab = createMaterialTopTabNavigator();
 
 export function Floor(): ReactElement {
     return (<Tab.Navigator>
-      <Tab.Screen name="Tasks" component={AllTasks} />
-      <Tab.Screen name="Residents" component={AllResidents} />
+      <Tab.Screen name="AllTasks" component={AllTasks} />
+      <Tab.Screen name="AllResidents" component={AllResidents} />
     </Tab.Navigator>);
 }

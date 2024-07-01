@@ -16,6 +16,8 @@ import { Room, Task } from "types/types";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Button from "components/Button";
 import { ScrollView } from "react-native";
+import { TouchableWithoutFeedback } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
 const LeftContent = (props) => <Avatar.Icon {...props} icon="folder" />;
 
@@ -28,34 +30,26 @@ export default function TaskCardFloor({
   task,
   assignedTo,
 }: TaskCardFloorProps) {
-  const [modalOpen, setModalOpen] = React.useState(false);
   const assignedName = assignedTo?.Resident?.Name?.split(" ")[0] || undefined;
+  const navigation = useNavigation();
 
   return (
     <View style={styles.taskCardContainer} testID="task-card">
       <Text style={styles.taskName}>{task.Name}</Text>
       <Text style={styles.assignedTo}>{assignedName ?? "unassigned"}</Text>
-      <Button testID="done-button">{assignedTo ? "REMIND" : "ASSIGN"}</Button>
-      <TouchableOpacity onPress={() => setModalOpen(true)}>
+      <Button
+        testID="done-button"
+        onPress={() => navigation.navigate("AssignTask", { taskId: task.Id })}
+      >
+        {assignedTo ? "REMIND" : "ASSIGN"}
+      </Button>
+      <TouchableOpacity
+        onPress={() =>
+          navigation.navigate("TaskActionsModal", { taskId: task.Id })
+        }
+      >
         <MaterialCommunityIcons name="dots-vertical" size={24} color="black" />
       </TouchableOpacity>
-
-      <View style={styles.centeredView}>
-        <Modal
-          animationType="fade"
-          transparent={true}
-          visible={modalOpen}
-          onRequestClose={() => setModalOpen(false)}
-        >
-          <TouchableOpacity style={styles.centeredViewModal} onPressOut={() => setModalOpen(false)}>
-            <View style={styles.modalView}>
-              <View style={styles.centeredView}>
-                <Button>REASSIGN</Button>
-              </View>
-            </View>
-          </TouchableOpacity>
-        </Modal>
-      </View>
     </View>
   );
 }
@@ -102,13 +96,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginTop: 22,
-  backgroundColor: 'rgba(0, 0, 0, 0.7)'
+    backgroundColor: "rgba(0, 0, 0, 0.7)",
   },
   centeredView: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     marginTop: 22,
+    gap: 10,
   },
   modalView: {
     margin: 20,
@@ -125,7 +120,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
     height: 400,
-    width: "100%",
+    width: "80%",
   },
   button: {
     borderRadius: 20,
