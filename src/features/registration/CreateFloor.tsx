@@ -92,7 +92,7 @@ export function CreateFloor({ navigation }): React.ReactElement {
         .filter((room) => room.number != "")
         .map((room, i) => ({
           id: i.toString(),
-          order: i + 1,
+          order: i,
           number: room.number,
         }));
       const floor = {

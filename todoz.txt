@@ -23,6 +23,7 @@ COOLIO FEATs
 
 IMP:
 1. feed refresh
+2. adr 1 fix, ie, "no one else available to take the task, do you want to take it?"
 
 
 
