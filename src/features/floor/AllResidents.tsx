@@ -1,4 +1,4 @@
-import { useGetPostLoginInfoQuery } from "features/user/UserSlice";
+import { useGetPostLoginyInfoQuery } from "features/registration/FloorSlice";
 import { ToastAndroid, View, Text } from "react-native";
 import Loading from "components/Loading";
 import { Checkbox, DataTable, Divider } from "react-native-paper";
@@ -8,7 +8,7 @@ import AllResidentsRecord from "features/floor/AllResidentsRecord";
 
 export default function AllResidents() {
   const { data, isLoading, isError, error } =
-    useGetPostLoginInfoQuery(undefined);
+    useGetPostLoginyInfoQuery(undefined);
 
   if (isLoading) {
     return <Loading />;

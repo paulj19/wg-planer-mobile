@@ -1,6 +1,4 @@
-import {
-  useGetPostLoginInfoQuery,
-} from "features/user/UserSlice";
+import { useGetPostLoginyInfoQuery } from "features/registration/FloorSlice";
 import {
   View,
   Text,
@@ -14,7 +12,7 @@ import type { Room } from "types/types";
 import Loading from "components/Loading";
 
 export default function AllTasks() {
-  const { data, isLoading, isError, error } = useGetPostLoginInfoQuery(
+  const { data, isLoading, isError, error } = useGetPostLoginyInfoQuery(
     undefined,
     {
       refetchOnFocus: true,

@@ -4,13 +4,13 @@ import { ToastAndroid, View } from "react-native";
 import { Text } from "react-native";
 import { Modal, Portal, Provider as PaperProvider } from "react-native-paper";
 import { StyleSheet } from "react-native";
-import { useGetPostLoginInfoQuery } from "features/user/UserSlice";
+import { useGetPostLoginyInfoQuery } from "features/registration/FloorSlice";
 import Loading from "components/Loading";
 
 export default function TaskActionsModal({ route, navigation }) {
   const { taskId } = route.params;
   const { data, isLoading, isError, error } =
-    useGetPostLoginInfoQuery(undefined);
+    useGetPostLoginyInfoQuery(undefined);
 
   const assignedTo = data.floor?.Tasks.find(
     (task) => task.Id === taskId

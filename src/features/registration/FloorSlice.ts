@@ -1,11 +1,11 @@
-import { GO_BACKEND, RESOURCE_SERVER_DEV } from "util/UrlPaths";
+import { GO_BACKEND, RESOURCE_SERVER_DEV, UPDATE_TASK, URL_POST_LOGIN } from "util/UrlPaths";
 import { REHYDRATE } from "redux-persist";
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { axiosBaseQuery } from "features/api/apiSlice";
 
 export const floorSlice = createApi({
   reducerPath: "floorApi",
-  baseQuery: axiosBaseQuery({ baseUrl: GO_BACKEND}),
+  baseQuery: axiosBaseQuery(),
   endpoints: (builder) => ({
     getFloor: builder.query({
       query: (floorId) => ({
@@ -37,6 +37,43 @@ export const floorSlice = createApi({
         }
       },
     }),
+    getPostLoginInfo: builder.query({
+      query: () => ({
+        url: URL_POST_LOGIN,
+        method: "get",
+      }),
+    }),
+    getPostLoginyInfo: builder.query({
+      query: () => ({
+        url: URL_POST_LOGIN,
+        method: "get",
+      }),
+    }),
+    updateTask: builder.mutation({
+      query: (data) => ({
+          url: UPDATE_TASK,
+          method: "post",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          data: data,
+        }),
+      async onQueryStarted({ ...data }, { dispatch, queryFulfilled }) {
+        try {
+          const result = await queryFulfilled;
+          dispatch(
+            floorSlice.util.updateQueryData("getPostLoginyInfo", result?.data?.floor?.Id, (draft) => {
+              console.log("DRAFT", draft)
+              Object.assign(draft.floor, result?.data?.floor);
+              console.log("AFTER", draft)
+
+            })
+          );
+        } catch (e) {
+          console.error(e);
+        }
+      },
+    }),
   }),
   extractRehydrationInfo(action, { reducerPath }) {
     if (action.type === REHYDRATE) {
@@ -45,5 +82,5 @@ export const floorSlice = createApi({
   },
 });
 
-export const { useGetFloorQuery, useCreateFloorMutation } = floorSlice;
+export const { useGetFloorQuery, useCreateFloorMutation, useLazyGetPostLoginInfoQuery, useGetPostLoginyInfoQuery, useUpdateTaskMutation } = floorSlice;
 

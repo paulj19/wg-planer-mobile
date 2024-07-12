@@ -3,7 +3,7 @@ import TaskCardFeed from "features/feed/TaskCardFeed";
 import NewResidentCard from "features/feed/NewResidentCard";
 import NewTaskCard from "features/feed/NewTaskCard";
 import { Text, ScrollView } from "react-native";
-import { useGetPostLoginInfoQuery } from "features/user/UserSlice";
+import { useGetPostLoginyInfoQuery } from "features/registration/FloorSlice";
 import { useSelector } from "react-redux";
 import { createSelector } from "@reduxjs/toolkit";
 import { FloorItem, Task } from "types/types";
@@ -28,7 +28,7 @@ export default function Feed(): ReactElement {
     );
   }, []);
 
-  const { floorInfo } = useGetPostLoginInfoQuery(undefined, {
+  const { floorInfo } = useGetPostLoginyInfoQuery(undefined, {
     selectFromResult: (result) => ({
       ...result,
       floorInfo: selectUserTasksById(result, result.data?.userprofile?.id),

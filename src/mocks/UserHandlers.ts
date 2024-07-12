@@ -14,17 +14,17 @@ export const userHandlers = [
   //   return res(ctx.json(userprofile), ctx.status(200));
   // }),
 
-  rest.get(URL_POST_LOGIN, (req, res, ctx) => {
-    return res(ctx.json({
-    floor: floorStub,
-    userprofile: {
-      id: 1,
-      username: "Max Musterman",
-      email: "maxmuster@gmail.com",
-      floorId: "66603e2a00afb9bb44b3cadb",
-      oid: 1,
-      authServer: "HOME_BREW",
-    },
-  }), ctx.status(200))
-  })
+  // rest.get(URL_POST_LOGIN, (req, res, ctx) => {
+  //   return res(ctx.json({
+  //   floor: floorStub,
+  //   userprofile: {
+  //     id: 1,
+  //     username: "Max Musterman",
+  //     email: "maxmuster@gmail.com",
+  //     floorId: "66603e2a00afb9bb44b3cadb",
+  //     oid: 1,
+  //     authServer: "HOME_BREW",
+  //   },
+  // }), ctx.status(200))
+  // })
 ];

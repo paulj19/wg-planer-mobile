@@ -10,20 +10,20 @@ import {
   REGISTER,
 } from "redux-persist";
 import * as  storage from "lib/storage/Storage";
-import { userSlice } from "features/user/UserSlice";
+// import { userSlice } from "features/user/UserSlice";
 import { floorSlice } from "features/registration/FloorSlice";
 
-const userSlicePersistConfig = {
-  key: "userSlice",
+const floorSlicePersistConfig = {
+  key: "floorSlice",
   storage,
 }
 
 const reducers = combineReducers({
-  [userSlice.reducerPath]: userSlice.reducer,
+  // [userSlice.reducerPath]: userSlice.reducer,
   [floorSlice.reducerPath]: floorSlice.reducer,
 });
 
-const persistedReducer = persistReducer(userSlicePersistConfig, reducers);
+const persistedReducer = persistReducer(floorSlicePersistConfig, reducers);
 
 export const store = configureStore({
   reducer: persistedReducer,
@@ -32,7 +32,7 @@ export const store = configureStore({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }).concat(floorSlice.middleware, userSlice.middleware),
+    }).concat(floorSlice.middleware),
 });
 
 export const persistor = persistStore(store);

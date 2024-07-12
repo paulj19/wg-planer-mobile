@@ -1,7 +1,7 @@
 import { GO_BACKEND, RESOURCE_SERVER_DEV, URL_POST_LOGIN } from "util/UrlPaths";
 import Logout from "components/Logout";
 import { ActivityIndicator, Text, View } from "react-native";
-import { useLazyGetPostLoginInfoQuery } from "features/user/UserSlice";
+import { useLazyGetPostLoginInfoQuery } from "features/registration/FloorSlice";
 import { useContext, useEffect, useState } from "react";
 import * as Analytics from "util/analytics/Analytics";
 import { AuthContext } from "App";

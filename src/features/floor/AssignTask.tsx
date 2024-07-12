@@ -1,4 +1,4 @@
-import { useGetPostLoginInfoQuery } from "features/user/UserSlice";
+import { useGetPostLoginyInfoQuery } from "features/registration/FloorSlice";
 import { ScrollView, Text, View } from "react-native";
 import { StyleSheet } from "react-native";
 import Loading from "components/Loading";
@@ -9,11 +9,14 @@ import Button from "components/Button";
 
 export function AssignTask({route, params}) {
   const { data, isLoading, isError, error } =
-    useGetPostLoginInfoQuery(undefined);
+    useGetPostLoginyInfoQuery(undefined);
   const {taskId} = route.params;
   const assignedTo = data.floor?.Tasks?.find(
     (task) => task.Id === taskId
   )?.AssignedTo;
+  const task = data.floor?.Tasks?.find(
+    (task) => task.Id === taskId
+  );
 
   if (isLoading) {
     return <Loading />;
@@ -39,7 +42,7 @@ export function AssignTask({route, params}) {
         return (
           room.Resident?.Available && (
             <>
-              <AssignTaskRecord room={room} />
+              <AssignTaskRecord room={room} task={task} floorId={data.floor.Id} />
               <Divider />
             </>
           )

@@ -9,26 +9,20 @@ import { useState } from "react";
 export const userSlice = createApi({
   reducerPath: "userApi",
   baseQuery: axiosBaseQuery(),
-  endpoints: (builder) => ({
-    getPostLoginInfo: builder.query({
-      query: () => ({
-        url: URL_POST_LOGIN,
-        method: "get",
-      }),
-    }),
-    getPostLoginInfox: builder.query({
-      query: () => ({
-        url: URL_POST_LOGIN,
-        method: "get",
-      }),
-    }),
-  }),
-  extractRehydrationInfo(action, { reducerPath }) {
-    if (action.type === REHYDRATE) {
-      return action.payload?.[reducerPath];
-    }
-  },
-});
+   endpoints: (builder) => ({
+     getPostLoginInfox: builder.query({
+       query: () => ({
+         url: URL_POST_LOGIN,
+         method: "get",
+       }),
+     }),
+   }),
+   extractRehydrationInfo(action, { reducerPath }) {
+     if (action.type === REHYDRATE) {
+       return action.payload?.[reducerPath];
+     }
+   },
+ });
 
 // const selectPostLoginInfoResult = userSlice.endpoints.getPostLoginInfo.select();
 // export const postLoginInfo = createSelector(
@@ -44,4 +38,3 @@ export const userSlice = createApi({
 
 // export const userprofilex = createSelector(selectUserProfileResult, result => result.data)
 
-export const { useLazyGetPostLoginInfoQuery, useGetPostLoginInfoQuery, useGetPostLoginInfoxQuery } = userSlice;

@@ -1,12 +1,17 @@
 import { useNavigation } from "@react-navigation/native";
 import Button from "components/Button";
-import { StyleSheet, View, Text, ToastAndroid } from "react-native";
+import {useUpdateTaskMutation} from "features/registration/FloorSlice";
+import { StyleSheet, View, Text, ToastAndroid, Task } from "react-native";
 import { Resident, Room } from "types/types";
 
-export function AssignTaskRecord({ room }: { room: Room }) {
+export function AssignTaskRecord({ room, task, floorId }: { room: Room, task: Task, floorId: string}) {
   const navigation = useNavigation();
-  const handleAssignTask = () => {
+  const [assignTask] = useUpdateTaskMutation();
+
+  const handleAssignTask = async () => {
     //handle api call
+    await assignTask({floorId, task: task, nextRoom: room, action: "ASSIGN"}).unwrap()
+
     ToastAndroid.show("Task assigned", ToastAndroid.SHORT);
     navigation.navigate("AllTasks");
   }
