@@ -1,4 +1,4 @@
-import { useGetPostLoginyInfoQuery } from "features/registration/FloorSlice";
+import { useGetPostLoginInfoQuery } from "features/registration/FloorSlice";
 import {
   View,
   Text,
@@ -6,18 +6,28 @@ import {
   ActivityIndicator,
   ToastAndroid,
   ScrollView,
+  RefreshControl,
 } from "react-native";
 import TaskCardFloor from "./TaskCardFloor";
 import type { Room } from "types/types";
 import Loading from "components/Loading";
+import { useState } from "react";
 
 export default function AllTasks() {
-  const { data, isLoading, isError, error } = useGetPostLoginyInfoQuery(
+  const [refreshing, setRefreshing] = useState(false);
+  const { data, isLoading, isError, error, refetch } = useGetPostLoginInfoQuery(
     undefined,
     {
       refetchOnFocus: true,
     }
   );
+  const onRefresh = () => {
+    setRefreshing(true);
+    refetch();
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000); // Simulate a 2-second refresh
+  };
 
   if (isLoading) {
     return <Loading />;
@@ -33,13 +43,16 @@ export default function AllTasks() {
   let assignedTo: Room | undefined;
 
   return (
-    <ScrollView>
+    <ScrollView
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
       {data?.floor?.Tasks?.map((task) => {
-        assignedTo = task.AssignedTo
-          ? data.floor?.Rooms?.find(
-              (room) => room.Id === task.AssignedTo
-            )
-          : undefined;
+        assignedTo =
+          task.AssignedTo !== -1
+            ? data.floor?.Rooms?.find((room) => room.Id === task.AssignedTo)
+            : undefined;
         return <TaskCardFloor task={task} assignedTo={assignedTo} />;
       })}
     </ScrollView>

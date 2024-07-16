@@ -38,7 +38,7 @@ export default function TaskCardFloor({
       <Text style={styles.taskName}>{task.Name}</Text>
       <Text style={styles.assignedTo}>{assignedName ?? "unassigned"}</Text>
       <Button
-        testID="done-button"
+        testID="assign-remind-button"
         onPress={() => navigation.navigate("AssignTask", { taskId: task.Id })}
       >
         {assignedTo ? "REMIND" : "ASSIGN"}

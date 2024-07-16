@@ -3,7 +3,7 @@ import TaskCardFeed from "features/feed/TaskCardFeed";
 import NewResidentCard from "features/feed/NewResidentCard";
 import NewTaskCard from "features/feed/NewTaskCard";
 import { Text, ScrollView } from "react-native";
-import { useGetPostLoginyInfoQuery } from "features/registration/FloorSlice";
+import { useGetPostLoginInfoQuery } from "features/registration/FloorSlice";
 import { useSelector } from "react-redux";
 import { createSelector } from "@reduxjs/toolkit";
 import { FloorItem, Task } from "types/types";
@@ -28,7 +28,7 @@ export default function Feed(): ReactElement {
     );
   }, []);
 
-  const { floorInfo } = useGetPostLoginyInfoQuery(undefined, {
+  const { floorInfo } = useGetPostLoginInfoQuery(undefined, {
     selectFromResult: (result) => ({
       ...result,
       floorInfo: selectUserTasksById(result, result.data?.userprofile?.id),
@@ -38,7 +38,7 @@ export default function Feed(): ReactElement {
   return (
     <ScrollView>
       {floorInfo?.Tasks?.map((task) => (
-        <TaskCardFeed taskName={task.Name} reminders={task.Reminders} />
+        <TaskCardFeed task={task} reminders={task.Reminders} floorId={floorInfo.Id}/>
       ))}
       {floorInfo?.Feed?.map((feedItem) => {
         if (feedItem.Type === "NEW_RESIDENT") {

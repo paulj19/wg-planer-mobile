@@ -1,15 +1,18 @@
 import * as React from "react";
 import { Avatar, Card, Text } from "react-native-paper";
-import { View } from "react-native";
+import { ToastAndroid, View } from "react-native";
 import Button from "components/Button";
 import { StyleSheet } from "react-native";
 import { Entypo } from '@expo/vector-icons';
+import {useUpdateTaskMutation} from "features/registration/FloorSlice";
+import {Task} from "types/types";
 
 const LeftContent = (props) => <Avatar.Icon {...props} icon="folder" />;
 
 type TaskCardFeedProps = {
-  taskName: string;
+  task: Task;
   reminders: number;
+  floorId: string;
 };
 // <Card style={{ borderRadius: 3 }}>
 //   <Card.Title style={{paddingTop:20}}
@@ -20,14 +23,23 @@ type TaskCardFeedProps = {
 //   </Card.Actions>
 // </Card>
 export default function TaskCardFeed({
-  taskName,
+  task,
   reminders,
+  floorId
 }: TaskCardFeedProps) {
+  const [assignTask] = useUpdateTaskMutation();
+  const handleTaskDone = async () => {
+    //handle api call
+    await assignTask({floorId, task: task, action: "DONE"}).unwrap()
+
+    ToastAndroid.show("Task assinged next room", ToastAndroid.SHORT);
+  }
   return (
+
     <View style={styles.taskCardContainer} testID="task-card">
-      <Text style={styles.taskName}>{taskName}</Text>
+      <Text style={styles.taskName}>{task.Name}</Text>
       {reminders > 0 ? <Reminders reminders={reminders} /> : null}
-      <Button testID="done-button">DONE</Button>
+      <Button testID="done-button" onPress={handleTaskDone}>DONE</Button>
     </View>
   );
 }

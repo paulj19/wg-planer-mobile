@@ -43,12 +43,6 @@ export const floorSlice = createApi({
         method: "get",
       }),
     }),
-    getPostLoginyInfo: builder.query({
-      query: () => ({
-        url: URL_POST_LOGIN,
-        method: "get",
-      }),
-    }),
     updateTask: builder.mutation({
       query: (data) => ({
           url: UPDATE_TASK,
@@ -62,11 +56,8 @@ export const floorSlice = createApi({
         try {
           const result = await queryFulfilled;
           dispatch(
-            floorSlice.util.updateQueryData("getPostLoginyInfo", result?.data?.floor?.Id, (draft) => {
-              console.log("DRAFT", draft)
-              Object.assign(draft.floor, result?.data?.floor);
-              console.log("AFTER", draft)
-
+            floorSlice.util.updateQueryData("getPostLoginInfo", result?.data?.floor?.Id, (draft) => {
+              Object.assign(draft.floor, result?.data);
             })
           );
         } catch (e) {
@@ -82,5 +73,5 @@ export const floorSlice = createApi({
   },
 });
 
-export const { useGetFloorQuery, useCreateFloorMutation, useLazyGetPostLoginInfoQuery, useGetPostLoginyInfoQuery, useUpdateTaskMutation } = floorSlice;
+export const { useGetFloorQuery, useCreateFloorMutation, useLazyGetPostLoginInfoQuery,  useUpdateTaskMutation, useGetPostLoginInfoQuery } = floorSlice;
 

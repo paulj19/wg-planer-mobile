@@ -1,4 +1,4 @@
-import { useGetPostLoginyInfoQuery } from "features/registration/FloorSlice";
+import { useGetPostLoginInfoQuery } from "features/registration/FloorSlice";
 import { ScrollView, Text, View } from "react-native";
 import { StyleSheet } from "react-native";
 import Loading from "components/Loading";
@@ -6,17 +6,16 @@ import { ToastAndroid } from "react-native";
 import { AssignTaskRecord } from "./AssignTaskRecord";
 import { Divider } from "react-native-paper";
 import Button from "components/Button";
+import { UnassignTaskRecord } from "./UnassignTaskRecord";
 
-export function AssignTask({route, params}) {
+export function AssignTask({ route, params }) {
   const { data, isLoading, isError, error } =
-    useGetPostLoginyInfoQuery(undefined);
-  const {taskId} = route.params;
+    useGetPostLoginInfoQuery(undefined);
+  const { taskId } = route.params;
   const assignedTo = data.floor?.Tasks?.find(
     (task) => task.Id === taskId
   )?.AssignedTo;
-  const task = data.floor?.Tasks?.find(
-    (task) => task.Id === taskId
-  );
+  const task = data.floor?.Tasks?.find((task) => task.Id === taskId);
 
   if (isLoading) {
     return <Loading />;
@@ -29,6 +28,7 @@ export function AssignTask({route, params}) {
       ToastAndroid.SHORT
     );
   }
+  console.log("TASK", task);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -38,16 +38,23 @@ export function AssignTask({route, params}) {
       </View>
       <Divider />
 
-      {data.floor?.Rooms?.filter((room)=> assignedTo !== room.Id).map((room) => {
-        return (
-          room.Resident?.Available && (
+      {data.floor?.Rooms?.filter((room) => assignedTo !== room.Id).map(
+        (room) => {
+          return room.Resident?.Available ? (
             <>
-              <AssignTaskRecord room={room} task={task} floorId={data.floor.Id} />
+              <AssignTaskRecord
+                room={room}
+                task={task}
+                floorId={data.floor.Id}
+              />
               <Divider />
             </>
-          )
-        );
-      })}
+          ) : null;
+        }
+      )}
+      {task.AssignedTo !== -1 ? (
+        <UnassignTaskRecord task={task} floorId={data.floor.Id} />
+      ) : null}
     </ScrollView>
   );
 }
