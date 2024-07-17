@@ -28,7 +28,6 @@ export function AssignTask({ route, params }) {
       ToastAndroid.SHORT
     );
   }
-  console.log("TASK", task);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>

@@ -31,3 +31,6 @@ BEFORE PUSH:
 1. remove Number from AllTasks
 2. unassigned task/during creation should be -1 or when a task gets unassigned, it should be -1
 
+
+BE:
+1. user in context with the logs
