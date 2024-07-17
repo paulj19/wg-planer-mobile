@@ -15,7 +15,7 @@ import EntryScreen from "components/EntryScreen";
 import { RegistrationForm } from "features/registration/RegistrationForm";
 import Login from "components/Login";
 import initBase64 from "util/Base64";
-import { mswHost } from "mocks/server";
+import { server } from "mocks/server";
 import { setupURLPolyfill } from "react-native-url-polyfill";
 import { Provider } from "react-redux";
 import { store } from "store/store";
@@ -23,8 +23,7 @@ import { isDevicePhoneOrTablet } from "util/Device";
 import { StyleSheet } from "react-native";
 import { CreateFloor } from "features/registration/CreateFloor";
 import TaskActionsModal from "features/floor/TaskActionsModal";
-import { AssignTask } from "features/floor/AssignTask";
-import AllTasks from "features/floor/AllTasks";
+import {AssignTask} from "features/floor/AssignTask";
 
 const Stack = createStackNavigator();
 initBase64();
@@ -55,7 +54,7 @@ export default function App() {
             newLogin: false,
             analyticsInitialized: true,
           };
-      }
+     }
     },
     //signedIn variable could be part of user profile
     { signedIn: false, newLogin: false, analyticsInitialized: false }
@@ -84,19 +83,10 @@ export default function App() {
     bootStrapAsync();
   }, []);
 
-  const linking = {
-    prefixes: ['*'],
-    config: {
-      screens: {
-        AllTasks: "all-tasks",
-        HomeScreen: "home",
-      },
-    },
-  };
   return (
     <Provider store={store}>
       <AuthContext.Provider value={{ authContext, authState }}>
-        <NavigationContainer linking={linking} ref={navigationRef}>
+        <NavigationContainer ref={navigationRef}>
           <Stack.Navigator
             screenOptions={{
               headerStyle: { elevation: 0 },
@@ -111,12 +101,9 @@ export default function App() {
                     component={HomeScreen}
                     options={{ headerShown: false }}
                   />
-                  <Stack.Screen name="AssignTask" component={AssignTask} />
+                    <Stack.Screen name="AssignTask" component={AssignTask} />
                   <Stack.Group screenOptions={{ presentation: "modal" }}>
-                    <Stack.Screen
-                      name="TaskActionsModal"
-                      component={TaskActionsModal}
-                    />
+                    <Stack.Screen name="TaskActionsModal" component={TaskActionsModal} />
                   </Stack.Group>
                 </>
               ) : (
@@ -154,11 +141,7 @@ if (isDevicePhoneOrTablet()) {
 }
 
 if (process.env.NODE_ENV === "development") {
-  if (isDevicePhoneOrTablet()) {
-    mswHost.listen({ onUnhandledRequest: "bypass" });
-  } else {
-    mswHost.start({ onUnhandledRequest: "bypass" });
-  }
+  server.listen({ onUnhandledRequest: "bypass" });
 }
 
 const styles = StyleSheet.create({

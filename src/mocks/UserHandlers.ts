@@ -1,6 +1,6 @@
 import { URL_POST_LOGIN, URL_USER_PROFILE } from "util/UrlPaths";
+import { rest } from "msw";
 import type { UserProfile } from "types/types";
-import { http, HttpResponse } from 'msw'
 import floorStub from "./stubs/floorStub";
 
 const userprofile: UserProfile = {
@@ -15,7 +15,6 @@ export const userHandlers = [
   // }),
 
   // rest.get(URL_POST_LOGIN, (req, res, ctx) => {
-  // http.get(URL_POST_LOGIN, () => {
   //   return res(ctx.json({
   //   floor: floorStub,
   //   userprofile: {
