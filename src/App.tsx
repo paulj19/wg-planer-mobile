@@ -153,7 +153,7 @@ if (isDevicePhoneOrTablet()) {
   setupURLPolyfill();
 }
 
-if (process.env.NODE_ENV === "development" || process.env.NODE_ENV === "test") {
+if (process.env.NODE_ENV === "development") {
   if (isDevicePhoneOrTablet()) {
     mswHost.listen({ onUnhandledRequest: "bypass" });
   } else {
