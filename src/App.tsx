@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   NavigationContainer,
   useNavigationContainerRef,
@@ -24,16 +24,34 @@ import { StyleSheet } from "react-native";
 import { CreateFloor } from "features/registration/CreateFloor";
 import TaskActionsModal from "features/floor/TaskActionsModal";
 import { AssignTask } from "features/floor/AssignTask";
-import AllTasks from "features/floor/AllTasks";
+import { registerForPushNotificationsAsync } from "features/notification/ExpoSetup";
+import * as Notifications from "expo-notifications";
 
 const Stack = createStackNavigator();
 initBase64();
 export let AuthContext;
 
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: true,
+  }),
+});
 export default function App() {
   AuthContext = React.createContext({});
   const navigationRef = useNavigationContainerRef();
   const routeNameRef = React.useRef();
+
+  const [channels, setChannels] = useState<Notifications.NotificationChannel[]>(
+    []
+  );
+  const [expoPushToken, setExpoPushToken] = useState("");
+  const [notification, setNotification] = useState<
+    Notifications.Notification | undefined
+  >(undefined);
+  const notificationListener = useRef<Notifications.Subscription>();
+  const responseListener = useRef<Notifications.Subscription>();
   //TODO think about optimising useEffect => only during mount?
   //TODO test this flow => iterate through all the possible cases
   const [authState, dispatch] = React.useReducer(
@@ -69,6 +87,32 @@ export default function App() {
     }),
     []
   );
+
+  useEffect(() => {
+    registerForPushNotificationsAsync()
+      .then((token) => setExpoPushToken(token ?? ""))
+      .catch((error: any) => setExpoPushToken(`${error}`));
+
+    notificationListener.current =
+      Notifications.addNotificationReceivedListener((notification) => {
+        // setNotification(notification);
+      });
+
+    responseListener.current =
+      Notifications.addNotificationResponseReceivedListener((response) => {
+        console.log(response);
+      });
+
+    return () => {
+      notificationListener.current &&
+        Notifications.removeNotificationSubscription(
+          notificationListener.current
+        );
+      responseListener.current &&
+        Notifications.removeNotificationSubscription(responseListener.current);
+    };
+  }, []);
+
   React.useEffect(() => {
     const bootStrapAsync = async () => {
       try {
@@ -85,7 +129,7 @@ export default function App() {
   }, []);
 
   const linking = {
-    prefixes: ['*'],
+    prefixes: ["*"],
     config: {
       screens: {
         AllTasks: "all-tasks",
@@ -93,6 +137,20 @@ export default function App() {
       },
     },
   };
+  console.log("expo push token", expoPushToken);
+  console.log(
+    "Channels: ",
+    JSON.stringify(
+      channels.map((c) => c.id),
+      null,
+      2
+    )
+  );
+  // if (notification) {
+  //   console.log("title", notification.request.content.title);
+  //   console.log("title", notification.request.content.body);
+  //   console.log("title", JSON.stringify(notification.request.content.data));
+  // }
   return (
     <Provider store={store}>
       <AuthContext.Provider value={{ authContext, authState }}>

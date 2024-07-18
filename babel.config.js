@@ -27,7 +27,7 @@ module.exports = function (api) {
             mocks: "./src/mocks",
             store: "./src/store",
             types: "./src/types",
-            util: "./src/util",
+            // util: "./src/util",
             App: "./src/App"
           },
         },
