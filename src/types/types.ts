@@ -46,3 +46,11 @@ export type NewTaskFeedItem = {
   Creator: string,
   TaskName: string,
 }
+
+export type NotificationType = "NEW_RESIDENT" | "NEW_TASK" | "TASK_DONE" | "TASK_ASSIGNED"
+
+export type NotificationData = {
+  FloorId: string,
+  Type: NotificationType,
+  Task: Task | undefined,
+}

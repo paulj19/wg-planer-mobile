@@ -34,3 +34,6 @@ BEFORE PUSH:
 
 BE:
 1. user in context with the logs
+2. auth token content in context
+3. add "was assigned to you by <resident name>" or "was done by" in task notification
+

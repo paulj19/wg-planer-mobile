@@ -17,7 +17,7 @@ import Login from "components/Login";
 import initBase64 from "util/Base64";
 import { mswHost } from "mocks/server";
 import { setupURLPolyfill } from "react-native-url-polyfill";
-import { Provider } from "react-redux";
+import { Provider, useDispatch } from "react-redux";
 import { store } from "store/store";
 import { isDevicePhoneOrTablet } from "util/Device";
 import { StyleSheet } from "react-native";
@@ -26,6 +26,8 @@ import TaskActionsModal from "features/floor/TaskActionsModal";
 import { AssignTask } from "features/floor/AssignTask";
 import { registerForPushNotificationsAsync } from "features/notification/ExpoSetup";
 import * as Notifications from "expo-notifications";
+import { NotificationData } from "types/types";
+import { floorSlice } from "features/registration/FloorSlice";
 
 const Stack = createStackNavigator();
 initBase64();
@@ -50,7 +52,6 @@ export default function App() {
   const [notification, setNotification] = useState<
     Notifications.Notification | undefined
   >(undefined);
-  const notificationListener = useRef<Notifications.Subscription>();
   const responseListener = useRef<Notifications.Subscription>();
   //TODO think about optimising useEffect => only during mount?
   //TODO test this flow => iterate through all the possible cases
@@ -93,21 +94,12 @@ export default function App() {
       .then((token) => setExpoPushToken(token ?? ""))
       .catch((error: any) => setExpoPushToken(`${error}`));
 
-    notificationListener.current =
-      Notifications.addNotificationReceivedListener((notification) => {
-        // setNotification(notification);
-      });
-
     responseListener.current =
       Notifications.addNotificationResponseReceivedListener((response) => {
         console.log(response);
       });
 
     return () => {
-      notificationListener.current &&
-        Notifications.removeNotificationSubscription(
-          notificationListener.current
-        );
       responseListener.current &&
         Notifications.removeNotificationSubscription(responseListener.current);
     };
