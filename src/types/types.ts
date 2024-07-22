@@ -47,7 +47,7 @@ export type NewTaskFeedItem = {
   TaskName: string,
 }
 
-export type NotificationType = "NEW_RESIDENT" | "NEW_TASK" | "TASK_DONE" | "TASK_ASSIGNED"
+export type NotificationType = "NEW_RESIDENT" | "NEW_TASK" | "TASK_DONE" | "TASK_ASSIGN"
 
 export type NotificationData = {
   FloorId: string,

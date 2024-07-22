@@ -11,16 +11,13 @@ import {
 import TaskCardFloor from "./TaskCardFloor";
 import type { Room } from "types/types";
 import Loading from "components/Loading";
-import { useState } from "react";
+import { useCallback, useState } from "react";
+import { useFocusEffect, useIsFocused } from "@react-navigation/native";
 
 export default function AllTasks() {
   const [refreshing, setRefreshing] = useState(false);
-  const { data, isLoading, isError, error, refetch } = useGetPostLoginInfoQuery(
-    undefined,
-    {
-      refetchOnFocus: true,
-    }
-  );
+  const { data, isLoading, isError, error, refetch } =
+    useGetPostLoginInfoQuery(undefined);
   const onRefresh = () => {
     setRefreshing(true);
     refetch();
@@ -28,6 +25,12 @@ export default function AllTasks() {
       setRefreshing(false);
     }, 2000); // Simulate a 2-second refresh
   };
+
+  useFocusEffect(
+    useCallback(() => {
+      refetch();
+    }, [])
+  );
 
   if (isLoading) {
     return <Loading />;

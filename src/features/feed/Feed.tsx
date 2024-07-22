@@ -2,7 +2,7 @@ import { ReactElement, useEffect, useMemo, useRef } from "react";
 import TaskCardFeed from "features/feed/TaskCardFeed";
 import NewResidentCard from "features/feed/NewResidentCard";
 import NewTaskCard from "features/feed/NewTaskCard";
-import { Text, ScrollView } from "react-native";
+import { Text, ScrollView, Platform } from "react-native";
 import {
   floorSlice,
   useGetPostLoginInfoQuery,
@@ -15,6 +15,7 @@ import * as Notifications from "expo-notifications";
 export default function Feed(): ReactElement {
   const notificationListener = useRef<Notifications.Subscription>();
   const dispatch = useDispatch();
+  // let userId;
 
   const sortCriteria = (a, b) =>
     a.Reminders === b.Reminders
@@ -35,10 +36,17 @@ export default function Feed(): ReactElement {
     );
   }, []);
 
+  // if (Platform.OS === "ios") {
+  //   userId = 1;
+  // } else {
+  //   userId = 2;
+  // }
+
   const { floorInfo, refetch } = useGetPostLoginInfoQuery(undefined, {
     selectFromResult: (result) => ({
       ...result,
       floorInfo: selectUserTasksById(result, result.data?.userprofile?.id),
+      // floorInfo: selectUserTasksById(result, userId),
     }),
   });
 
@@ -46,11 +54,12 @@ export default function Feed(): ReactElement {
     notificationListener.current =
       Notifications.addNotificationReceivedListener(async (notification) => {
         if (notification.request.content.data) {
-          const { FloorId, Type, Task } = notification.request.content.data;
           try {
             if (notification.request.content.data) {
-              const { FloorId, Type, Task } = notification.request.content.data;
-              if (Type === "TASK_DONE" || Type === "TASK_ASSIGNED") {
+              const { FloorId, Type } = notification.request.content.data;
+              const Task = JSON.parse(notification.request.content.data.Task);
+
+              if (Type === "TASK_DONE" || Type === "TASK_ASSIGN") {
                 dispatch(
                   //@ts-ignore
                   floorSlice.util.updateQueryData(
