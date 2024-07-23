@@ -31,6 +31,7 @@ export type Resident = {
   Id: string,
   Name: string,
   Available: boolean,
+  ExpoPushToken: string,
 }
 
 export type FeedItem = NewResidentFeedItem | NewTaskFeedItem

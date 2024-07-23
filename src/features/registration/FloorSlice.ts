@@ -1,4 +1,10 @@
-import { GO_BACKEND, RESOURCE_SERVER_DEV, UPDATE_TASK, URL_POST_LOGIN } from "util/UrlPaths";
+import {
+  GO_BACKEND,
+  RESOURCE_SERVER_DEV,
+  SET_EXPO_PUSH_TOKEN,
+  UPDATE_TASK,
+  URL_POST_LOGIN,
+} from "util/UrlPaths";
 import { REHYDRATE } from "redux-persist";
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { axiosBaseQuery } from "features/api/apiSlice";
@@ -28,9 +34,13 @@ export const floorSlice = createApi({
         try {
           const result = await queryFulfilled;
           dispatch(
-            floorSlice.util.updateQueryData("getFloor", result?.data?.Id, (draft) => {
-              Object.assign(draft, result?.data);
-            })
+            floorSlice.util.updateQueryData(
+              "getFloor",
+              result?.data?.Id,
+              (draft) => {
+                Object.assign(draft, result?.data);
+              }
+            )
           );
         } catch (e) {
           console.error(e);
@@ -45,20 +55,50 @@ export const floorSlice = createApi({
     }),
     updateTask: builder.mutation({
       query: (data) => ({
-          url: UPDATE_TASK,
-          method: "post",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          data: data,
-        }),
+        url: UPDATE_TASK,
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        data: data,
+      }),
       async onQueryStarted({ ...data }, { dispatch, queryFulfilled }) {
         try {
           const result = await queryFulfilled;
           dispatch(
-            floorSlice.util.updateQueryData("getPostLoginInfo", result?.data?.floor?.Id, (draft) => {
-              Object.assign(draft.floor, result?.data);
-            })
+            floorSlice.util.updateQueryData(
+              "getPostLoginInfo",
+              result?.data?.floor?.Id,
+              (draft) => {
+                Object.assign(draft.floor, result?.data);
+              }
+            )
+          );
+        } catch (e) {
+          console.error(e);
+        }
+      },
+    }),
+    registerExpoPushToken: builder.mutation({
+      query: (data) => ({
+        url: SET_EXPO_PUSH_TOKEN,
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        data: data,
+      }),
+      async onQueryStarted({ ...data }, { dispatch, queryFulfilled }) {
+        try {
+          const result = await queryFulfilled;
+          dispatch(
+            floorSlice.util.updateQueryData(
+              "getPostLoginInfo",
+              result?.data?.floor?.Id,
+              (draft) => {
+                Object.assign(draft.floor, result?.data);
+              }
+            )
           );
         } catch (e) {
           console.error(e);
@@ -73,5 +113,11 @@ export const floorSlice = createApi({
   },
 });
 
-export const { useGetFloorQuery, useCreateFloorMutation, useLazyGetPostLoginInfoQuery,  useUpdateTaskMutation, useGetPostLoginInfoQuery } = floorSlice;
-
+export const {
+  useGetFloorQuery,
+  useCreateFloorMutation,
+  useLazyGetPostLoginInfoQuery,
+  useGetPostLoginInfoQuery,
+  useUpdateTaskMutation,
+  useRegisterExpoPushTokenMutation,
+} = floorSlice;

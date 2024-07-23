@@ -1,11 +1,15 @@
 import { GO_BACKEND, RESOURCE_SERVER_DEV, URL_POST_LOGIN } from "util/UrlPaths";
 import Logout from "components/Logout";
-import { ActivityIndicator, Text, View } from "react-native";
-import { useLazyGetPostLoginInfoQuery } from "features/registration/FloorSlice";
+import { ActivityIndicator, Text, ToastAndroid, View } from "react-native";
+import {
+  floorSlice,
+  useGetPostLoginInfoQuery,
+  useLazyGetPostLoginInfoQuery,
+} from "features/registration/FloorSlice";
 import { useContext, useEffect, useState } from "react";
 import * as Analytics from "util/analytics/Analytics";
 import { AuthContext } from "App";
-import { FloorItem, UserProfile } from "types/types";
+import { FloorItem, Room, UserProfile } from "types/types";
 import { ErrorScreen } from "components/ErrorScreen";
 import { Settings } from "features/settings/ProfileSettings";
 import { NavigationContainer } from "@react-navigation/native";
@@ -13,34 +17,65 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Feed from "features/feed/Feed";
 import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
-import { Floor} from "features/floor/Floor";
-import floorStub from "mocks/stubs/floorStub";
+import { Floor } from "features/floor/Floor";
+import { registerForPushNotificationsAsync } from "features/notification/ExpoSetup";
+import { Platform } from "react-native";
 
 export default function HomeScreen() {
-  const [getPostLoginInfo, { currentData }] = useLazyGetPostLoginInfoQuery();
-  // const {data: currentData, error, isLoading, isUninitialized, isFetching} = useGetPostLoginInfoQuery(undefined );
-
-  const userprofile : UserProfile = currentData?.userprofile;
-  const floor: FloorItem = currentData?.floor;
+  const { data, isLoading, isError, error } =
+    useGetPostLoginInfoQuery(undefined);
   const { authContext, authState } = useContext(AuthContext);
-  const [userprofileError, setUserprofileError] = useState(false);
+  const [registerExpoPushToken] = floorSlice.useRegisterExpoPushTokenMutation();
+
+  const userprofile: UserProfile = data?.userprofile;
+  const floor: FloorItem = data?.floor;
+
+  // const myRoom = floor?.Rooms?.find(
+  //   (room) => room.Resident?.Id === userprofile.id.toString()
+  // );
+  let userId;
+  if (Platform.OS === "ios") {
+    userId = 1;
+  } else {
+    userId = 2;
+  }
+  const myRoom = floor?.Rooms?.find(
+    (room) => room.Resident?.Id === userId.toString()
+  );
 
   useEffect(() => {
-    getPostLoginInfo(null, true)
-      .unwrap()
-      .then((userprofile) => {
-        // analyticsInitAndLogLogin(userprofile);
-      })
-      .catch((e) => {
-        console.error("error getting userprofile analytics init, login", e);
-        setUserprofileError(true);
-      });
-  }, []);
+    // analyticsInitAndLogLogin(userprofile);
+    // @ts-ignore
+          if (Platform.OS === "ios") {
+    console.log("XXX", myRoom, data?.floor.Id);
+          } else {
+    console.log("JJJ", myRoom, data?.floor.Id);
+          }
+    if (myRoom && !myRoom.Resident.ExpoPushToken) {
+      registerForPushNotificationsAsync()
+        .then((token) => {
+          if (!token) {
+            throw new Error("invalid token received" + token);
+          }
+          if (Platform.OS === "ios") {
+            console.log("ios", token);
+          } else {
+            console.log("android", token);
+          }
+          registerExpoPushToken({
+            floorId: floor.Id,
+            // @ts-ignore
+            userId: myRoom.Resident.Id,
+            ExpoPushToken: token,
+          });
+        })
+        .catch((error: any) =>
+          console.error("Error registering push token", error)
+        );
+    }
+  }, [myRoom?.Resident?.ExpoPushToken]);
 
-  // if (userprofileError) {
-  //   return <ErrorScreen />;
-  // }
-  if (!currentData) {
+  if (isLoading) {
     return (
       <ActivityIndicator
         size="large"
@@ -51,6 +86,14 @@ export default function HomeScreen() {
           marginRight: "auto",
         }}
       />
+    );
+  }
+
+  if (isError) {
+    console.error("Error loading floor data ", error);
+    ToastAndroid.show(
+      "Error loading page, please refresh or try again later",
+      ToastAndroid.SHORT
     );
   }
 

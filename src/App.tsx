@@ -48,7 +48,6 @@ export default function App() {
   const [channels, setChannels] = useState<Notifications.NotificationChannel[]>(
     []
   );
-  const [expoPushToken, setExpoPushToken] = useState("");
   const [notification, setNotification] = useState<
     Notifications.Notification | undefined
   >(undefined);
@@ -90,10 +89,6 @@ export default function App() {
   );
 
   useEffect(() => {
-    registerForPushNotificationsAsync()
-      .then((token) => setExpoPushToken(token ?? ""))
-      .catch((error: any) => setExpoPushToken(`${error}`));
-
     responseListener.current =
       Notifications.addNotificationResponseReceivedListener((response) => {
         console.log(response);
@@ -129,20 +124,6 @@ export default function App() {
       },
     },
   };
-  console.log("expo push token", expoPushToken);
-  console.log(
-    "Channels: ",
-    JSON.stringify(
-      channels.map((c) => c.id),
-      null,
-      2
-    )
-  );
-  // if (notification) {
-  //   console.log("title", notification.request.content.title);
-  //   console.log("title", notification.request.content.body);
-  //   console.log("title", JSON.stringify(notification.request.content.data));
-  // }
   return (
     <Provider store={store}>
       <AuthContext.Provider value={{ authContext, authState }}>

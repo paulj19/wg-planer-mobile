@@ -15,12 +15,13 @@ import * as Notifications from "expo-notifications";
 export default function Feed(): ReactElement {
   const notificationListener = useRef<Notifications.Subscription>();
   const dispatch = useDispatch();
-  // let userId;
+  let userId;
 
   const sortCriteria = (a, b) =>
     a.Reminders === b.Reminders
       ? a.AssignmentDate - b.AssignmentDate
       : b.Reminders - a.Reminders;
+
   const selectUserTasksById = useMemo(() => {
     const emptyArray = [];
     return createSelector(
@@ -36,17 +37,17 @@ export default function Feed(): ReactElement {
     );
   }, []);
 
-  // if (Platform.OS === "ios") {
-  //   userId = 1;
-  // } else {
-  //   userId = 2;
-  // }
+  if (Platform.OS === "ios") {
+    userId = 0;
+  } else {
+    userId = 1;
+  }
 
   const { floorInfo, refetch } = useGetPostLoginInfoQuery(undefined, {
     selectFromResult: (result) => ({
       ...result,
-      floorInfo: selectUserTasksById(result, result.data?.userprofile?.id),
-      // floorInfo: selectUserTasksById(result, userId),
+      // floorInfo: selectUserTasksById(result, result.data?.userprofile?.id),
+      floorInfo: selectUserTasksById(result, userId),
     }),
   });
 
