@@ -60,7 +60,7 @@ export function mockPostLoginInfo() {
     },
     userprofile: {
       id: 1,
-      username: "Paulo",
+      username: "Paulox",
       email: "maxmuster@gmail.com",
       floorId: "66603e2a00afb9bb44b3cadb",
       oid: 1,

@@ -46,21 +46,11 @@ export default function HomeScreen() {
   useEffect(() => {
     // analyticsInitAndLogLogin(userprofile);
     // @ts-ignore
-          if (Platform.OS === "ios") {
-    console.log("XXX", myRoom, data?.floor.Id);
-          } else {
-    console.log("JJJ", myRoom, data?.floor.Id);
-          }
     if (myRoom && !myRoom.Resident.ExpoPushToken) {
       registerForPushNotificationsAsync()
         .then((token) => {
           if (!token) {
             throw new Error("invalid token received" + token);
-          }
-          if (Platform.OS === "ios") {
-            console.log("ios", token);
-          } else {
-            console.log("android", token);
           }
           registerExpoPushToken({
             floorId: floor.Id,
@@ -113,7 +103,8 @@ export default function HomeScreen() {
   return (
     <>
       <Tab.Navigator
-        initialRouteName="Feed"
+        // initialRouteName="Feed"
+        initialRouteName="home"
         screenOptions={({ route }) => ({
           tabBarActiveTintColor: "#000",
           tabBarInactiveTintColor: "gray",
@@ -132,21 +123,21 @@ export default function HomeScreen() {
         })}
       >
         <Tab.Screen
-          name="Floor"
+          name="floor"
           component={Floor}
           options={{
             tabBarLabel: "Home",
           }}
         />
         <Tab.Screen
-          name="Feed"
+          name="feed"
           component={Feed}
           options={{
             tabBarLabel: "Feed",
           }}
         />
         <Tab.Screen
-          name="Settings"
+          name="settings"
           component={Settings}
           options={{
             tabBarLabel: "Settings",

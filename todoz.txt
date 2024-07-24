@@ -44,3 +44,12 @@ BE:
 
 FE:
 1. move expoPushToken registration to login page by adding expoPushToken to userprofile
+
+
+EXPO NOTIFICATIONS:
+  1. ignoring background notifications for now but all the updates can be handled and cache can be kept updated just with background notifications: "A background notification (iOS) or a data-only notification (Android) is a remote notification that does not display an alert, play a sound, or add a badge to your app's icon. The purpose of a background notification is to provide a way to wake up your app to trigger an app data refresh in the background."
+  2. create appropriate channels: If you do not specify a notification channel, expo-notifications will create a fallback channel for you, named Miscellaneous. We encourage you to always ensure appropriate channels with informative names are set up for the application and to always send notifications to these channels.
+k
+  3. colors, icons: Custom notification icon and colors, You can configure the notification.icon and notification.color keys in the project's app.json 
+  4. PERMISSIONS: eg. in android on reboot
+  5. receipts, push tickets, recovery in server side
