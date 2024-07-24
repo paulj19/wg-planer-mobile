@@ -61,7 +61,7 @@ export default function Feed(): ReactElement {
               const { FloorId, Type } = notification.request.content.data;
               const Task = JSON.parse(notification.request.content.data.Task);
 
-              if (Type === "TASK_DONE" || Type === "TASK_ASSIGN") {
+              if (Type === "TASK_DONE" || Type === "TASK_ASSIGN"|| Type === "TASK_REMINDER") {
                 dispatch(
                   //@ts-ignore
                   floorSlice.util.updateQueryData(
@@ -80,7 +80,7 @@ export default function Feed(): ReactElement {
                           break;
                         }
                       }
-                      if (i === draft.floor.Tasks.length - 1) {
+                      if (i === draft.floor.Tasks.length) {
                         throw new Error("Task not found in user tasks");
                       }
                     }

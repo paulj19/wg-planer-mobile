@@ -20,3 +20,4 @@ export const URL_USER_PROFILE = RESOURCE_SERVER_DEV + "/userprofile";
 export const URL_POST_LOGIN = GO_BACKEND + "/post-login";
 export const UPDATE_TASK = GO_BACKEND + "/update-task";
 export const SET_EXPO_PUSH_TOKEN = GO_BACKEND + "/register-expo-token";
+export const TASK_REMINDER = GO_BACKEND + "/remind-task";

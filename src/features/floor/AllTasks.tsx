@@ -45,7 +45,7 @@ export default function AllTasks() {
           task.AssignedTo !== -1
             ? data.floor?.Rooms?.find((room) => room.Id === task.AssignedTo)
             : undefined;
-        return <TaskCardFloor task={task} assignedTo={assignedTo} />;
+        return <TaskCardFloor task={task} assignedTo={assignedTo} floorId={data.floor.Id} myId={data.userprofile.id.toString()}/>;
       })}
     </ScrollViewWithRefresh >
   );

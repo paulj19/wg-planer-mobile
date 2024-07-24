@@ -9,7 +9,14 @@ import {
   PaperProvider,
   Portal,
 } from "react-native-paper";
-import { TouchableOpacity, View, Modal, Pressable } from "react-native";
+import {
+  TouchableOpacity,
+  View,
+  Modal,
+  Pressable,
+  ToastAndroid,
+  Platform,
+} from "react-native";
 import { StyleSheet } from "react-native";
 import { Entypo } from "@expo/vector-icons";
 import { Room, Task } from "types/types";
@@ -18,31 +25,68 @@ import Button from "components/Button";
 import { ScrollView } from "react-native";
 import { TouchableWithoutFeedback } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { useRemindTaskMutation } from "features/registration/FloorSlice";
 
 const LeftContent = (props) => <Avatar.Icon {...props} icon="folder" />;
 
 type TaskCardFloorProps = {
   task: Task;
   assignedTo: Room | undefined;
+  floorId: string;
+  myId: string;
 };
 
 export default function TaskCardFloor({
   task,
   assignedTo,
+  floorId,
+  myId,
 }: TaskCardFloorProps) {
   const assignedName = assignedTo?.Resident?.Name?.split(" ")[0] || undefined;
   const navigation = useNavigation();
+  const [remindTask] = useRemindTaskMutation();
 
+  const handleRemindTask = async () => {
+    try {
+      await remindTask({
+        floorId,
+        task,
+        action: "REMIND",
+      }).unwrap();
+
+      ToastAndroid.show("Reminder sent", ToastAndroid.SHORT);
+    } catch (error) {
+      console.error("Error reminding task ", error);
+      ToastAndroid.show(
+        "Error reminding task, please refresh or try again later",
+        ToastAndroid.SHORT
+      );
+    }
+  };
+
+  let userId;
+  if (Platform.OS === "ios") {
+    userId = "1";
+  } else {
+    userId = "2";
+  }
+
+  //TODO put it back
+  // {assignedTo && assignedTo.Resident?.Id !== myId ? (
   return (
     <View style={styles.taskCardContainer} testID="task-card">
       <Text style={styles.taskName}>{task.Name}</Text>
       <Text style={styles.assignedTo}>{assignedName ?? "unassigned"}</Text>
-      <Button
-        testID="assign-remind-button"
-        onPress={() => navigation.navigate("AssignTask", { taskId: task.Id })}
-      >
-        {assignedTo ? "REMIND" : "ASSIGN"}
-      </Button>
+      {assignedTo?.Resident?.Id !== userId ? (
+        <Button onPress={handleRemindTask}>REMIND</Button>
+      ) : (
+        <Button
+          testID="assign-remind-button"
+          onPress={() => navigation.navigate("AssignTask", { taskId: task.Id })}
+        >
+          {assignedTo ? "REASSIGN" : "ASSIGN"}
+        </Button>
+      )}
       <TouchableOpacity
         onPress={() =>
           navigation.navigate("TaskActionsModal", { taskId: task.Id })

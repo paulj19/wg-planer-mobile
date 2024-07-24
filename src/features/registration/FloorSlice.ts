@@ -2,6 +2,7 @@ import {
   GO_BACKEND,
   RESOURCE_SERVER_DEV,
   SET_EXPO_PUSH_TOKEN,
+  TASK_REMINDER as REMIND_TASK,
   UPDATE_TASK,
   URL_POST_LOGIN,
 } from "util/UrlPaths";
@@ -105,6 +106,32 @@ export const floorSlice = createApi({
         }
       },
     }),
+    remindTask: builder.mutation({
+      query: (data) => ({
+        url: REMIND_TASK,
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        data: data,
+      }),
+      async onQueryStarted({ ...data }, { dispatch, queryFulfilled }) {
+        try {
+          const result = await queryFulfilled;
+          dispatch(
+            floorSlice.util.updateQueryData(
+              "getPostLoginInfo",
+              result?.data?.floor?.Id,
+              (draft) => {
+                Object.assign(draft.floor, result?.data);
+              }
+            )
+          );
+        } catch (e) {
+          console.error(e);
+        }
+      },
+    }),
   }),
   extractRehydrationInfo(action, { reducerPath }) {
     if (action.type === REHYDRATE) {
@@ -120,4 +147,5 @@ export const {
   useGetPostLoginInfoQuery,
   useUpdateTaskMutation,
   useRegisterExpoPushTokenMutation,
+  useRemindTaskMutation,
 } = floorSlice;
