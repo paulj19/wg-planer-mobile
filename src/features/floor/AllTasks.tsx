@@ -13,18 +13,11 @@ import type { Room } from "types/types";
 import Loading from "components/Loading";
 import { useCallback, useState } from "react";
 import { useFocusEffect, useIsFocused } from "@react-navigation/native";
+import {ScrollViewWithRefresh} from "components/ScrollViewWithRefresh";
 
 export default function AllTasks() {
-  const [refreshing, setRefreshing] = useState(false);
   const { data, isLoading, isError, error, refetch } =
     useGetPostLoginInfoQuery(undefined);
-  const onRefresh = () => {
-    setRefreshing(true);
-    refetch();
-    setTimeout(() => {
-      setRefreshing(false);
-    }, 2000); // Simulate a 2-second refresh
-  };
 
   useFocusEffect(
     useCallback(() => {
@@ -46,11 +39,7 @@ export default function AllTasks() {
   let assignedTo: Room | undefined;
 
   return (
-    <ScrollView
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-      }
-    >
+  <ScrollViewWithRefresh refetch={refetch}>
       {data?.floor?.Tasks?.map((task) => {
         assignedTo =
           task.AssignedTo !== -1
@@ -58,6 +47,6 @@ export default function AllTasks() {
             : undefined;
         return <TaskCardFloor task={task} assignedTo={assignedTo} />;
       })}
-    </ScrollView>
+    </ScrollViewWithRefresh >
   );
 }

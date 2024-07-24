@@ -5,9 +5,10 @@ import { Checkbox, DataTable, Divider } from "react-native-paper";
 import Button from "components/Button";
 import { ScrollView, StyleSheet } from "react-native";
 import AllResidentsRecord from "features/floor/AllResidentsRecord";
+import { ScrollViewWithRefresh } from "components/ScrollViewWithRefresh";
 
 export default function AllResidents() {
-  const { data, isLoading, isError, error } =
+  const { data, isLoading, isError, error, refetch } =
     useGetPostLoginInfoQuery(undefined);
 
   if (isLoading) {
@@ -23,7 +24,10 @@ export default function AllResidents() {
   }
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <ScrollViewWithRefresh
+      refetch={refetch}
+      contentContainerStyle={styles.container}
+    >
       <View style={styles.header}>
         <Text style={styles.residentName}>Resident Name</Text>
         <Text>Room</Text>
@@ -38,7 +42,7 @@ export default function AllResidents() {
           </>
         );
       })}
-    </ScrollView>
+    </ScrollViewWithRefresh>
   );
 }
 

@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { createSelector } from "@reduxjs/toolkit";
 import { FloorItem, Task } from "types/types";
 import * as Notifications from "expo-notifications";
+import {ScrollViewWithRefresh} from "components/ScrollViewWithRefresh";
 
 export default function Feed(): ReactElement {
   const notificationListener = useRef<Notifications.Subscription>();
@@ -103,7 +104,9 @@ export default function Feed(): ReactElement {
   }, [dispatch]);
 
   return (
-    <ScrollView>
+    <ScrollViewWithRefresh
+      refetch={refetch}
+    >
       {floorInfo?.Tasks?.map((task) => (
         <TaskCardFeed
           task={task}
@@ -125,6 +128,6 @@ export default function Feed(): ReactElement {
           );
         }
       })}
-    </ScrollView>
+    </ScrollViewWithRefresh>
   );
 }
