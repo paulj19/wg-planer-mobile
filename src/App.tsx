@@ -24,34 +24,14 @@ import { StyleSheet } from "react-native";
 import { CreateFloor } from "features/registration/CreateFloor";
 import TaskActionsModal from "features/floor/TaskActionsModal";
 import { AssignTask } from "features/floor/AssignTask";
-import { registerForPushNotificationsAsync } from "features/notification/ExpoSetup";
-import * as Notifications from "expo-notifications";
-import { NotificationData } from "types/types";
-import { floorSlice } from "features/registration/FloorSlice";
 
 const Stack = createStackNavigator();
 initBase64();
 export let AuthContext;
 
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: true,
-    shouldSetBadge: true,
-  }),
-});
 export default function App() {
   AuthContext = React.createContext({});
   const navigationRef = useNavigationContainerRef();
-  const routeNameRef = React.useRef();
-
-  const [channels, setChannels] = useState<Notifications.NotificationChannel[]>(
-    []
-  );
-  const [notification, setNotification] = useState<
-    Notifications.Notification | undefined
-  >(undefined);
-  const responseListener = useRef<Notifications.Subscription>();
   //TODO think about optimising useEffect => only during mount?
   //TODO test this flow => iterate through all the possible cases
   const [authState, dispatch] = React.useReducer(
@@ -88,18 +68,6 @@ export default function App() {
     []
   );
 
-  useEffect(() => {
-    responseListener.current =
-      Notifications.addNotificationResponseReceivedListener((response) => {
-        console.log(response);
-      });
-
-    return () => {
-      responseListener.current &&
-        Notifications.removeNotificationSubscription(responseListener.current);
-    };
-  }, []);
-
   React.useEffect(() => {
     const bootStrapAsync = async () => {
       try {
@@ -115,19 +83,10 @@ export default function App() {
     bootStrapAsync();
   }, []);
 
-  const linking = {
-    prefixes: ["*"],
-    config: {
-      screens: {
-        AllTasks: "all-tasks",
-        HomeScreen: "home",
-      },
-    },
-  };
   return (
     <Provider store={store}>
       <AuthContext.Provider value={{ authContext, authState }}>
-        <NavigationContainer linking={linking} ref={navigationRef}>
+        <NavigationContainer ref={navigationRef}>
           <Stack.Navigator
             screenOptions={{
               headerStyle: { elevation: 0 },
