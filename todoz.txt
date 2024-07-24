@@ -53,3 +53,13 @@ k
   3. colors, icons: Custom notification icon and colors, You can configure the notification.icon and notification.color keys in the project's app.json 
   4. PERMISSIONS: eg. in android on reboot
   5. receipts, push tickets, recovery in server side
+imp
+=======
+  6. notification navigation to feed
+  7. Badge =
+  8 do not show notification if user assigns to himself 
+
+
+
+USER DELETE:
+  1. remove pushtoken subscription
