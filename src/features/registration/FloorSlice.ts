@@ -132,6 +132,16 @@ export const floorSlice = createApi({
         }
       },
     }),
+  setUnavailable: builder.mutation({
+    query: (data) => ({
+        url: UPDATE_TASK,
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: data,
+    }),
+  }),
   }),
   extractRehydrationInfo(action, { reducerPath }) {
     if (action.type === REHYDRATE) {
