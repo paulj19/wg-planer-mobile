@@ -132,16 +132,32 @@ export const floorSlice = createApi({
         }
       },
     }),
-  setUnavailable: builder.mutation({
-    query: (data) => ({
-        url: UPDATE_TASK,
-      method: "post",
-      headers: {
-        "Content-Type": "application/json",
+    updateAvailabilityStatus: builder.mutation({
+      query: (data) => ({
+        url: GO_BACKEND + "/update-availability",
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        data: data,
+      }),
+      async onQueryStarted({ ...data }, { dispatch, queryFulfilled }) {
+        try {
+          const result = await queryFulfilled;
+          dispatch(
+            floorSlice.util.updateQueryData(
+              "getPostLoginInfo",
+              result?.data?.floor?.Id,
+              (draft) => {
+                Object.assign(draft.floor, result?.data);
+              }
+            )
+          );
+        } catch (e) {
+          console.error(e);
+        }
       },
-      data: data,
     }),
-  }),
   }),
   extractRehydrationInfo(action, { reducerPath }) {
     if (action.type === REHYDRATE) {
@@ -158,4 +174,5 @@ export const {
   useUpdateTaskMutation,
   useRegisterExpoPushTokenMutation,
   useRemindTaskMutation,
+  useUpdateAvailabilityStatusMutation,
 } = floorSlice;
