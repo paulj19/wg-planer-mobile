@@ -1,13 +1,24 @@
-import { ReactElement } from "react";
-import { Platform, Switch, Text, ToastAndroid, View } from "react-native";
+import React, { ReactElement } from "react";
+import {
+  Modal,
+  Platform,
+  Pressable,
+  StyleSheet,
+  Text,
+  ToastAndroid,
+  View,
+} from "react-native";
 import {
   useUpdateAvailabilityStatusMutation,
   useGetPostLoginInfoQuery,
 } from "features/registration/FloorSlice";
 import Loading from "components/Loading";
+import { Dialog, PaperProvider, Portal, Switch } from "react-native-paper";
+import Button from "components/Button";
 
 export function Settings(): ReactElement {
   const [updateAvailabilityStatus] = useUpdateAvailabilityStatusMutation();
+  const [dialogVisible, setDialogVisible] = React.useState(false);
   const { data, isLoading, isError, error, refetch } =
     useGetPostLoginInfoQuery(undefined);
 
@@ -34,25 +45,56 @@ export function Settings(): ReactElement {
     (room) => room.Resident?.Id === userId.toString()
   );
 
-  const handleAvailabilityStatusChange = async () => {
-    //are you sure?
+  const handleConfirm = async () => {
+    setDialogVisible(false);
+    const successMsg = !myRoom.Resident.Available
+      ? "You are now available to take tasks"
+      : "Your are now unavailable to take tasks. Your current tasks have been assigned to next available resident.";
     await updateAvailabilityStatus({
       action: myRoom.Resident.Available
         ? "RESIDENT_UNAVAILABLE"
         : "RESIDENT_AVAILABLE",
     }).unwrap();
-    ToastAndroid.show("Set to unavailable", ToastAndroid.SHORT);
+    ToastAndroid.show(successMsg, ToastAndroid.SHORT);
+  };
+
+  const ConfirmDialog = () => {
+    return (
+      <View>
+        <Portal>
+          <Dialog
+            visible={dialogVisible}
+            onDismiss={() => setDialogVisible(false)}
+          >
+            <Dialog.Title>
+              Are you sure to change the Availability Status?
+            </Dialog.Title>
+            <Dialog.Content>
+              <Text>
+                If you set yourself to unavailable, then all your current tasks
+                will be assigned to next available resident.
+              </Text>
+            </Dialog.Content>
+            <Dialog.Actions>
+              <Button onPress={handleConfirm}>Confirm</Button>
+              <Button onPress={() => setDialogVisible(false)}>Cancel</Button>
+            </Dialog.Actions>
+          </Dialog>
+        </Portal>
+      </View>
+    );
   };
 
   return (
-    <View style={{ marginTop: 20 }}>
+    <PaperProvider>
+      <ConfirmDialog />
       <Switch
-        trackColor={{ false: "#767577", true: "#81b0ff" }}
-        thumbColor={myRoom.Resident.Available ? "#f5dd4b" : "#f4f3f4"}
-        ios_backgroundColor="#3e3e3e"
-        onValueChange={handleAvailabilityStatusChange}
         value={myRoom.Resident.Available}
+        onValueChange={() =>
+          myRoom.Resident.Available ? setDialogVisible(true) : handleConfirm()
+        }
       />
-    </View>
+    </PaperProvider>
   );
 }
+

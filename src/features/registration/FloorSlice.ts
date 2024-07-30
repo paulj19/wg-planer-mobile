@@ -5,6 +5,7 @@ import {
   TASK_REMINDER as REMIND_TASK,
   UPDATE_TASK,
   URL_POST_LOGIN,
+  UPDATE_AVAILIBILITY,
 } from "util/UrlPaths";
 import { REHYDRATE } from "redux-persist";
 import { createApi } from "@reduxjs/toolkit/query/react";
@@ -134,7 +135,7 @@ export const floorSlice = createApi({
     }),
     updateAvailabilityStatus: builder.mutation({
       query: (data) => ({
-        url: GO_BACKEND + "/update-availability",
+        url: UPDATE_AVAILIBILITY,
         method: "post",
         headers: {
           "Content-Type": "application/json",

@@ -6,7 +6,7 @@ export const URL_AUTH_SERVER = "http://192.168.0.108:8081";
 //   ? MOCK_BASE_URL
 //   : "http://192.168.33.184:8082";
 export const RESOURCE_SERVER_DEV = "http://192.168.0.108:8082";
-export const GO_BACKEND = "http://192.168.0.112:8080";
+export const GO_BACKEND = "http://192.168.0.114:8080";
 export const PATH_VALIDATE_ACCESS_TOKEN = "/validate-access-token";
 export const PATH_LOGIN = "/login";
 export const URL_AUTHORIZATION = URL_AUTH_SERVER + "/oauth2/authorize";
@@ -21,3 +21,4 @@ export const URL_POST_LOGIN = GO_BACKEND + "/post-login";
 export const UPDATE_TASK = GO_BACKEND + "/update-task";
 export const SET_EXPO_PUSH_TOKEN = GO_BACKEND + "/register-expo-token";
 export const TASK_REMINDER = GO_BACKEND + "/remind-task";
+export const UPDATE_AVAILIBILITY = GO_BACKEND + "/update-availability";

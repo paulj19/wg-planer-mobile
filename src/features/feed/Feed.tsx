@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { createSelector } from "@reduxjs/toolkit";
 import { FloorItem, Task } from "types/types";
 import * as Notifications from "expo-notifications";
-import {ScrollViewWithRefresh} from "components/ScrollViewWithRefresh";
+import { ScrollViewWithRefresh } from "components/ScrollViewWithRefresh";
 
 export default function Feed(): ReactElement {
   const notificationListener = useRef<Notifications.Subscription>();
@@ -59,34 +59,40 @@ export default function Feed(): ReactElement {
           try {
             if (notification.request.content.data) {
               const { FloorId, Type } = notification.request.content.data;
-              const Task = JSON.parse(notification.request.content.data.Task);
-
-              if (Type === "TASK_DONE" || Type === "TASK_ASSIGN"|| Type === "TASK_REMINDER") {
-                dispatch(
-                  //@ts-ignore
-                  floorSlice.util.updateQueryData(
-                    "getPostLoginInfo",
-                    undefined,
-                    (draft) => {
-                      if (draft.floor.Id !== FloorId) {
-                        throw new Error(
-                          "Notification flooId does not match user floorId"
-                        );
-                      }
+              const Patch = JSON.parse(notification.request.content.data.Patch);
+              dispatch(
+                //@ts-ignore
+                floorSlice.util.updateQueryData(
+                  "getPostLoginInfo",
+                  undefined,
+                  (draft) => {
+                    if (draft.floor.Id !== FloorId) {
+                      throw new Error(
+                        "Notification flooId does not match user floorId"
+                      );
+                    }
+                    if (
+                      Type === "TASK_DONE" ||
+                      Type === "TASK_ASSIGN" ||
+                      Type === "TASK_REMINDER"
+                    ) {
                       let i = 0;
                       for (; i < draft.floor.Tasks.length; i++) {
-                        if (draft.floor.Tasks[i].Id === Task.Id) {
-                          Object.assign(draft.floor.Tasks[i], Task);
+                        //TODO array indexing buggy?
+                        if (draft.floor.Tasks[i].Id === Patch[0].Id) {
+                          Object.assign(draft.floor.Tasks[i], Patch[0]);
                           break;
                         }
                       }
                       if (i === draft.floor.Tasks.length) {
                         throw new Error("Task not found in user tasks");
                       }
+                    } else if (Type === "RESIDENT_UNAVAILABLE") {
+                      Object.assign(draft.floor.Tasks, Patch);
                     }
-                  )
-                );
-              }
+                  }
+                )
+              );
             }
           } catch (e) {
             console.error("error updating task with notification", e);
@@ -104,9 +110,7 @@ export default function Feed(): ReactElement {
   }, [dispatch]);
 
   return (
-    <ScrollViewWithRefresh
-      refetch={refetch}
-    >
+    <ScrollViewWithRefresh refetch={refetch}>
       {floorInfo?.Tasks?.map((task) => (
         <TaskCardFeed
           task={task}
