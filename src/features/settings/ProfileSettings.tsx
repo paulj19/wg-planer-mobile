@@ -1,5 +1,6 @@
 import React, { ReactElement } from "react";
 import {
+  Image,
   Modal,
   Platform,
   Pressable,
@@ -13,8 +14,13 @@ import {
   useGetPostLoginInfoQuery,
 } from "features/registration/FloorSlice";
 import Loading from "components/Loading";
-import { Dialog, PaperProvider, Portal, Switch } from "react-native-paper";
+import { Dialog, Divider, PaperProvider, Portal, Switch } from "react-native-paper";
 import Button from "components/Button";
+import { ScrollView } from "react-native";
+import { ListItem } from "react-native-elements";
+import InfoText from "./InfoText";
+import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 export function Settings(): ReactElement {
   const [updateAvailabilityStatus] = useUpdateAvailabilityStatusMutation();
@@ -87,14 +93,89 @@ export function Settings(): ReactElement {
 
   return (
     <PaperProvider>
-      <ConfirmDialog />
-      <Switch
-        value={myRoom.Resident.Available}
-        onValueChange={() =>
-          myRoom.Resident.Available ? setDialogVisible(true) : handleConfirm()
-        }
-      />
+      <ScrollView>
+        <View style={styles.headerContainer}>
+          <View style={styles.userRow}>
+            <View style={styles.userImage}>
+              <Text style={styles.userNameAvatar}>
+                {data.userprofile.username.charAt(0)}
+              </Text>
+            </View>
+            <View style={styles.userNameRow}>
+              <Text style={styles.userNameText}>
+                {data.userprofile.username}
+              </Text>
+            </View>
+          </View>
+        </View>
+        <View>
+          <InfoText text="Account" />
+          <ListItem>
+            <MaterialIcons name="email" size={24} color="black" />
+            <ListItem.Content>
+              <ListItem.Title>{data.userprofile.email}</ListItem.Title>
+            </ListItem.Content>
+          </ListItem>
+          <Divider />
+          <ListItem>
+            <FontAwesome5 name="umbrella-beach" size={24} color="black" />
+            <ListItem.Content>
+              <ListItem.Title>Available</ListItem.Title>
+            </ListItem.Content>
+            <Switch
+              value={myRoom.Resident.Available}
+              onValueChange={() =>
+                myRoom.Resident.Available
+                  ? setDialogVisible(true)
+                  : handleConfirm()
+              }
+            />
+          </ListItem>
+        </View>
+        <ConfirmDialog />
+      </ScrollView>
     </PaperProvider>
   );
 }
 
+const styles = StyleSheet.create({
+  headerContainer: {
+    alignItems: "center",
+    backgroundColor: "#FFF",
+    marginBottom: 10,
+  },
+  userImage: {
+    borderRadius: 60,
+    height: 120,
+    marginBottom: 10,
+    width: 120,
+    backgroundColor: "#f0f0f0",
+  },
+  userNameRow: {
+    marginBottom: 10,
+  },
+  userNameText: {
+    color: "#5B5A5A",
+    fontSize: 18,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  userRow: {
+    alignItems: "center",
+    flexDirection: "column",
+    justifyContent: "center",
+    marginBottom: 12,
+  },
+  userNameAvatar: {
+    color: "#000",
+    fontSize: 45,
+    fontWeight: "bold",
+    textAlign: "center",
+    margin: "auto",
+  },
+  listItemContainer: {
+    height: 55,
+    borderWidth: 0.5,
+    borderColor: "#ECECEC",
+  },
+});

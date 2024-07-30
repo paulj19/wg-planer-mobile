@@ -1,6 +1,13 @@
 import { GO_BACKEND, RESOURCE_SERVER_DEV, URL_POST_LOGIN } from "util/UrlPaths";
 import Logout from "components/Logout";
-import { ActivityIndicator, Text, ToastAndroid, View } from "react-native";
+import {
+  ActivityIndicator,
+  Pressable,
+  Text,
+  ToastAndroid,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import {
   floorSlice,
   useGetPostLoginInfoQuery,
@@ -141,6 +148,7 @@ export default function HomeScreen() {
           component={Settings}
           options={{
             tabBarLabel: "Settings",
+            headerRight: () => <Logout />,
           }}
         />
       </Tab.Navigator>
