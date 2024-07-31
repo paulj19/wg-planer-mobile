@@ -34,6 +34,7 @@ export default function AllResidents() {
       ToastAndroid.SHORT
     );
   }
+
   const handleCodeCopy = async () => {
     try {
       const copied = await setStringAsync(codeGenerated);
@@ -47,6 +48,7 @@ export default function AllResidents() {
       ToastAndroid.show("Error copying code", ToastAndroid.SHORT);
     }
   };
+
   const DisplayCodeDialog = () => {
     return (
       <View>
@@ -60,8 +62,7 @@ export default function AllResidents() {
             </Dialog.Title>
             <Dialog.Content>
               <Text>
-                This code is valid for 20 minutes. Please share it with the new
-                resident.
+               Please share this code with the new resident. The code is needed to sign up! It is valid for 20 minutes.
               </Text>
             </Dialog.Content>
             <Dialog.Actions>

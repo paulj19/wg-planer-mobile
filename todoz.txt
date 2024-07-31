@@ -62,6 +62,8 @@ imp
   8. was it becaues DONE or ASSIGN? who did it
 
 
-
+ADD NEW RESIDENT:
+  1. show code in the table for 20 min, the problem is only when there are multiple free rooms in the table and setCode useState does not work anymore. One option would be to put it inside the room record and then remove it when the timer expires.
+  2. expo sharing to whatsapp/telegram
 USER DELETE:
   1. remove pushtoken subscription

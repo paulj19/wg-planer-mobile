@@ -18,21 +18,21 @@ export default function AllResidentsRecord({
   generateCode: any;
   setCode: any;
 }) {
-  const handleGenerateCode = async () => {
-    try {
-      const code = await generateCode({ Room: room })
-        .unwrap()
-        .then((res) => setCode(res.code))
 
-      console.log("Code generated", code);
+  const handleGenerateCode = () => {
+    try {
+      generateCode({ Room: room })
+        .unwrap()
+        .then((res) => setCode(res.code));
     } catch (e) {
       console.error("Error generating code", e);
       ToastAndroid.show(
-        "Error adding new user, please try again later",
+        "An error occurred, please try again later",
         ToastAndroid.SHORT
       );
     }
   };
+
   return (
     <View style={styles.container}>
       {!room.Resident?.Id ? (
