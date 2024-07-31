@@ -42,6 +42,7 @@ BE:
 6. right now refetch is done when focus in AllTasks, make this bit better by clever checks, like if loaded within last 1 sec(cache age or something) then dont refetch, there is a check anyway for consistency
 7. remove userId and floorId in token registration and take it from userProfile which must be in the context
 8. userprofile id to string, also occurences of userId to string
+9. 3 attempts to enter code
 
 FE:
 1. move expoPushToken registration to login page by adding expoPushToken to userprofile

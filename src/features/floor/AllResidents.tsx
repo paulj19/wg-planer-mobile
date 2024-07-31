@@ -1,15 +1,27 @@
 import { useGetPostLoginInfoQuery } from "features/registration/FloorSlice";
 import { ToastAndroid, View, Text } from "react-native";
 import Loading from "components/Loading";
-import { Checkbox, DataTable, Divider } from "react-native-paper";
+import {
+  Checkbox,
+  DataTable,
+  Dialog,
+  Divider,
+  PaperProvider,
+  Portal,
+} from "react-native-paper";
 import Button from "components/Button";
 import { ScrollView, StyleSheet } from "react-native";
 import AllResidentsRecord from "features/floor/AllResidentsRecord";
 import { ScrollViewWithRefresh } from "components/ScrollViewWithRefresh";
+import { useGenerateCodeMutation } from "features/user/UserSlice";
+import { useState } from "react";
+import { setStringAsync } from "expo-clipboard";
 
 export default function AllResidents() {
+  const [codeGenerated, setCode] = useState("");
   const { data, isLoading, isError, error, refetch } =
     useGetPostLoginInfoQuery(undefined);
+  const [generateCode] = useGenerateCodeMutation();
 
   if (isLoading) {
     return <Loading />;
@@ -22,27 +34,75 @@ export default function AllResidents() {
       ToastAndroid.SHORT
     );
   }
-
-  return (
-    <ScrollViewWithRefresh
-      refetch={refetch}
-      contentContainerStyle={styles.container}
-    >
-      <View style={styles.header}>
-        <Text style={styles.residentName}>Resident Name</Text>
-        <Text>Room</Text>
-        <Text>Availability</Text>
+  const handleCodeCopy = async () => {
+    try {
+      const copied = await setStringAsync(codeGenerated);
+      if (!copied) {
+        throw new Error("Error copying code");
+      }
+      ToastAndroid.show("Code copied to clipboard", ToastAndroid.SHORT);
+      setTimeout(() => setCode(""), 1000);
+    } catch (e) {
+      console.error("Error copying code", e);
+      ToastAndroid.show("Error copying code", ToastAndroid.SHORT);
+    }
+  };
+  const DisplayCodeDialog = () => {
+    return (
+      <View>
+        <Portal>
+          <Dialog
+            visible={codeGenerated === "" ? false : true}
+            onDismiss={() => setCode("")}
+          >
+            <Dialog.Title style={styles.codeGenerated}>
+              {codeGenerated}
+            </Dialog.Title>
+            <Dialog.Content>
+              <Text>
+                This code is valid for 20 minutes. Please share it with the new
+                resident.
+              </Text>
+            </Dialog.Content>
+            <Dialog.Actions>
+              <Button onPress={handleCodeCopy}>Copy</Button>
+              <Button onPress={() => setCode("")}>Cancel</Button>
+            </Dialog.Actions>
+          </Dialog>
+        </Portal>
       </View>
-      <Divider />
-      {data.floor.Rooms?.map((room) => {
-        return (
-          <>
-            <AllResidentsRecord room={room} />
-            <Divider />
-          </>
-        );
-      })}
-    </ScrollViewWithRefresh>
+    );
+  };
+
+  //how to send code to dialog and save it for 10 min, when multiple codes/rooms are ther
+  return (
+    <PaperProvider>
+      <DisplayCodeDialog />
+      <ScrollViewWithRefresh
+        refetch={refetch}
+        contentContainerStyle={styles.container}
+      >
+        <View style={styles.header}>
+          <DisplayCodeDialog />
+          <Text style={styles.residentName}>Resident Name</Text>
+          <Text>Room</Text>
+          <Text>Availability</Text>
+        </View>
+        <Divider />
+        {data.floor.Rooms?.map((room) => {
+          return (
+            <>
+              <AllResidentsRecord
+                room={room}
+                generateCode={generateCode}
+                setCode={setCode}
+              />
+              <Divider />
+            </>
+          );
+        })}
+      </ScrollViewWithRefresh>
+    </PaperProvider>
   );
 }
 
@@ -64,5 +124,9 @@ const styles = StyleSheet.create({
   },
   residentName: {
     width: 140,
+  },
+  codeGenerated: {
+    textAlign: "center",
+    fontSize: 24,
   },
 });

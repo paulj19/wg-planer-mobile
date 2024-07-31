@@ -70,7 +70,8 @@
     "redux-persist": "^6.0.0",
     "util": "^0.12.5",
     "yarn": "^1.22.19",
-    "yup": "^0.32.11"
+    "yup": "^0.32.11",
+    "expo-clipboard": "~6.0.3"
   },
   "overrides": {
     "typescript": "5.1.6"
