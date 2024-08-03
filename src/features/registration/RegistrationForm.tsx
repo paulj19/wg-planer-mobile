@@ -8,6 +8,11 @@ import { Dropdown } from "react-native-element-dropdown";
 import { TextInput, Button } from "react-native-paper";
 import { ErrorScreen } from "components/ErrorScreen";
 import Loading from "components/Loading";
+import {
+  useAddNewResidentMutation,
+  useRegisterNewUserMutation,
+} from "features/user/UserSlice";
+import floorStub from "mocks/stubs/floorStub";
 
 const registrationValidationSchema = Yup.object().shape({
   username: Yup.string()
@@ -37,25 +42,14 @@ const registrationValidationSchema = Yup.object().shape({
 });
 
 export const RegistrationForm = ({ route, navigation }) => {
-  const floorId = route.params?.floorId;
-  if (!floorId) {
-    return (<ErrorScreen />);
+  const { floor, room } = route.params;
+  const [registerNewUser] = useRegisterNewUserMutation();
+  const [addNewResident] = useAddNewResidentMutation();
+
+  if (!floor) {
+    return <ErrorScreen />;
   }
 
-  const { data: floorData, isLoading, isError } = useGetFloorQuery(floorId);
-  if (isLoading) {
-    return (
-      <Loading />
-    );
-  }
-  if (isError) {
-    console.error("Error fetching floor data");
-    ToastAndroid.show(
-      "Error creating floor, please try again",
-      ToastAndroid.SHORT
-    );
-    navigation.goBack();
-  }
   return (
     <Formik
       initialValues={{
@@ -63,23 +57,44 @@ export const RegistrationForm = ({ route, navigation }) => {
         email: "",
         password: "",
         confirmPassword: "",
-        room: "",
+        room: JSON.stringify(room) ?? "",
       }}
       validationSchema={registrationValidationSchema}
       validateOnMount={true}
       validateOnChange={true}
-      onSubmit={(values, errors) => {
+      onSubmit={async (values, errors) => {
         const { confirmPassword, room, ...valuesToSend } = values;
-        httpRequest
-          .submitRegistrationData(
-            JSON.stringify({
-              ...valuesToSend,
-              oid: null,
-              authServer: "HOME_BREW",
-              floorId: floorData.Id,
+        const room_ = JSON.parse(room);
+        await registerNewUser(valuesToSend)
+          //.then(() =>
+          ////TODO remove
+          //  Promise.resolve({
+          //    id: 13,
+          //    username: "Mike Ehrmantraut",
+          //    email: "jessie.pink@gmail.com",
+          //    floorId: "669fca69d244526d709f6d76",
+          //    oid: 13,
+          //    authServer: "HOME_BREW",
+          //  })
+          // )
+          .unwrap() 
+          .then(async (r) => {
+            await addNewResident({
+              floorId: floor.Id,
+              room: {
+                ...room,
+                Resident: {
+                  Id: r.id.toString(),
+                  Name: r.username,
+                  Available: true,
+                },
+              },
             })
-          )
-          .then((r) => navigation.navigate("Login", { promptWindow: true }))
+              .unwrap()
+              .then(() => {
+                navigation.navigate("Login", { promptWindow: true });
+              });
+          })
           .catch((e) => {
             console.error(e);
             ToastAndroid.showWithGravity(
@@ -117,12 +132,12 @@ export const RegistrationForm = ({ route, navigation }) => {
           )}
           <Dropdown
             name="room"
-            data={floorData.Rooms}
-            onChange={(item) => handleChange("room")(item.Number)}
+            data={room ? Array.of(room) : floor.Rooms}
+            onChange={(item) => handleChange("room")(JSON.stringify(item))}
             onBlur={() => handleBlur("room")}
             labelField="Number"
             valueField="Number"
-            value={values.room}
+            value={room ?? values.room}
             placeholder="Select your room"
             style={[styles.dropdown, {}]}
             placeholderStyle={styles.placeholderStyle}

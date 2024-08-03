@@ -18,12 +18,11 @@ export default function AllResidentsRecord({
   generateCode: any;
   setCode: any;
 }) {
-
-  const handleGenerateCode = () => {
+  const handleGenerateCode = async () => {
     try {
-      generateCode({ Room: room })
+      await generateCode({ Room: room })
         .unwrap()
-        .then((res) => setCode(res.code));
+        .then((res) => setCode(res.generatedCode));
     } catch (e) {
       console.error("Error generating code", e);
       ToastAndroid.show(

@@ -1,8 +1,11 @@
 import {
+  ADD_NEW_RESIDENT,
   GENERATE_CODE,
   GO_BACKEND,
   RESOURCE_SERVER_DEV,
+  SUBMIT_CODE,
   URL_POST_LOGIN,
+  URL_REGISTER_NEW,
 } from "util/UrlPaths";
 import { REHYDRATE } from "redux-persist";
 import { createApi } from "@reduxjs/toolkit/query/react";
@@ -25,6 +28,36 @@ export const userSlice = createApi({
         data: data,
       }),
     }),
+    submitCode: builder.mutation({
+      query: (data) => ({
+        url: SUBMIT_CODE,
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        data: data,
+      }),
+    }),
+    addNewResident: builder.mutation({
+      query: (data) => ({
+        url: ADD_NEW_RESIDENT,
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        data: data,
+      }),
+    }),
+    registerNewUser: builder.mutation({
+      query: (data) => ({
+        url: URL_REGISTER_NEW,
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        data: data,
+      }),
+    }),
   }),
   extractRehydrationInfo(action, { reducerPath }) {
     if (action.type === REHYDRATE) {
@@ -33,4 +66,4 @@ export const userSlice = createApi({
   },
 });
 
-export const { useGenerateCodeMutation } = userSlice;
+export const { useGenerateCodeMutation, useSubmitCodeMutation, useAddNewResidentMutation, useRegisterNewUserMutation } = userSlice;

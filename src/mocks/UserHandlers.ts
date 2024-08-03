@@ -1,6 +1,10 @@
-import { URL_POST_LOGIN, URL_USER_PROFILE } from "util/UrlPaths";
+import {
+  URL_POST_LOGIN,
+  URL_REGISTER_NEW,
+  URL_USER_PROFILE,
+} from "util/UrlPaths";
 import type { UserProfile } from "types/types";
-import { http, HttpResponse } from 'msw'
+import { http, HttpResponse } from "msw";
 import floorStub from "./stubs/floorStub";
 
 const userprofile: UserProfile = {

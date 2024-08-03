@@ -102,13 +102,13 @@ export function CreateFloor({ navigation }): React.ReactElement {
       };
       await createFloor(floor)
         .unwrap()
-        .then((payload) => {
+        .then((res) => {
           ToastAndroid.showWithGravity(
             "Floor created!",
             ToastAndroid.LONG,
             ToastAndroid.BOTTOM
           );
-          navigation.navigate("RegistrationForm", { floorId: payload.Id });
+          navigation.navigate("RegistrationForm", { floor: res });
         });
     } catch (e) {
       console.error(e);

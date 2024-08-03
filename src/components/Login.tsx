@@ -81,18 +81,20 @@ export default function Login({ navigation, route }) {
   }, [discovery, request, response]);
 
   return (
-    <Button
-      mode="contained-tonal"
-      style={{
-        width: "75%",
-        marginTop: "50%",
-        marginLeft: "auto",
-        marginRight: "auto",
-      }}
-      onPress={() => promptAsync(useProxy)}
-      disabled={!request}
-    >
-      LOGIN
-    </Button>
+    <>
+      <Button
+        mode="contained-tonal"
+        style={{
+          width: "75%",
+          marginTop: "50%",
+          marginLeft: "auto",
+          marginRight: "auto",
+        }}
+        onPress={() => promptAsync(useProxy)}
+        disabled={!request}
+      >
+        LOGIN
+      </Button>
+    </>
   );
 }

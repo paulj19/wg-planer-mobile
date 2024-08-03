@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
+  DefaultTheme,
   NavigationContainer,
   useNavigationContainerRef,
 } from "@react-navigation/native";
@@ -20,10 +21,14 @@ import { setupURLPolyfill } from "react-native-url-polyfill";
 import { Provider, useDispatch } from "react-redux";
 import { store } from "store/store";
 import { isDevicePhoneOrTablet } from "util/Device";
-import { StyleSheet } from "react-native";
+import { Platform, StyleSheet } from "react-native";
 import { CreateFloor } from "features/registration/CreateFloor";
 import TaskActionsModal from "features/floor/TaskActionsModal";
 import { AssignTask } from "features/floor/AssignTask";
+import CodeInput from "features/registration/CodeInput";
+import { TextEncoder, TextDecoder } from "util";
+
+Object.assign(global, { TextDecoder, TextEncoder });
 
 const Stack = createStackNavigator();
 initBase64();
@@ -82,15 +87,21 @@ export default function App() {
     };
     bootStrapAsync();
   }, []);
+  const navTheme = {
+    ...DefaultTheme,
+    colors: {
+      ...DefaultTheme.colors,
+      background: "white",
+    },
+  };
 
   return (
     <Provider store={store}>
       <AuthContext.Provider value={{ authContext, authState }}>
-        <NavigationContainer ref={navigationRef}>
+        <NavigationContainer theme={navTheme} ref={navigationRef}>
           <Stack.Navigator
             screenOptions={{
               headerStyle: { elevation: 0 },
-              cardStyle: { backgroundColor: "#000" },
             }}
           >
             <>
@@ -117,6 +128,7 @@ export default function App() {
                     options={{ headerShown: false }}
                   />
                   <Stack.Screen name="Create Floor" component={CreateFloor} />
+                  <Stack.Screen name="Code Input" component={CodeInput} />
                 </>
               )}
               <Stack.Screen
@@ -127,7 +139,7 @@ export default function App() {
               <Stack.Screen
                 name="Login"
                 component={Login}
-                options={{ gestureEnabled: false, headerLeft: () => <></> }}
+                options={{ headerBackTitle: "home", headerLeft: () => <></> }}
               />
             </>
           </Stack.Navigator>
