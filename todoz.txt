@@ -19,11 +19,13 @@ COOLIO FEATs
 5. reminders number in task card clickable => who has reminded you? and message? photos(in remind button option to take photos)
 6. clicking done => pop up UI like in gmeet
 7. ask for help => next time it comes to him, you take it
+8. Reminder gaps => should be accepted by the floor
 
 
 IMP:
-1. feed refresh
 2. adr 1 fix, ie, "no one else available to take the task, do you want to take it?"
+3. on redeploy a script to see if any broken timers for taskCreation etc, based on Voting structs' LaunchDate, window etc
+
 
 
 
@@ -69,3 +71,8 @@ ADD NEW RESIDENT:
   2. expo sharing to whatsapp/telegram
 USER DELETE:
   1. remove pushtoken subscription
+
+VOTING:
+  1. voting interval etc another voting, and it can be stored as a seperate setting and can be changed in settings along with profile settings
+  2. notify all residents that a voting(create task) has been deleted?
+  3. final vote to accept the task => REST reply task created. 

@@ -1,9 +1,11 @@
-import {useState} from "react";
-import {RefreshControl, ScrollView} from "react-native";
+import { useState } from "react";
+import { RefreshControl, ScrollView } from "react-native";
 
 export function ScrollViewWithRefresh({
-  children, refetch, contentContainerStyle
-} ) {
+  children,
+  refetch,
+  contentContainerStyle,
+}) {
   const [refreshing, setRefreshing] = useState(false);
 
   const onRefresh = () => {
@@ -25,4 +27,3 @@ export function ScrollViewWithRefresh({
     </ScrollView>
   );
 }
-

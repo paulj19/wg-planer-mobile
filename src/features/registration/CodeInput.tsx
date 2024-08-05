@@ -52,7 +52,7 @@ export default function CodeInput({ route, navigation }) {
         <TextInput
           style={styles.codeInput}
           mode="flat"
-          placeholder="Code"
+         placeholder="Code"
           onChangeText={(text) => setCode(text.toUpperCase())}
           value={code}
           maxLength={4}

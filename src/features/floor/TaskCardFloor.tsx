@@ -73,11 +73,12 @@ export default function TaskCardFloor({
 
   //TODO put it back
   // {assignedTo && assignedTo.Resident?.Id !== myId ? (
+  console.log("assignedTo", assignedTo);
   return (
     <View style={styles.taskCardContainer} testID="task-card">
       <Text style={styles.taskName}>{task.Name}</Text>
       <Text style={styles.assignedTo}>{assignedName ?? "unassigned"}</Text>
-      {assignedTo?.Resident?.Id !== userId ? (
+      {assignedTo && assignedTo?.Resident?.Id !== userId ? (
         <Button onPress={handleRemindTask}>REMIND</Button>
       ) : (
         <Button
