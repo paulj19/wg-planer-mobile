@@ -26,3 +26,4 @@ export const GENERATE_CODE = GO_BACKEND + "/generate-code";
 export const SUBMIT_CODE = GO_BACKEND + "/submit-code";
 export const ADD_NEW_RESIDENT = GO_BACKEND + "/add-newResident";
 export const CREATE_TASK = GO_BACKEND + "/create-task";
+export const UPDATE_VOTING = GO_BACKEND + "/update-voting";

@@ -6,6 +6,7 @@ import { Text, ScrollView, Platform } from "react-native";
 import {
   floorSlice,
   useGetPostLoginInfoQuery,
+  useUpdateVotingMutation,
 } from "features/registration/FloorSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { createSelector } from "@reduxjs/toolkit";
@@ -16,6 +17,7 @@ import { ScrollViewWithRefresh } from "components/ScrollViewWithRefresh";
 export default function Feed(): ReactElement {
   const notificationListener = useRef<Notifications.Subscription>();
   const dispatch = useDispatch();
+  const [updateVoting] = useUpdateVotingMutation();
   let userId;
 
   const sortCriteria = (a, b) =>
@@ -118,18 +120,9 @@ export default function Feed(): ReactElement {
           floorId={floorInfo.Id}
         />
       ))}
-      {floorInfo?.Feed?.map((feedItem) => {
-        if (feedItem.Type === "NEW_RESIDENT") {
-          return (
-            <NewResidentCard name={feedItem.NewResident} room={feedItem.Room} />
-          );
-        } else if (feedItem.Type === "NEW_TASK") {
-          return (
-            <NewTaskCard
-              creator={feedItem.Creator}
-              taskName={feedItem.TaskName}
-            />
-          );
+      {floorInfo?.Votings?.map((voting) => {
+        if (voting.Type === "CREATE_TASK" && voting.CreatedBy != userId) {
+          return <NewTaskCard {...{voting, updateVoting}}/>;
         }
       })}
     </ScrollViewWithRefresh>

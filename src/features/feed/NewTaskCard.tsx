@@ -1,22 +1,31 @@
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, ToastAndroid } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
+import {Voting} from "types/types";
 
 type NewTaskCardProps = {
-  creator: string;
-  taskName: string;
+  voting: Voting;
+  updateVoting: (any) => Promise<any>;
 };
 
-export default function NewTaskCard({ creator, taskName}: NewTaskCardProps) {
+export default function NewTaskCard({voting, updateVoting}: NewTaskCardProps) {
+  const handleAction = async (action) => {
+    try {
+      await updateVoting({voting, action});
+    } catch (e) {
+      console.error("Error accepting or decline voting for task create", e);
+      ToastAndroid.show("An error occured, please try again later", ToastAndroid.SHORT);
+    }
+  }
   return (
     <View style={styles.container}>
       <View style={styles.infos}>
         <Text style={styles.text}>{
-          `${creator} created a new task ${taskName}`}
+          `Task ${voting.Data} has been created`}
         </Text>
       </View>
       <View style={styles.actions}>
-        <IconButton  name="check" color="green" testID="accept" onPress={() => {}} />
-        <IconButton  name="close" color="grey"  testID="reject" onPress={() => {}} />
+        <IconButton  name="check" color="green" testID="accept" onPress={() => handleAction("ACCEPT")} />
+        <IconButton  name="close" color="grey"  testID="reject" onPress={() => handleAction("REJECT")} />
       </View>
     </View>
   );

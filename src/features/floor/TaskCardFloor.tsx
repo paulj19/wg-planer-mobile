@@ -73,7 +73,6 @@ export default function TaskCardFloor({
 
   //TODO put it back
   // {assignedTo && assignedTo.Resident?.Id !== myId ? (
-  console.log("assignedTo", assignedTo);
   return (
     <View style={styles.taskCardContainer} testID="task-card">
       <Text style={styles.taskName}>{task.Name}</Text>

@@ -7,6 +7,7 @@ import {
   URL_POST_LOGIN,
   UPDATE_AVAILIBILITY,
   CREATE_TASK,
+  UPDATE_VOTING,
 } from "util/UrlPaths";
 import { REHYDRATE } from "redux-persist";
 import { createApi } from "@reduxjs/toolkit/query/react";
@@ -186,6 +187,32 @@ export const floorSlice = createApi({
         }
       },
     }),
+    updateVoting: builder.mutation({
+      query: (data) => ({
+        url: UPDATE_VOTING,
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        data: data,
+      }),
+      async onQueryStarted({ ...data }, { dispatch, queryFulfilled }) {
+        try {
+          const result = await queryFulfilled;
+          dispatch(
+            floorSlice.util.updateQueryData(
+              "getPostLoginInfo",
+              result?.data?.floor?.Id,
+              (draft) => {
+                Object.assign(draft.floor, result?.data);
+              }
+            )
+          );
+        } catch (e) {
+          console.error(e);
+        }
+      },
+    }),
   }),
   extractRehydrationInfo(action, { reducerPath }) {
     if (action.type === REHYDRATE) {
@@ -204,4 +231,5 @@ export const {
   useRemindTaskMutation,
   useUpdateAvailabilityStatusMutation,
   useCreateTaskMutation,
+  useUpdateVotingMutation
 } = floorSlice;
