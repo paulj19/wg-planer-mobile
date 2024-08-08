@@ -55,7 +55,7 @@ export default function AllTasks() {
         return;
       }
 
-      await createTask({ taskname: inputRef.current.value });
+      await createTask({ Task: {Name: inputRef.current.value} });
       setDialogVisible(false);
       ToastAndroid.show(
         "Task put for voting, when another resident accepts voting request, task will be created!",
