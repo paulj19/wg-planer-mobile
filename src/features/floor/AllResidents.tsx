@@ -97,6 +97,7 @@ export default function AllResidents() {
                 room={room}
                 generateCode={generateCode}
                 setCode={setCode}
+                key={room.Id}
               />
               <Divider />
             </>

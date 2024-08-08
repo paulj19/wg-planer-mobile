@@ -129,6 +129,7 @@ export default function AllTasks() {
               assignedTo={assignedTo}
               floorId={data.floor.Id}
               myId={data.userprofile.id.toString()}
+              key={task.Id}
             />
           );
         })}

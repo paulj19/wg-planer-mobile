@@ -62,7 +62,6 @@ export default function Feed(): ReactElement {
             if (notification.request.content.data) {
               const { FloorId, Type } = notification.request.content.data;
               const Payload = JSON.parse(notification.request.content.data.Patch);
-              console.log("notification received", notification.request.content.data);
               dispatch(
                 //@ts-ignore
                 floorSlice.util.updateQueryData(
@@ -121,11 +120,12 @@ export default function Feed(): ReactElement {
           task={task}
           reminders={task.Reminders}
           floorId={floorInfo.Id}
+          key={task.Id}
         />
       ))}
       {floorInfo?.Votings?.map((voting) => {
         if (voting.Type === "CREATE_TASK" && voting.CreatedBy != userId) {
-          return <NewTaskCard {...{ voting, updateVoting }} />;
+          return <NewTaskCard {...{ voting, updateVoting, key: voting.Id }} />;
         }
       })}
     </ScrollViewWithRefresh>
