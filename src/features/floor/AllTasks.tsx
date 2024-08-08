@@ -6,7 +6,6 @@ import {
   View,
   Text,
   StyleSheet,
-  ActivityIndicator,
   ToastAndroid,
   ScrollView,
   RefreshControl,
@@ -21,11 +20,13 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { TouchableOpacity, TextInput } from "react-native";
 import { Dialog, PaperProvider, Portal } from "react-native-paper";
 import Button from "components/Button";
+import { ActivityIndicator, MD2Colors } from "react-native-paper";
 
 export default function AllTasks() {
   const { data, isLoading, isError, error, refetch } =
     useGetPostLoginInfoQuery(undefined);
-  const [createTask] = useCreateTaskMutation();
+  const [createTask, { isLoading: createTaskIsLoading }] =
+    useCreateTaskMutation();
   const [dialogVisible, setDialogVisible] = useState(false);
   const inputRef = useRef(null);
 
@@ -56,7 +57,10 @@ export default function AllTasks() {
 
       await createTask({ taskname: inputRef.current.value });
       setDialogVisible(false);
-      ToastAndroid.show("Task created", ToastAndroid.SHORT);
+      ToastAndroid.show(
+        "Task put for voting, when another resident accepts voting request, task will be created!",
+        ToastAndroid.SHORT
+      );
     } catch (e) {
       console.error("Error creating task", e);
       ToastAndroid.show("Error creating task", ToastAndroid.SHORT);
@@ -70,32 +74,39 @@ export default function AllTasks() {
           <Dialog
             visible={dialogVisible}
             onDismiss={() => setDialogVisible(false)}
+            style={{minHeight: 200, justifyContent: "center"}}
           >
-            <Dialog.Title>Create a new task</Dialog.Title>
-            <Dialog.Content>
-              <TextInput
-                style={{
-                  borderColor: "gray",
-                  borderWidth: 1,
-                  borderRadius: 3,
-                  padding: 5,
-                }}
-                placeholder="Task name"
-                ref={inputRef}
-                // @ts-ignore
-                onChangeText={(text) => (inputRef.current.value = text)}
-              />
-            </Dialog.Content>
-            <Dialog.Actions>
-              <Button onPress={handleCreateTask}>Create</Button>
-              <Button
-                onPress={() => {
-                  setDialogVisible(false);
-                }}
-              >
-                Cancel
-              </Button>
-            </Dialog.Actions>
+            {createTaskIsLoading ? (
+              <ActivityIndicator animating={true} />
+            ) : (
+              <>
+                <Dialog.Title>Create a new task</Dialog.Title>
+                <Dialog.Content>
+                  <TextInput
+                    style={{
+                      borderColor: "gray",
+                      borderWidth: 1,
+                      borderRadius: 3,
+                      padding: 5,
+                    }}
+                    placeholder="Task name"
+                    ref={inputRef}
+                    // @ts-ignore
+                    onChangeText={(text) => (inputRef.current.value = text)}
+                  />
+                </Dialog.Content>
+                <Dialog.Actions>
+                  <Button onPress={handleCreateTask}>Create</Button>
+                  <Button
+                    onPress={() => {
+                      setDialogVisible(false);
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                </Dialog.Actions>
+              </>
+            )}
           </Dialog>
         </Portal>
       </View>

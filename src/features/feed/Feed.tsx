@@ -61,7 +61,8 @@ export default function Feed(): ReactElement {
           try {
             if (notification.request.content.data) {
               const { FloorId, Type } = notification.request.content.data;
-              const Patch = JSON.parse(notification.request.content.data.Patch);
+              const Payload = JSON.parse(notification.request.content.data.Patch);
+              console.log("notification received", notification.request.content.data);
               dispatch(
                 //@ts-ignore
                 floorSlice.util.updateQueryData(
@@ -81,8 +82,8 @@ export default function Feed(): ReactElement {
                       let i = 0;
                       for (; i < draft.floor.Tasks.length; i++) {
                         //TODO array indexing buggy?
-                        if (draft.floor.Tasks[i].Id === Patch[0].Id) {
-                          Object.assign(draft.floor.Tasks[i], Patch[0]);
+                        if (draft.floor.Tasks[i].Id === Payload[0].Id) {
+                          Object.assign(draft.floor.Tasks[i], Payload[0]);
                           break;
                         }
                       }
@@ -90,7 +91,9 @@ export default function Feed(): ReactElement {
                         throw new Error("Task not found in user tasks");
                       }
                     } else if (Type === "RESIDENT_UNAVAILABLE") {
-                      Object.assign(draft.floor.Tasks, Patch);
+                      Object.assign(draft.floor.Tasks, Payload);
+                    } else if (Type === "VOTING_ADD") {
+                      Object.assign(draft.floor.Votings, Payload);
                     }
                   }
                 )
@@ -122,7 +125,7 @@ export default function Feed(): ReactElement {
       ))}
       {floorInfo?.Votings?.map((voting) => {
         if (voting.Type === "CREATE_TASK" && voting.CreatedBy != userId) {
-          return <NewTaskCard {...{voting, updateVoting}}/>;
+          return <NewTaskCard {...{ voting, updateVoting }} />;
         }
       })}
     </ScrollViewWithRefresh>

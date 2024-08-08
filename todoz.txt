@@ -25,6 +25,7 @@ COOLIO FEATs
 IMP:
 2. adr 1 fix, ie, "no one else available to take the task, do you want to take it?"
 3. on redeploy a script to see if any broken timers for taskCreation etc, based on Voting structs' LaunchDate, window etc
+4. notification silent on task created, voting deleted etc
 
 
 
@@ -33,8 +34,8 @@ BEFORE PUSH:
 1. remove Number from AllTasks
 2. unassigned task/during creation should be -1 or when a task gets unassigned, it should be -1
 3. remove mock userId for ios and and from TaskCardFloor
-
 4. check if navigation.navigate("RegistrationForm", { floor: res }); is working in 
+5. set timeout to 2 days for create task BE
 
 
 BE:

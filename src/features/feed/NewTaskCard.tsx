@@ -20,7 +20,7 @@ export default function NewTaskCard({voting, updateVoting}: NewTaskCardProps) {
     <View style={styles.container}>
       <View style={styles.infos}>
         <Text style={styles.text}>{
-          `Task ${voting.Data} has been created`}
+          `Request to create new Task ${voting.Data}`}
         </Text>
       </View>
       <View style={styles.actions}>
