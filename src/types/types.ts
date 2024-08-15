@@ -39,9 +39,9 @@ export type Resident = {
 export type Voting = {
   Id: number;
   Type: string;
-  Data: string;
-  Accepts: number;
-  Rejects: number;
+  Data: Task;
+  Accepts: string[];
+  Rejects: string[];
   LaunchDate: string;
   VotingWindow: string;
   CreatedBy: string;

@@ -4,7 +4,11 @@ import { ToastAndroid, View } from "react-native";
 import { Text } from "react-native";
 import { Modal, Portal, Provider as PaperProvider } from "react-native-paper";
 import { StyleSheet } from "react-native";
-import { useGetPostLoginInfoQuery, useRemindTaskMutation } from "features/registration/FloorSlice";
+import {
+  useCreateDelTaskMutation,
+  useGetPostLoginInfoQuery,
+  useRemindTaskMutation,
+} from "features/registration/FloorSlice";
 import Loading from "components/Loading";
 import { useUpdateTaskMutation } from "features/registration/FloorSlice";
 
@@ -14,6 +18,8 @@ export default function TaskActionsModal({ route, navigation }) {
     useGetPostLoginInfoQuery(undefined);
   const [assignTask] = useUpdateTaskMutation();
   const [remindTask] = useRemindTaskMutation();
+  const [deleteTask, { isLoading: isDeleteTaskLoading }] =
+    useCreateDelTaskMutation();
 
   const task = data.floor?.Tasks.find((task) => task.Id === taskId);
 
@@ -29,25 +35,50 @@ export default function TaskActionsModal({ route, navigation }) {
   };
 
   const handleRemindTask = async () => {
-  try {
-    await remindTask({
-      floorId: data.floor.Id,
-      task,
-      action: "REMIND",
-    }).unwrap();
+    try {
+      await remindTask({
+        floorId: data.floor.Id,
+        task,
+        action: "REMIND",
+      }).unwrap();
 
-    ToastAndroid.show("Reminder sent", ToastAndroid.SHORT);
-    navigation.navigate("AllTasks");
-  } catch (error) {
-    console.error("Error reminding task ", error);
-    ToastAndroid.show(
-      "Error reminding task, please refresh or try again later",
-      ToastAndroid.SHORT
-    );
+      ToastAndroid.show("Reminder sent", ToastAndroid.SHORT);
+      navigation.navigate("AllTasks");
+    } catch (error) {
+      console.error("Error reminding task ", error);
+      ToastAndroid.show(
+        "Error reminding task, please refresh or try again later",
+        ToastAndroid.SHORT
+      );
+    }
   };
-  }
 
-  if (isLoading) {
+  const handleDeleteTask = async () => {
+    try {
+      if (data.floor.Votings.find((voting) => voting.Data.Id === taskId)) {
+        ToastAndroid.show(
+          "Task delete already set for voting, still waiting for all available residents to accept",
+          ToastAndroid.LONG
+        );
+        navigation.navigate("AllTasks");
+        return
+      }
+      await deleteTask({ task, Action: "DELETE_TASK" });
+      navigation.navigate("AllTasks");
+      ToastAndroid.show(
+        "Task set for voting, task will be deleted once all the residents accept",
+        ToastAndroid.LONG
+      );
+    } catch (error) {
+      console.error("Error deleting task ", error);
+      ToastAndroid.show(
+        "Error deleting task, please refresh or try again later",
+        ToastAndroid.SHORT
+      );
+    }
+  };
+
+  if (isLoading || isDeleteTaskLoading) {
     return <Loading />;
   }
 
@@ -63,7 +94,13 @@ export default function TaskActionsModal({ route, navigation }) {
     <View style={styles.container}>
       {task.assignedTo !== -1 ? (
         <>
-          <Button onPress={() => {handleRemindTask}}>REMIND</Button>
+          <Button
+            onPress={() => {
+              handleRemindTask;
+            }}
+          >
+            REMIND
+          </Button>
           <Button onPress={() => navigation.navigate("AssignTask", { taskId })}>
             REASSIGN
           </Button>
@@ -74,7 +111,7 @@ export default function TaskActionsModal({ route, navigation }) {
           ASSIGN
         </Button>
       )}
-      <Button>DELETE</Button>
+      <Button onPress={handleDeleteTask}>DELETE</Button>
     </View>
   );
 }

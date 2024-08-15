@@ -7,7 +7,8 @@ type NewTaskCardProps = {
   updateVoting: (any) => Promise<any>;
 };
 
-export default function NewTaskCard({voting, updateVoting}: NewTaskCardProps) {
+export default function TaskCardVoting({voting, updateVoting}: NewTaskCardProps) {
+  console.log("voting", voting);
   const handleAction = async (action) => {
     try {
       await updateVoting({voting, action});
@@ -16,11 +17,12 @@ export default function NewTaskCard({voting, updateVoting}: NewTaskCardProps) {
       ToastAndroid.show("An error occured, please try again later", ToastAndroid.SHORT);
     }
   }
+  const textType = voting.Type === "CREATE_TASK" ? "create new" : "delete";
   return (
     <View style={styles.container}>
       <View style={styles.infos}>
         <Text style={styles.text}>{
-          `Request to create new Task ${voting.Data}`}
+          `Request to ${textType} task ${voting.Data.Name}`}
         </Text>
       </View>
       <View style={styles.actions}>

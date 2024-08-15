@@ -27,6 +27,13 @@ IMP:
 3. on redeploy a script to see if any broken timers for taskCreation etc, based on Voting structs' LaunchDate, window etc
 4. notification silent on task created, voting deleted etc
 
+VERY IMP:
+--------
+1. you need to store myRoom, myId and important current user things in FE as in context or something and remove all the places from redux selectors etc, get the userId from userprofile and have somthing like a context which stores userprofile and myRoom
+2. gorouties for sending notificatoins
+3. think about putting all the imp stuff of a request like floor, User etc inside the struct as in from request decoding, ie struct's interfaces' methods should already have the struct fields, then how would this compare to the LBC does it? putting it in context? is context really meant for this?
+4. convert Voting.Accepts to map[string]bool
+
 
 
 
@@ -36,6 +43,8 @@ BEFORE PUSH:
 3. remove mock userId for ios and and from TaskCardFloor
 4. check if navigation.navigate("RegistrationForm", { floor: res }); is working in 
 5. set timeout to 2 days for create task BE
+6. uncomment contains check on deletetask voting
+7. make sure userId is string in FE and BE
 
 
 BE:

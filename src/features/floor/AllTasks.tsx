@@ -1,5 +1,5 @@
 import {
-  useCreateTaskMutation,
+  useCreateDelTaskMutation,
   useGetPostLoginInfoQuery,
 } from "features/registration/FloorSlice";
 import {
@@ -26,7 +26,7 @@ export default function AllTasks() {
   const { data, isLoading, isError, error, refetch } =
     useGetPostLoginInfoQuery(undefined);
   const [createTask, { isLoading: createTaskIsLoading }] =
-    useCreateTaskMutation();
+    useCreateDelTaskMutation();
   const [dialogVisible, setDialogVisible] = useState(false);
   const inputRef = useRef(null);
 
@@ -55,7 +55,7 @@ export default function AllTasks() {
         return;
       }
 
-      await createTask({ Task: {Name: inputRef.current.value} });
+      await createTask({ Task: {Name: inputRef.current.value}, Action: "CREATE_TASK" });
       setDialogVisible(false);
       ToastAndroid.show(
         "Task put for voting, when another resident accepts voting request, task will be created!",

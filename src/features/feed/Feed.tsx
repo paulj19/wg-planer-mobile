@@ -1,7 +1,7 @@
 import { ReactElement, useEffect, useMemo, useRef } from "react";
 import TaskCardFeed from "features/feed/TaskCardFeed";
 import NewResidentCard from "features/feed/NewResidentCard";
-import NewTaskCard from "features/feed/NewTaskCard";
+import TaskCardVoting from "features/feed/TaskCardVoting";
 import { Text, ScrollView, Platform } from "react-native";
 import {
   floorSlice,
@@ -10,7 +10,7 @@ import {
 } from "features/registration/FloorSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { createSelector } from "@reduxjs/toolkit";
-import { FloorItem, Task } from "types/types";
+import { FloorItem, Room, Task } from "types/types";
 import * as Notifications from "expo-notifications";
 import { ScrollViewWithRefresh } from "components/ScrollViewWithRefresh";
 
@@ -20,31 +20,29 @@ export default function Feed(): ReactElement {
   const [updateVoting] = useUpdateVotingMutation();
   let userId;
 
-  const sortCriteria = (a, b) =>
-    a.Reminders === b.Reminders
-      ? a.AssignmentDate - b.AssignmentDate
-      : b.Reminders - a.Reminders;
+  if (Platform.OS === "ios") {
+    userId = "1";
+  } else {
+    userId = "2";
+  }
 
   const selectUserTasksById = useMemo(() => {
     const emptyArray = [];
     return createSelector(
       (result) => result?.data?.floor,
-      (state, userId) => userId,
-      (floor: FloorItem, userId) => ({
+      (state, userId) =>
+        state?.currentData?.floor?.Rooms?.find(
+          (room) => room.Resident?.Id === userId.toString()
+        )?.Id,
+      (floor: FloorItem, myRoomId) => ({
         ...floor,
         Tasks:
-          floor?.Tasks?.filter((task: Task) => task.AssignedTo === userId).sort(
-            sortCriteria
-          ) || emptyArray,
+          floor?.Tasks?.filter(
+            (task: Task) => task.AssignedTo === myRoomId
+          ).sort(sortCriteria) || emptyArray,
       })
     );
   }, []);
-
-  if (Platform.OS === "ios") {
-    userId = 0;
-  } else {
-    userId = 1;
-  }
 
   const { floorInfo, refetch } = useGetPostLoginInfoQuery(undefined, {
     selectFromResult: (result) => ({
@@ -54,6 +52,11 @@ export default function Feed(): ReactElement {
     }),
   });
 
+  const sortCriteria = (a, b) =>
+    a.Reminders === b.Reminders
+      ? a.AssignmentDate - b.AssignmentDate
+      : b.Reminders - a.Reminders;
+
   useEffect(() => {
     notificationListener.current =
       Notifications.addNotificationReceivedListener(async (notification) => {
@@ -61,7 +64,9 @@ export default function Feed(): ReactElement {
           try {
             if (notification.request.content.data) {
               const { FloorId, Type } = notification.request.content.data;
-              const Payload = JSON.parse(notification.request.content.data.Patch);
+              const Payload = JSON.parse(
+                notification.request.content.data.Patch
+              );
               dispatch(
                 //@ts-ignore
                 floorSlice.util.updateQueryData(
@@ -124,9 +129,16 @@ export default function Feed(): ReactElement {
         />
       ))}
       {floorInfo?.Votings?.map((voting) => {
-        if (voting.Type === "CREATE_TASK" && voting.CreatedBy != userId) {
-          return <NewTaskCard {...{ voting, updateVoting, key: voting.Id }} />;
-        }
+        return (voting.Type === "CREATE_TASK" ||
+          voting.Type === "DELETE_TASK") &&
+          voting.CreatedBy != userId.toString() &&
+          !voting.Accepts.includes(userId) ? (
+          <TaskCardVoting
+            voting={voting}
+            updateVoting={updateVoting}
+            key={voting.Id}
+          />
+        ) : null;
       })}
     </ScrollViewWithRefresh>
   );

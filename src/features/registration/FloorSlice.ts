@@ -6,7 +6,7 @@ import {
   UPDATE_TASK,
   URL_POST_LOGIN,
   UPDATE_AVAILIBILITY,
-  CREATE_TASK,
+  CREATE_DEL_TASK,
   UPDATE_VOTING,
 } from "util/UrlPaths";
 import { REHYDRATE } from "redux-persist";
@@ -161,9 +161,9 @@ export const floorSlice = createApi({
         }
       },
     }),
-    createTask: builder.mutation({
+    createDelTask: builder.mutation({
       query: (data) => ({
-        url: CREATE_TASK,
+        url: CREATE_DEL_TASK,
         method: "post",
         headers: {
           "Content-Type": "application/json",
@@ -230,6 +230,6 @@ export const {
   useRegisterExpoPushTokenMutation,
   useRemindTaskMutation,
   useUpdateAvailabilityStatusMutation,
-  useCreateTaskMutation,
+  useCreateDelTaskMutation,
   useUpdateVotingMutation
 } = floorSlice;
