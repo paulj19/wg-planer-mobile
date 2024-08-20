@@ -21,6 +21,7 @@ import { ListItem } from "react-native-elements";
 import InfoText from "./InfoText";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import {Link} from "@react-navigation/native";
 
 export function Settings(): ReactElement {
   const [updateAvailabilityStatus] = useUpdateAvailabilityStatusMutation();
@@ -92,49 +93,7 @@ export function Settings(): ReactElement {
   };
 
   return (
-    <PaperProvider>
-      <ScrollView>
-        <View style={styles.headerContainer}>
-          <View style={styles.userRow}>
-            <View style={styles.userImage}>
-              <Text style={styles.userNameAvatar}>
-                {data.userprofile.username.charAt(0)}
-              </Text>
-            </View>
-            <View style={styles.userNameRow}>
-              <Text style={styles.userNameText}>
-                {data.userprofile.username}
-              </Text>
-            </View>
-          </View>
-        </View>
-        <View>
-          <InfoText text="Account" />
-          <ListItem>
-            <MaterialIcons name="email" size={24} color="black" />
-            <ListItem.Content>
-              <ListItem.Title>{data.userprofile.email}</ListItem.Title>
-            </ListItem.Content>
-          </ListItem>
-          <Divider />
-          <ListItem>
-            <FontAwesome5 name="umbrella-beach" size={24} color="black" />
-            <ListItem.Content>
-              <ListItem.Title>Available</ListItem.Title>
-            </ListItem.Content>
-            <Switch
-              value={myRoom.Resident.Available}
-              onValueChange={() =>
-                myRoom.Resident.Available
-                  ? setDialogVisible(true)
-                  : handleConfirm()
-              }
-            />
-          </ListItem>
-        </View>
-        <ConfirmDialog />
-      </ScrollView>
-    </PaperProvider>
+      <Link to="/Forgot">Assign Task</Link>
   );
 }
 

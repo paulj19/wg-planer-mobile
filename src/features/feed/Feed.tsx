@@ -13,6 +13,7 @@ import { createSelector } from "@reduxjs/toolkit";
 import { FloorItem, Room, Task } from "types/types";
 import * as Notifications from "expo-notifications";
 import { ScrollViewWithRefresh } from "components/ScrollViewWithRefresh";
+import {Link} from "@react-navigation/native";
 
 export default function Feed(): ReactElement {
   const notificationListener = useRef<Notifications.Subscription>();
@@ -120,26 +121,7 @@ export default function Feed(): ReactElement {
 
   return (
     <ScrollViewWithRefresh refetch={refetch}>
-      {floorInfo?.Tasks?.map((task) => (
-        <TaskCardFeed
-          task={task}
-          reminders={task.Reminders}
-          floorId={floorInfo.Id}
-          key={task.Id}
-        />
-      ))}
-      {floorInfo?.Votings?.map((voting) => {
-        return (voting.Type === "CREATE_TASK" ||
-          voting.Type === "DELETE_TASK") &&
-          voting.CreatedBy != userId.toString() &&
-          !voting.Accepts.includes(userId) ? (
-          <TaskCardVoting
-            voting={voting}
-            updateVoting={updateVoting}
-            key={voting.Id}
-          />
-        ) : null;
-      })}
+      <Link to="/Forgot">Assign Task</Link>
     </ScrollViewWithRefresh>
   );
 }

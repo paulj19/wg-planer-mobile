@@ -1,5 +1,6 @@
 import {
   ADD_NEW_RESIDENT,
+  SUBMIT_FORGOT_PW_CODE,
   GENERATE_CODE,
   GO_BACKEND,
   RESOURCE_SERVER_DEV,
@@ -51,6 +52,16 @@ export const userSlice = createApi({
     registerNewUser: builder.mutation({
       query: (data) => ({
         url: URL_REGISTER_NEW,
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        data: data,
+      }),
+    }),
+    submitForgotPWCode: builder.mutation({
+      query: (data) => ({
+        url: FORGOT_PW_CODE,
         method: "post",
         headers: {
           "Content-Type": "application/json",

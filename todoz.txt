@@ -33,6 +33,8 @@ VERY IMP:
 2. gorouties for sending notificatoins
 3. think about putting all the imp stuff of a request like floor, User etc inside the struct as in from request decoding, ie struct's interfaces' methods should already have the struct fields, then how would this compare to the LBC does it? putting it in context? is context really meant for this?
 4. convert Voting.Accepts to map[string]bool
+5. timer to remove voting will not work during redeploy, has to be inside a database or something like redis cache or something to put inside a map and repopulate during redeploy => REPLACE MAP WITH REDIS/DB
+6. ADD MONGO OPTIMISTIC LOCKING
 
 
 

@@ -90,7 +90,7 @@ export default function AllResidents() {
           <Text>Availability</Text>
         </View>
         <Divider />
-        {data.floor.Rooms?.map((room) => {
+        {data.floor?.Rooms?.map((room) => {
           return (
             <>
               <AllResidentsRecord

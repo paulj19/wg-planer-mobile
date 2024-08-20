@@ -27,6 +27,7 @@ import TaskActionsModal from "features/floor/TaskActionsModal";
 import { AssignTask } from "features/floor/AssignTask";
 import CodeInput from "features/registration/CodeInput";
 import { TextEncoder, TextDecoder } from "util";
+import {EnterCode} from "features/forgot_password/EnterCode";
 
 Object.assign(global, { TextDecoder, TextEncoder });
 
@@ -129,6 +130,7 @@ export default function App() {
                   />
                   <Stack.Screen name="Create Floor" component={CreateFloor} />
                   <Stack.Screen name="Code Input" component={CodeInput} />
+                  <Stack.Screen name="Forgot" component={EnterCode} />
                 </>
               )}
               <Stack.Screen

@@ -1,11 +1,11 @@
 import { MOCK_ENABLED } from "@env";
 
 export const MOCK_BASE_URL = "http://localhost";
-export const URL_AUTH_SERVER = "http://192.168.0.108:8081";
+export const URL_AUTH_SERVER = "http://192.168.1.9:8080";
 // export const RESOURCE_SERVER_DEV = MOCK_ENABLED
 //   ? MOCK_BASE_URL
 //   : "http://192.168.33.184:8082";
-export const RESOURCE_SERVER_DEV = "http://192.168.0.108:8082";
+export const RESOURCE_SERVER_DEV = "http://192.168.1.9:8081";
 export const GO_BACKEND = "http://192.168.1.9:8080";
 export const PATH_VALIDATE_ACCESS_TOKEN = "/validate-access-token";
 export const PATH_LOGIN = "/login";
@@ -27,3 +27,5 @@ export const SUBMIT_CODE = GO_BACKEND + "/submit-code";
 export const ADD_NEW_RESIDENT = GO_BACKEND + "/add-newResident";
 export const CREATE_DEL_TASK = GO_BACKEND + "/create-del-task";
 export const UPDATE_VOTING = GO_BACKEND + "/update-voting";
+export const SUBMIT_FORGOT_PW_CODE = RESOURCE_SERVER_DEV + "/validate";
+
