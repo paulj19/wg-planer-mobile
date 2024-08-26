@@ -21,7 +21,7 @@ import { ListItem } from "react-native-elements";
 import InfoText from "./InfoText";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import {Link} from "@react-navigation/native";
+import { Link } from "@react-navigation/native";
 
 export function Settings(): ReactElement {
   const [updateAvailabilityStatus] = useUpdateAvailabilityStatusMutation();
@@ -93,7 +93,7 @@ export function Settings(): ReactElement {
   };
 
   return (
-      <Link to="/Forgot">Assign Task</Link>
+    <Link to="/Forgot">Assign Task</Link>
   );
 }
 

@@ -113,6 +113,7 @@ export default function App() {
                     component={HomeScreen}
                     options={{ headerShown: false }}
                   />
+                  <Stack.Screen name="Forgot" component={EnterCode} />
                   <Stack.Screen name="AssignTask" component={AssignTask} />
                   <Stack.Group screenOptions={{ presentation: "modal" }}>
                     <Stack.Screen
@@ -130,7 +131,6 @@ export default function App() {
                   />
                   <Stack.Screen name="Create Floor" component={CreateFloor} />
                   <Stack.Screen name="Code Input" component={CodeInput} />
-                  <Stack.Screen name="Forgot" component={EnterCode} />
                 </>
               )}
               <Stack.Screen

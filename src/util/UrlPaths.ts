@@ -27,5 +27,5 @@ export const SUBMIT_CODE = GO_BACKEND + "/submit-code";
 export const ADD_NEW_RESIDENT = GO_BACKEND + "/add-newResident";
 export const CREATE_DEL_TASK = GO_BACKEND + "/create-del-task";
 export const UPDATE_VOTING = GO_BACKEND + "/update-voting";
-export const SUBMIT_FORGOT_PW_CODE = RESOURCE_SERVER_DEV + "/validate";
+export const FORGOT_PW_CODE = RESOURCE_SERVER_DEV + "/validate";
 

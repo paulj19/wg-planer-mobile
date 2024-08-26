@@ -1,18 +1,18 @@
-import {useNavigation} from "@react-navigation/native";
-import {useSubmitForgotPWCodeMutation} from "features/user/UserSlice";
-import {ReactElement, useState} from "react";
-import {Button, TextInput, View, Text, StyleSheet} from "react-native";
-import {ToastAndroid} from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { useSubmitForgotPWCodeMutation } from "features/user/UserSlice";
+import { ReactElement, useState } from "react";
+import { Button, TextInput, View, Text, StyleSheet } from "react-native";
+import { ToastAndroid } from "react-native";
 
 export function EnterCode(): ReactElement {
   const [code, setCode] = useState("");
   const [submitCode, { data, error }] = useSubmitForgotPWCodeMutation();
-  const navigation = useNavigation(); 
+  const navigation = useNavigation();
 
   const handleSubmitCode = async () => {
     try {
       await submitCode({
-      code
+        code,
       }).unwrap();
 
       navigation.navigate("ForgotPW_Reset");
@@ -27,7 +27,6 @@ export function EnterCode(): ReactElement {
 
   return (
     <View style={styles.container}>
-
       <Text style={styles.title}>Enter Code</Text>
       <TextInput
         style={styles.input}
@@ -36,12 +35,11 @@ export function EnterCode(): ReactElement {
         placeholder="Code"
       />
       <Button title="Submit" onPress={handleSubmitCode} />
-)      {data && <Text>{data.submitCode}</Text>}
     </View>
   );
 }
 
-const styles = StyleSheet.create( {
+const styles = StyleSheet.create({
   container: {
     display: "flex",
     flexDirection: "column",

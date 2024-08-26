@@ -7,6 +7,7 @@ import {
   SUBMIT_CODE,
   URL_POST_LOGIN,
   URL_REGISTER_NEW,
+  FORGOT_PW_CODE,
 } from "util/UrlPaths";
 import { REHYDRATE } from "redux-persist";
 import { createApi } from "@reduxjs/toolkit/query/react";
@@ -77,4 +78,4 @@ export const userSlice = createApi({
   },
 });
 
-export const { useGenerateCodeMutation, useSubmitCodeMutation, useAddNewResidentMutation, useRegisterNewUserMutation } = userSlice;
+export const { useGenerateCodeMutation, useSubmitCodeMutation, useAddNewResidentMutation, useRegisterNewUserMutation, useSubmitForgotPWCodeMutation } = userSlice;
