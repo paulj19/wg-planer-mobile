@@ -106,7 +106,7 @@ export default function App() {
             }}
           >
             <>
-              {!authState?.signedIn ? (
+              {authState?.signedIn ? (
                 <>
                   <Stack.Screen
                     name="Home"
